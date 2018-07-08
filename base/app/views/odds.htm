@@ -1,0 +1,68 @@
+<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
+<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>
+
+<h2 id="existing">Existing Odds</h2>
+<div class="bd-example">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Away</th>
+      <th scope="col">Home</th>
+      <th scope="col">Spread</th>
+      <th scope="col">Moneyline</th>
+    </tr>
+  </thead>
+  <tbody>
+    <repeat group="{{ @existingOdds }}" value="{{ @item }}">
+      <tr>
+        <td>{{ @item.date }}</td>
+        <td>{{ @item.away }}</td>
+        <td>{{ @item.home }}</td>
+        <td>{{ @item.spread }}</td>
+        <td>{{ @item.moneyline }}</td>
+      </tr>
+    </repeat>
+      <tr>
+        <td><a class="btn btn-primary mb-2" href="/updateodds" role="button">Update</a></td><td/><td/><td/><td/>
+      </tr>
+  </tbody>
+</table>
+</div>
+<h2 id="existing">Add New Odds</h2>
+<form  method="POST" action="/addodds">
+<div class="bd-example">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Away</th>
+      <th scope="col">Home</th>
+      <th scope="col">Spread</th>
+      <th scope="col">Moneyline</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><input class="form-control" type="datetime-local" value="2018-08-19T13:45:00" id="date" name="date"></td>
+	<td>
+	 <select class="form-control-inline" type="text" value="1" id="away" name="away">
+ 	   <option>Buf</option>
+	 </select>
+        </td>
+	<td>
+	 <select class="form-control-inline" type="text" value="1" id="home" name="home">
+ 	   <option>NEW</option>
+	 </select>
+        </td>
+        <td><input class="form-control" type="number" value="0" id="spread" name="spread"></td>
+        <td><input class="form-control" type="number" value="1" step="0.1" id="moneyline" name="moneyline"></td>
+      </tr>
+      <tr>
+        <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td><td/><td/><td/><td/>
+      </tr>
+  </tbody>
+</table>
+</div>
+</form>
+</main>

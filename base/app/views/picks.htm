@@ -1,0 +1,90 @@
+<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
+<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>
+
+<h2 id="existing">New Picks</h2>
+<form method="POST" action="/addodds">
+  <div class="form align-items-center">
+    <div class="bd-example">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Away</th>
+          <th scope="col">Home</th>
+          <th scope="col">Spread</th>
+          <th scope="col">Moneyline</th>
+          <th scope="col">Pick</th>
+          <th scope="col">ML</th>
+          <th scope="col">Lock</th>
+        </tr>
+      </thead>
+      <tbody>
+      <repeat group="{{ @oddsForNewPicks }}" key="{{ @akey }}" value="{{ @odds }}">
+        <tr>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>
+	    <select class="form-control-inline" type="text" value="1" id="newpick" name="newpick">
+ 	       <option>Buf</option>
+	       <option>NEW</option>
+	    </select>
+	  </td>
+	  <td>
+	    <select class="form-control-inline" type="text" value="1" id="newpick" name="newpick">
+ 	      <option>Buf</option>
+	      <option>NEW</option>
+	    </select>
+          </td>
+	  <td>
+	    <input class="form-check-input-inline" type="checkbox" value="" id="defaultCheck1">
+	  </td>
+        </tr>
+      </repeat>
+      <tr>
+	<td>
+          <button type="submit" class="btn-small btn-primary mb-2">Submit</button>
+	</td>
+        <td/><td/><td/><td/><td/><td/>
+      </tr>
+    </tbody>
+  </div>
+  </div>
+</table>
+</form>
+
+<h2 id="examples">Existing Picks</h2>
+<div class="bd-example">
+<table class="table">
+  <thead>
+    <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Away</th>
+          <th scope="col">Home</th>
+          <th scope="col">Spread</th>
+          <th scope="col">Moneyline</th>
+          <th scope="col">Pick</th>
+          <th scope="col">ML</th>
+          <th scope="col">Lock</th>
+    </tr>
+  </thead>
+  <tbody>
+    <repeat group="{{ @existingPicks }}" key="{{ @ikey }}" value="{{ @item }}">
+	<p></p>
+      <tr>
+        <td>{{ @oddsForExistingPicks[@ikey].date }}</td>
+        <td>Away</td>
+        <td>Home</td>
+        <td>{{ @oddsForExistingPicks[@ikey].spread }}</td>
+        <td>{{ @oddsForExistingPicks[@ikey].moneyline }}</td>
+        <td>{{ @item.spread_pick }}</td>
+        <td>{{ @item.ml_pick }}</td>
+        <td>Lock</td>
+      </tr>
+    </repeat>
+  </tbody>
+</table>
+</div>
+</main>

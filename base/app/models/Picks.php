@@ -36,6 +36,14 @@ class Picks extends DB\SQL\Mapper{
 	    $this->update();
 	}
 	
+	public function editSpreadAndMLPicks($id,$spread_pick,$ml_pick,$lock) {
+	    $this->load(array('id=?',$id));
+	    $this->spread_pick=$spread_pick;
+	    $this->ml_pick=$ml_pick;
+	    $this->lock=$lock;
+	    $this->update();
+	}
+
 	public function delete($id) {
 	    $this->load(array('id=?',$id));
 	    $this->erase();

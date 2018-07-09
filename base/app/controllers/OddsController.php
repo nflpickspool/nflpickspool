@@ -49,7 +49,6 @@ class OddsController extends Controller {
 	}
 
 	function writeUpdatedOdds(){
-		var_dump($_POST);
 		$numberOfRows=count($this->f3->get('POST.spread'));
 		$odds = new Odds($this->db);
 		for ($x = 0; $x < $numberOfRows; $x++) {

@@ -2,7 +2,7 @@
 <script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>
 
 <h2 id="existing">New Picks</h2>
-<form method="POST" action="/addodds">
+<form method="POST" action="/addpicks">
   <div class="form align-items-center">
     <div class="bd-example">
     <table class="table">
@@ -21,25 +21,27 @@
       <tbody>
       <repeat group="{{ @oddsForNewPicks }}" key="{{ @akey }}" value="{{ @odds }}">
         <tr>
-          <td>0</td>
-          <td>1</td>
-          <td>2</td>
-          <td>3</td>
-          <td>4</td>
+	  <input type="hidden" name="odds_id[{{ @ikey }}]" id="odds_id[{{ @ikey }}]" value="{{ @odds.id }}">
+          <td>{{ @odds.date }}</td>
+          <td>{{ @odds.away }}</td>
+          <td>{{ @odds.home }}</td>
+          <td>{{ @odds.spread }}</td>
+          <td>{{ @odds.moneyline }}</td>
           <td>
-	    <select class="form-control-inline" type="text" value="1" id="newpick" name="newpick">
- 	       <option>Buf</option>
-	       <option>NEW</option>
+	    <select class="form-control-inline" type="text" value="" id="spread_pick[{{ @akey }}]" name="spread_pick[{{ @akey }}]">
+ 	       <option>{{ @odds.away }}</option>
+	       <option>{{ @odds.home }}</option>
 	    </select>
 	  </td>
 	  <td>
-	    <select class="form-control-inline" type="text" value="1" id="newpick" name="newpick">
- 	      <option>Buf</option>
-	      <option>NEW</option>
+	    <select class="form-control-inline" type="text" value="" id="ml_pick[{{ @akey }}]" name="ml_pick[{{ @akey }}]">
+ 	      <option></option>
+ 	      <option>{{ @odds.away }}</option>
+	      <option>{{ @odds.home }}</option>
 	    </select>
           </td>
 	  <td>
-	    <input class="form-check-input-inline" type="checkbox" value="" id="defaultCheck1">
+	    <input class="form-check-input-inline" type="checkbox" value="1" id="lock[{{ @akey }}]" name="lock[{{ @akey }}]">
 	  </td>
         </tr>
       </repeat>
@@ -47,7 +49,7 @@
 	<td>
           <button type="submit" class="btn-small btn-primary mb-2">Submit</button>
 	</td>
-        <td/><td/><td/><td/><td/><td/>
+        <td/><td/><td/><td/><td/><td/><td/>
       </tr>
     </tbody>
   </div>
@@ -75,15 +77,18 @@
 	<p></p>
       <tr>
         <td>{{ @oddsForExistingPicks[@ikey].date }}</td>
-        <td>Away</td>
-        <td>Home</td>
+        <td>{{ @oddsForExistingPicks[@ikey].away }}</td>
+        <td>{{ @oddsForExistingPicks[@ikey].home }}</td>
         <td>{{ @oddsForExistingPicks[@ikey].spread }}</td>
         <td>{{ @oddsForExistingPicks[@ikey].moneyline }}</td>
         <td>{{ @item.spread_pick }}</td>
         <td>{{ @item.ml_pick }}</td>
-        <td>Lock</td>
+        <td>{{ @item.lock }}</td>
       </tr>
     </repeat>
+      <tr>
+        <td><a class="btn btn-primary mb-2" href="/updatepicks" role="button">Update</a></td><td/><td/><td/><td/><td/><td/><td/></td>
+      </tr>
   </tbody>
 </table>
 </div>

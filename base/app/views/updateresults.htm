@@ -3,28 +3,28 @@
 <!--<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>-->
 
 <h2 id="existing">Update Existing Odds</h2>
-<form method="POST" action="/writeUpdatedOdds	">
+<form method="POST" action="/writeUpdatedResults">
 <div class="bd-example">
 <table class="table">
   <thead>
     <tr>
       <th scope="col">Date</th>
       <th scope="col">Away</th>
+      <th scope="col">Away Score</th>
       <th scope="col">Home</th>
-      <th scope="col">Spread</th>
-      <th scope="col">Moneyline</th>
+      <th scope="col">Home Score</th>
       <th scope="col">Delete</th>
     </tr>
   </thead>
   <tbody>
-    <repeat group="{{ @existingOdds }}" key="{{ @ikey }}" value="{{ @item }}">
+    <repeat group="{{ @resultsToUpdate }}" key="{{ @ikey }}" value="{{ @item }}">
       <tr>
 	<input type="hidden" name="id[{{ @ikey }}]" id="id[{{ @ikey }}]" value="{{ @item.id }}">
       	<td>{{ @item.date }}</td>
         <td>{{ @item.away }}</td>
+	<td><input class="form-control" type="number" value="{{ @item.awayScore }}" id="awayScore[{{ @ikey }}]" name="awayScore[{{ @ikey }}]"></td>
         <td>{{ @item.home }}</td>
-        <td><input class="form-control" type="number" value="{{ @item.spread }}" id="spread[{{ @ikey }}]" name="spread[{{ @ikey }}]"></td>
-        <td><input class="form-control" type="number" value="{{ @item.moneyline }}" step="0.1" id="moneyline[{{ @ikey }}]" name="moneyline[{{ @ikey }}]"></td>
+        <td><input class="form-control" type="number" value="{{ @item.awayScore }}" id="homeScore[{{ @ikey }}]" name="homeScore[{{ @ikey }}]"></td>
         <td><input class="form-check-input-inline" type="checkbox" id="del[{{ @ikey }}]" name="del[{{ @ikey }}]" value="1"></td>
       </tr>
     </repeat>

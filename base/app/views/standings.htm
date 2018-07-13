@@ -1,0 +1,28 @@
+<!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
+<main role="main" class="container">
+<!--<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>-->
+
+<h2 id="existing">Standings</h2>
+<div class="bd-example">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Email</th>
+      <th scope="col">ATS Points</th>
+      <th scope="col">ML Points</th>
+      <th scope="col">Total Points</th>
+    </tr>
+  </thead>
+  <tbody>
+    <repeat group="{{ @standings }}" value="{{ @item }}">
+      <tr>
+        <td>{{ @item.email }}</td>
+        <td>{{ @item.pts_spread }}</td>
+        <td>{{ @item.pts_ml }}</td>
+        <td>{{ @item.pts_total }}</td>
+      </tr>
+    </repeat>
+  </tbody>
+</table>
+</div>
+</main>

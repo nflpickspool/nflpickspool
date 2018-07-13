@@ -1,5 +1,6 @@
-<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
-<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>
+<!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
+<main role="main" class="container">
+<!--<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>-->
 
 <h2 id="existing">Existing Odds</h2>
 <div class="bd-example">
@@ -44,7 +45,7 @@
   </thead>
   <tbody>
       <tr>
-        <td><input class="form-control" type="datetime-local" value="2018-08-19T13:45:00" id="date" name="date"></td>
+        <td><input class="form-control" type="datetime-local" value="{{ @timeNow }}" id="date" name="date"></td>
 	<td>
 	 <select class="form-control-inline" type="text" value="1" id="away" name="away">
 	   <include href="awayTeams.htm" />

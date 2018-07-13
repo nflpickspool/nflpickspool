@@ -47,6 +47,7 @@ class PicksController extends Controller {
 			} else {
 				$picks->lock = 0;
 			}
+			$picks->date_submitted = date("Y-m-d H:i:s");
 			$picks->save();
 		}
 
@@ -104,5 +105,13 @@ class PicksController extends Controller {
 			}
 		}
 		$this->f3->reroute('/makepicks');
+	}
+	
+	function renderStandings(){
+		$picks = new Picks($this->db);
+		$this->f3->set('standings',$picks->getStandings());
+		$this->f3->set('view','standings.htm');
+        	$template=new Template;
+        	echo $template->render('layout.htm');
 	}
 }

@@ -16,13 +16,19 @@ class Odds extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
-	public function getByEmail($email) {
-	    $this->load(array('email=?',$email));
+	public function getFutureOdds() {
+		$this->load(array('date>?',date("Y-m-d H:i:s")));
+		return $this->query;
 	}
 
-	public function getFutureOdds() {
-		$this->load(array('date>?',date("Y-m-d h:i A")));
-		//$this->load(array('line>?',4));
+	public function getPastOddsWithoutResults() {
+		$this->load(array('date<? AND (awayScore IS NULL OR homeScore IS NULL	)',date("Y-m-d H:i:s")));
+		//$this->load(array('date<? AND homeScore=NULL OR awayScore=NULL',date("Y-m-d h:i A")));
+		return $this->query;
+	}
+
+	public function getRecentOddsWithResults() {
+		$this->load(array('date<? AND awayScore IS NOT NULL AND homeScore IS NOT NULL',date("Y-m-d H:i:s")));
 		return $this->query;
 	}
 
@@ -41,6 +47,14 @@ class Odds extends DB\SQL\Mapper{
 	    $this->load(array('id=?',$id));
 	    $this->spread=$spread;
 	    $this->moneyline=$moneyline;
+	    $this->date_submitted = date("Y-m-d H:i:s");
+	    $this->update();
+	}
+
+	public function addScores($id,$awayScore,$homeScore) {
+	    $this->load(array('id=?',$id));
+	    $this->awayScore=$awayScore;
+	    $this->homeScore=$homeScore;
 	    $this->update();
 	}
 	

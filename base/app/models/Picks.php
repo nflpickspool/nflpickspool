@@ -16,6 +16,11 @@ class Picks extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
+	public function getByOddsId($odds_id) {
+	    $this->load(array('odds_id=?',$odds_id));
+	    return $this->query;
+	}
+
 	public function getByEmail($email) {
 	    $this->load(array('email=?',$email));
 	}
@@ -23,6 +28,14 @@ class Picks extends DB\SQL\Mapper{
 	public function getByOddsIdAndEmail($id,$email) {
 	    $this->load(array('odds_id=? AND email=?',$id,$email));
 	    return $this->query;
+	}
+
+	public function getStandings() {
+		return $this->db->exec(
+			'SELECT email,SUM(pts_spread) as pts_spread,'.
+			'SUM(pts_ml)as pts_ml,SUM(pts_spread + pts_ml)'.
+			' as pts_total FROM picks GROUP BY email ORDER BY pts_total;'
+		);
 	}
 
 	public function add() {
@@ -41,6 +54,13 @@ class Picks extends DB\SQL\Mapper{
 	    $this->spread_pick=$spread_pick;
 	    $this->ml_pick=$ml_pick;
 	    $this->lock=$lock;
+	    $this->update();
+	}
+
+	public function editSpreadAndMLPoints($id,$pts_spread,$pts_ml) {
+	    $this->load(array('id=?',$id));
+	    $this->pts_spread=$pts_spread;
+	    $this->pts_ml=$pts_ml;
 	    $this->update();
 	}
 

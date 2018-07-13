@@ -1,0 +1,66 @@
+<!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
+<main role="main" class="container">
+<!--<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>-->
+
+<h2 id="existing">Log Results</h2>
+<form method="POST" action="/addresults">
+  <div class="form align-items-center">
+    <div class="bd-example">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Away</th>
+          <th scope="col">Away Score</th>
+          <th scope="col">Home</th>
+          <th scope="col">Home Score</th>
+        </tr>
+      </thead>
+      <tbody>
+      <repeat group="{{ @oddsNeedingResults }}" key="{{ @akey }}" value="{{ @odds }}">
+        <tr>
+	  <input type="hidden" name="id[{{ @ikey }}]" id="id[{{ @ikey }}]" value="{{ @odds.id }}">
+          <td>{{ @odds.date }}</td>
+          <td>{{ @odds.away }}</td>
+	  <td><input class="form-control" type="number" value="0" id="awayScore[{{ @ikey }}]" name="awayScore[{{ @ikey }}]"></td>
+          <td>{{ @odds.home }}</td>
+          <td><input class="form-control" type="number" value="0" id="homeScore[{{ @ikey }}]" name="homeScore[{{ @ikey }}]"></td>
+        </tr>
+      </repeat>
+	  <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td><td/><td/><td/><td/>
+        </tr>
+    </tbody>
+  </div>
+  </div>
+</table>
+</form>
+
+<h2 id="examples">Recent Results</h2>
+<div class="bd-example">
+<table class="table">
+  <thead>
+    <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Away</th>
+          <th scope="col">Away Score</th>
+          <th scope="col">Home</th>
+          <th scope="col">Home Score</th>    </tr>
+  </thead>
+  <tbody>
+    <repeat group="{{ @recentResults }}" key="{{ @ikey }}" value="{{ @results }}">
+	<p></p>
+      <tr>
+        <td>{{ @results.date }}</td>
+        <td>{{ @results.away }}</td>
+        <td>{{ @results.awayScore }}</td>
+        <td>{{ @results.home }}</td>
+        <td>{{ @results.homeScore }}</td>
+      </tr>
+    </repeat>
+      <tr>
+        <td><a class="btn btn-primary mb-2" href="/updateresults" role="button">Update</a></td><td/><td/><td/><td/>
+      </tr>
+  </tbody>
+</table>
+</div>
+</main>

@@ -16,6 +16,17 @@ class Odds extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
+
+	public function getLatestSeason() {
+		return $this->db->exec(
+			'SELECT MAX(season) as season FROM odds;'
+		);
+	}
+
+	public function getLatestWeekForSeason($season) {
+		return $this->db->exec('SELECT MAX(week) as week FROM odds WHERE season='.$season.';');
+	}
+
 	public function getFutureOdds() {
 		$this->load(array('date>?',date("Y-m-d H:i:s")));
 		return $this->query;

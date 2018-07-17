@@ -8,6 +8,8 @@
 <table class="table">
   <thead>
     <tr>
+      <th scope="col">Season</th>
+      <th scope="col">Week</th>
       <th scope="col">Date</th>
       <th scope="col">Away</th>
       <th scope="col">Home</th>
@@ -20,6 +22,8 @@
     <repeat group="{{ @existingOdds }}" key="{{ @ikey }}" value="{{ @item }}">
       <tr>
 	<input type="hidden" name="id[{{ @ikey }}]" id="id[{{ @ikey }}]" value="{{ @item.id }}">
+      	<td>{{ @item.season }}</td>
+        <td>{{ @item.week }}</td>
       	<td>{{ @item.date }}</td>
         <td>{{ @item.away }}</td>
         <td>{{ @item.home }}</td>

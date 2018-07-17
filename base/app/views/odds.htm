@@ -7,6 +7,8 @@
 <table class="table">
   <thead>
     <tr>
+      <th scope="col">Season</th>
+      <th scope="col">Week</th>
       <th scope="col">Date</th>
       <th scope="col">Away</th>
       <th scope="col">Home</th>
@@ -17,6 +19,8 @@
   <tbody>
     <repeat group="{{ @existingOdds }}" value="{{ @item }}">
       <tr>
+        <td>{{ @item.season }}</td>
+        <td>{{ @item.week }}</td>
         <td>{{ @item.date }}</td>
         <td>{{ @item.away }}</td>
         <td>{{ @item.home }}</td>
@@ -25,7 +29,7 @@
       </tr>
     </repeat>
       <tr>
-        <td><a class="btn btn-primary mb-2" href="/updateodds" role="button">Update</a></td><td/><td/><td/><td/>
+        <td><a class="btn btn-primary mb-2" href="/updateodds" role="button">Update</a></td><td/><td/><td/><td/><td/><td/>
       </tr>
   </tbody>
 </table>
@@ -36,6 +40,8 @@
 <table class="table">
   <thead>
     <tr>
+      <th scope="col">Season</th>
+      <th scope="col">Week</th>
       <th scope="col">Date</th>
       <th scope="col">Away</th>
       <th scope="col">Home</th>
@@ -45,6 +51,17 @@
   </thead>
   <tbody>
       <tr>
+	<td>
+	 <select class="form-control-inline" type="number" value="1" id="season" name="season">
+	    <option>2018</option>
+	 </select>
+	</td>
+	<td>
+         <select class="form-control-inline" type="number" value="1" id="week" name="week">
+            <option>1</option>
+	    <option>2</option>
+	 </select>
+	</td>
         <td><input class="form-control" type="datetime-local" value="{{ @timeNow }}" id="date" name="date"></td>
 	<td>
 	 <select class="form-control-inline" type="text" value="1" id="away" name="away">
@@ -60,7 +77,7 @@
         <td><input class="form-control" type="number" value="1" step="0.1" id="moneyline" name="moneyline"></td>
       </tr>
       <tr>
-        <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td><td/><td/><td/><td/>
+        <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td><td/><td/><td/><td/><td/><td/>
       </tr>
   </tbody>
 </table>

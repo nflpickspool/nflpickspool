@@ -9,6 +9,8 @@
     <table class="table">
       <thead>
         <tr>
+          <th scope="col">Season</th>
+          <th scope="col">Week</th>
           <th scope="col">Date</th>
           <th scope="col">Away</th>
           <th scope="col">Away Score</th>
@@ -20,6 +22,8 @@
       <repeat group="{{ @oddsNeedingResults }}" key="{{ @akey }}" value="{{ @odds }}">
         <tr>
 	  <input type="hidden" name="id[{{ @ikey }}]" id="id[{{ @ikey }}]" value="{{ @odds.id }}">
+          <td>{{ @odds.season }}</td>
+          <td>{{ @odds.week }}</td>
           <td>{{ @odds.date }}</td>
           <td>{{ @odds.away }}</td>
 	  <td><input class="form-control" type="number" value="0" id="awayScore[{{ @ikey }}]" name="awayScore[{{ @ikey }}]"></td>
@@ -27,7 +31,7 @@
           <td><input class="form-control" type="number" value="0" id="homeScore[{{ @ikey }}]" name="homeScore[{{ @ikey }}]"></td>
         </tr>
       </repeat>
-	  <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td><td/><td/><td/><td/>
+	  <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td><td/><td/><td/><td/><td/><td/>
         </tr>
     </tbody>
   </div>
@@ -40,6 +44,8 @@
 <table class="table">
   <thead>
     <tr>
+          <th scope="col">Season</th>
+          <th scope="col">Week</th>
           <th scope="col">Date</th>
           <th scope="col">Away</th>
           <th scope="col">Away Score</th>
@@ -50,6 +56,8 @@
     <repeat group="{{ @recentResults }}" key="{{ @ikey }}" value="{{ @results }}">
 	<p></p>
       <tr>
+        <td>{{ @results.season }}</td>
+        <td>{{ @results.week }}</td>
         <td>{{ @results.date }}</td>
         <td>{{ @results.away }}</td>
         <td>{{ @results.awayScore }}</td>
@@ -58,7 +66,7 @@
       </tr>
     </repeat>
       <tr>
-        <td><a class="btn btn-primary mb-2" href="/updateresults" role="button">Update</a></td><td/><td/><td/><td/>
+        <td><a class="btn btn-primary mb-2" href="/updateresults" role="button">Update</a></td><td/><td/><td/><td/><td/><td/>
       </tr>
   </tbody>
 </table>

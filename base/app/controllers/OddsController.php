@@ -31,6 +31,8 @@ class OddsController extends Controller {
 	function addOdds(){
 		//var_dump($_POST);
 		$odds = new Odds($this->db);
+		$odds->season = $this->f3->get('POST.season');
+		$odds->week = $this->f3->get('POST.week');
 		$odds->date = $this->f3->get('POST.date');
 		$odds->away = $this->f3->get('POST.away');
 		$odds->home = $this->f3->get('POST.home');

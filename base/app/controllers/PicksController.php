@@ -106,6 +106,34 @@ class PicksController extends Controller {
 		}
 		$this->f3->reroute('/makepicks');
 	}
+
+	function renderScoreboard(){
+		$this->f3->set('view','scoreboard.htm');
+
+		$odds = new Odds($this->db);
+		$picks = new Picks($this->db);
+		$user = new User($this->db);
+
+		if(empty($this->f3->get('POST.season'))){
+			$season=$odds->getLatestSeason()[0]['season'];
+			$week=$odds->getLatestWeekForSeason($season)[0]['week'];
+		} else {
+			$season=$this->f3->get('POST.season');
+			$week=$this->f3->get('POST.week');
+		}
+		
+		$users = $user->all();
+		$this->f3->set('users', $users);
+		$scores=array();
+		foreach ($users as &$userObject) {
+			array_push($scores, $picks->getScoreboard($userObject->email,$season,$week));
+		}		
+
+		$this->f3->set('scores', $scores);
+
+        	$template=new Template;
+        	echo $template->render('layout.htm');
+	}
 	
 	function renderStandings(){
 		$picks = new Picks($this->db);

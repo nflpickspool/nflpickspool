@@ -8,6 +8,8 @@
 <table class="table">
   <thead>
     <tr>
+      <th scope="col">Season</th>
+      <th scope="col">Week</th>
       <th scope="col">Date</th>
       <th scope="col">Away</th>
       <th scope="col">Away Score</th>
@@ -20,6 +22,8 @@
     <repeat group="{{ @resultsToUpdate }}" key="{{ @ikey }}" value="{{ @item }}">
       <tr>
 	<input type="hidden" name="id[{{ @ikey }}]" id="id[{{ @ikey }}]" value="{{ @item.id }}">
+      	<td>{{ @item.season }}</td>
+        <td>{{ @item.week }}</td>
       	<td>{{ @item.date }}</td>
         <td>{{ @item.away }}</td>
 	<td><input class="form-control" type="number" value="{{ @item.awayScore }}" id="awayScore[{{ @ikey }}]" name="awayScore[{{ @ikey }}]"></td>
@@ -29,7 +33,7 @@
       </tr>
     </repeat>
       <tr>
-        <td><button type="submit" class="btn btn-primary mb-2">Update</button></td><td/><td/><td/><td/><td/>
+        <td><button type="submit" class="btn btn-primary mb-2">Update</button></td><td/><td/><td/><td/><td/><td/><td/>
       </tr>
   </tbody>
 </table>

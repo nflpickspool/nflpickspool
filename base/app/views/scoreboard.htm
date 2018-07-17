@@ -1,0 +1,74 @@
+<!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
+<main role="main" class="container">
+<!--<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>-->
+<h2 id="existing">Scoreboard</h2>
+<div class="bd-example">
+<form method="POST" action="/scoreboard">
+<table class="table">
+  <div class="form align-items-center">
+    <div class="bd-example">
+  <thead>
+    <tr>
+          <th scope="col">Season</th>
+          <th scope="col">Week</th>
+          <th/><th/><th/><th/><th/><th/><th/>
+    </tr>
+  </thead>
+        <tbody>
+	  <tr>
+	    <td>
+	      <select class="form-control-inline" type="text" value="" id="season" name="season">
+ 	        <option>2018</option>
+	      </select>
+            </td>
+	    <td>
+	      <select class="form-control-inline" type="text" value="" id="week" name="week">
+ 	        <option>1</option>
+	        <option>2</option>
+	      </select>
+            </td>
+            <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td>
+            <td/><td/><td/><td/><td/><td/><td/>
+          </tr>
+        </tbody>
+  </div>
+  </div>
+</table>
+</form>
+<repeat group="{{ @users }}" key="{{ @ukey }}" value="{{ @user }}">
+<h3 id="userid">{{ @user.email }}</h3>
+<table class="table">
+  <thead>
+    <tr>
+          <th scope="col">Season</th>
+          <th scope="col">Week</th>
+          <th scope="col">Date</th>
+          <th scope="col">Away</th>
+          <th scope="col">Home</th>
+          <th scope="col">Spread</th>
+          <th scope="col">Moneyline</th>
+          <th scope="col">Pick</th>
+          <th scope="col">ML</th>
+          <th scope="col">Lock</th>
+    </tr>
+  </thead>
+  <tbody>
+      <repeat group="{{ @scores }}" key="{{ @pkey }}" value="{{ @pick }}">
+	<tr>
+          <td>{{ @pick[@pkey].season }}</td>
+          <td>{{ @pick[@pkey].week }}</td>
+          <td>{{ @pick[@pkey].date }}</td>
+          <td>{{ @pick[@pkey].away }}</td>
+          <td>{{ @pick[@pkey].home }}</td>
+          <td>{{ @pick[@pkey].spread }}</td>
+          <td>{{ @pick[@pkey].moneyline }}</td>
+          <td>{{ @pick[@pkey].spread_pick }}</td>
+          <td>{{ @pick[@pkey].ml_pick }}</td>
+          <td>{{ @pick[@pkey].lock }}</td>
+        </tr>
+      </repeat>
+  </tbody>
+</table>
+</repeat>
+</div>
+</main>

@@ -29,6 +29,12 @@ class User extends DB\SQL\Mapper{
 	    $this->copyFrom('POST');
 	    $this->update();
 	}
+
+	public function editPassword($email,$passwordHash) {
+	    $this->load(array('email=?',$email));
+	    $this->password=$passwordHash;
+	    $this->update();
+	}
 	
 	public function delete($id) {
 	    $this->load(array('id=?',$id));

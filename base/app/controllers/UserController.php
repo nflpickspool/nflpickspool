@@ -1,43 +1,22 @@
 <?php
 class UserController extends Controller {
 
-	function beforeroute() {
-		//TODO:Had to copy this from Controller. Should avoid duplication
-		if($this->f3->get('SESSION.admin') === null){
-		 	$this->f3->set('menu','menu.htm');
-		} else {
-		 	$this->f3->set('menu','admin-menu.htm');
-		}
-	}
-
 	function render(){
-		if($this->f3->get('SESSION.user') !== null){
-			$this->f3->reroute('/');
-		}
-		 $template=new Template;
-        	 echo $template->render('login.htm');
-	}
+		//TODO: This duplicates some from PicksController render.
+		$odds = new Odds($this->db);
+		$picks = new Picks($this->db);
 
-	function authenticate(){
-		 $email = $this->f3->get('POST.email');
-		 $password = $this->f3->get('POST.password');
-
-		 $user = new User($this->db);
-		 $user->getByEmail($email);
-
-		 if($user->dry()){
-			$this->f3->reroute('/login');
-		}
-
-		if(password_verify($password, $user->password)){
-			$this->f3->set('SESSION.user',$user->email);
-			if($user->admin === 1){
-				$this->f3->set('SESSION.admin',1);
+		$futureOdds = $odds->getFutureOdds();
+		foreach ($futureOdds as &$oddsObject) {
+			$existingPicksForUser = $picks->getByOddsIdAndEmail($oddsObject->id,$this->f3->get('SESSION.user'));
+			if(empty($existingPicksForUser)){
+				$this->f3->set('incompletePicks',1);
+				break;
 			}
-			$this->f3->reroute('/');
-		} else {
-		  	$this->f3->reroute('/login');
 		}
+		$this->f3->set('view','home.htm');
+        	$template=new Template;
+        	echo $template->render('layout.htm');
 	}
 
 	function displayProfile(){

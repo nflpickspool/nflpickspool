@@ -4,16 +4,21 @@ class Controller {
 	protected $f3;
     	protected $db;
 
-	function beforeroute() {
-		if($this->f3->get('SESSION.user') === null){
-			$this->f3->reroute('/login');
-			exit;
-		}
+	function selectMenu() {
 		if($this->f3->get('SESSION.admin') === null){
 		 	$this->f3->set('menu','menu.htm');
 		} else {
 		 	$this->f3->set('menu','admin-menu.htm');
 		}
+	}
+
+	function beforeroute() {
+		if($this->f3->get('SESSION.user') === null){
+			$this->f3->reroute('/login');
+			exit;
+		}
+		$this->selectMenu();
+		
 	}
 
 	function afterroute() {

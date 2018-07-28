@@ -24,7 +24,7 @@
 	  <input type="hidden" name="id[{{ @ikey }}]" id="id[{{ @ikey }}]" value="{{ @odds.id }}">
           <td>{{ @odds.season }}</td>
           <td>{{ @odds.week }}</td>
-          <td>{{ @odds.date }}</td>
+          <td>{{ date('D m/d g:i A',strtotime(@odds.date)) }}</td>
           <td>{{ @odds.away }}</td>
 	  <td><input class="form-control" type="number" value="0" id="awayScore[{{ @ikey }}]" name="awayScore[{{ @ikey }}]"></td>
           <td>{{ @odds.home }}</td>
@@ -58,7 +58,7 @@
       <tr>
         <td>{{ @results.season }}</td>
         <td>{{ @results.week }}</td>
-        <td>{{ @results.date }}</td>
+        <td>{{ date('D m/d g:i A',strtotime(@results.date)) }}</td>
         <td>{{ @results.away }}</td>
         <td>{{ @results.awayScore }}</td>
         <td>{{ @results.home }}</td>

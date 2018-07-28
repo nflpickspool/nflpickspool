@@ -24,7 +24,7 @@
 	<input type="hidden" name="id[{{ @ikey }}]" id="id[{{ @ikey }}]" value="{{ @item.id }}">
       	<td>{{ @item.season }}</td>
         <td>{{ @item.week }}</td>
-      	<td>{{ @item.date }}</td>
+      	<td>{{ date('D m/d g:i A',strtotime(@item.date)) }}</td>
         <td>{{ @item.away }}</td>
 	<td><input class="form-control" type="number" value="{{ @item.awayScore }}" id="awayScore[{{ @ikey }}]" name="awayScore[{{ @ikey }}]"></td>
         <td>{{ @item.home }}</td>

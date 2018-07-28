@@ -1,0 +1,70 @@
+<!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
+<main role="main" class="container">
+<div class="bd-example">
+<check if="{{ !empty(@oddsForNewPicks) }}">
+<true>
+<h2 id="new">Incomplete Picks</h2>
+<form method="POST" action="/addpicks">
+  <div class="form align-items-center">
+    <div class="bd-example">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Season</th>
+          <th scope="col">Week</th>
+          <th scope="col">Date</th>
+          <th scope="col">Away</th>
+          <th scope="col">Home</th>
+          <th scope="col">Spread</th>
+          <th scope="col">Moneyline</th>
+          <th scope="col">Pick</th>
+          <th scope="col">ML</th>
+          <th scope="col">Lock</th>
+        </tr>
+      </thead>
+      <tbody>
+      <repeat group="{{ @oddsForNewPicks }}" key="{{ @akey }}" value="{{ @odds }}">
+        <tr>
+	  <input type="hidden" name="odds_id[{{ @ikey }}]" id="odds_id[{{ @ikey }}]" value="{{ @odds.id }}">
+          <td>{{ @odds.season }}</td>
+          <td>{{ @odds.week }}</td>
+          <td>{{ date('D m/d g:i A',strtotime(@odds.date)) }}</td>
+          <td>{{ @odds.away }}</td>
+          <td>{{ @odds.home }}</td>
+          <td>{{ @odds.spread }}</td>
+          <td>{{ @odds.moneyline }}</td>
+          <td>
+	    <select class="form-control-inline" type="text" value="" id="spread_pick[{{ @akey }}]" name="spread_pick[{{ @akey }}]">
+ 	       <option>{{ @odds.away }}</option>
+	       <option>{{ @odds.home }}</option>
+	    </select>
+	  </td>
+	  <td>
+	    <select class="form-control-inline" type="text" value="" id="ml_pick[{{ @akey }}]" name="ml_pick[{{ @akey }}]">
+ 	      <option></option>
+ 	      <option>{{ @odds.away }}</option>
+	      <option>{{ @odds.home }}</option>
+	    </select>
+          </td>
+	  <td>
+	    <input class="form-check-input-inline" type="checkbox" value="1" id="lock[{{ @akey }}]" name="lock[{{ @akey }}]">
+	  </td>
+        </tr>
+      </repeat>
+      <tr>
+	<td>
+          <button type="submit" class="btn btn-primary mb-2">Submit</button>
+	</td>
+        <td/><td/><td/><td/><td/><td/><td/><td/><td/>
+      </tr>
+    </tbody>
+  </div>
+  </div>
+</table>
+</form>
+</true>
+<false>
+<h2 id="new">No Incomplete Picks for this week</h2>
+</false>
+</check>
+</main>

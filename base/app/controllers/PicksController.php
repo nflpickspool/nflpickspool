@@ -3,15 +3,27 @@ class PicksController extends Controller {
 
 	function render(){
 		$odds = new Odds($this->db);
+		$this->f3->set('seasonList',$odds->getSeasonAndWeekList());
+		$email=$this->f3->get('SESSION.user');
+		//TODO:Duplicated from renderScoreboard
+		if(empty($this->f3->get('POST.season'))){
+			$season=$odds->getLatestSeason()[0]['season'];
+			$week=$odds->getLatestWeekForSeason($season)[0]['week'];
+		} else {
+			$season=explode("-",$this->f3->get('POST.season'))[0];
+			$week=explode("-",$this->f3->get('POST.season'))[1];
+		}
 		$picks = new Picks($this->db);
+		//TODO: Make getIncompletePicks query work
+		//$this->f3->set('incompletePicks',$picks->getIncompletePicks($email,$season,$week));
 
-		$futureOdds = $odds->getFutureOdds();
+		$futureOdds = $odds->getFutureOddsBySeasonWeek($season,$week);
 		$oddsForNewPicks = array();
 		$existingPicks = array();
 		$oddsForExistingPicks = array();
 
 		foreach ($futureOdds as &$oddsObject) {
-			$existingPicksForUser = $picks->getByOddsIdAndEmail($oddsObject->id,$this->f3->get('SESSION.user'));
+			$existingPicksForUser = $picks->getByOddsIdAndEmail($oddsObject->id,$email);
 			if(empty($existingPicksForUser)){
 				//echo "New Pick " . $oddsObject->moneyline . "<br>";
 				array_push($oddsForNewPicks,$oddsObject);
@@ -23,11 +35,43 @@ class PicksController extends Controller {
 				}
 			}
 		}
+		$this->f3->set('season', $season);
+		$this->f3->set('week', $week);
 		$this->f3->set('oddsForNewPicks', $oddsForNewPicks);
 		$this->f3->set('existingPicks', $existingPicks);
 		$this->f3->set('oddsForExistingPicks', $oddsForExistingPicks);
+		$this->f3->set('closedPicks',$picks->getClosedPicks($email,$season,$week));
 
 		$this->f3->set('view','picks.htm');
+        	$template=new Template;
+        	echo $template->render('layout.htm');
+	}
+
+	//TODO: Duplication from render...big time
+	function renderIncompletePicks(){
+		$odds = new Odds($this->db);
+		$email=$this->f3->get('SESSION.user');
+		$season=$odds->getLatestSeason()[0]['season'];
+		$week=$odds->getLatestWeekForSeason($season)[0]['week'];
+		$picks = new Picks($this->db);
+		//TODO: Make getIncompletePicks query work
+		//$this->f3->set('incompletePicks',$picks->getIncompletePicks($email,$season,$week));
+
+		$futureOdds = $odds->getFutureOddsBySeasonWeek($season,$week);
+		$oddsForNewPicks = array();
+		$existingPicks = array();
+		$oddsForExistingPicks = array();
+
+		foreach ($futureOdds as &$oddsObject) {
+			$existingPicksForUser = $picks->getByOddsIdAndEmail($oddsObject->id,$email);
+			if(empty($existingPicksForUser)){
+				//echo "New Pick " . $oddsObject->moneyline . "<br>";
+				array_push($oddsForNewPicks,$oddsObject);
+			}
+		}
+		$this->f3->set('oddsForNewPicks', $oddsForNewPicks);
+
+		$this->f3->set('view','incompletepicks.htm');
         	$template=new Template;
         	echo $template->render('layout.htm');
 	}

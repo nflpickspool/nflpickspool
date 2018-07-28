@@ -35,6 +35,33 @@ class Picks extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
+	public function getIncompletePicks($email,$season,$week) {
+		return $this->db->exec(
+			'SELECT odds.season, odds.week, odds.date, odds.away, odds.home, odds.spread, odds.moneyline '.
+			'FROM picks '.
+			'INNER JOIN odds ON picks.odds_id = odds.id '.
+			'WHERE odds.date>\''.date("Y-m-d H:i:s").'\' AND odds.season='.$season.' AND odds.week='.$week.' AND picks.email=\''.$email.'\';'		
+		);
+	}
+
+	public function getSubmittedPicks($email,$season,$week) {
+		return $this->db->exec(
+			'SELECT odds.season, odds.week, odds.date, odds.away, odds.home, odds.spread, odds.moneyline, picks.spread_pick, picks.ml_pick, picks.lock '.
+			'FROM picks '.
+			'INNER JOIN odds ON picks.odds_id = odds.id '.
+			'WHERE odds.date>\''.date("Y-m-d H:i:s").'\' AND odds.season='.$season.' AND odds.week='.$week.' AND picks.email=\''.$email.'\';'		
+		);
+	}
+
+	public function getClosedPicks($email,$season,$week) {
+		return $this->db->exec(
+			'SELECT odds.season, odds.week, odds.date, odds.away, odds.home, odds.spread, odds.moneyline, picks.spread_pick, picks.ml_pick, picks.lock '.
+			'FROM picks '.
+			'INNER JOIN odds ON picks.odds_id = odds.id '.
+			'WHERE odds.date<\''.date("Y-m-d H:i:s").'\' AND odds.season='.$season.' AND odds.week='.$week.' AND picks.email=\''.$email.'\';'		
+		);
+	}
+
 	public function getStandings() {
 		return $this->db->exec(
 			'SELECT email,SUM(pts_spread) as pts_spread,'.

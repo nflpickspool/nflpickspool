@@ -1,8 +1,38 @@
 <!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
 <main role="main" class="container">
-<!--<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>-->
-
-<h2 id="new">New Picks</h2>
+<h2 id="existing">View Picks</h2>
+<div class="bd-example">
+<form method="POST" action="/makepicks">
+<table class="table">
+  <div class="form align-items-center">
+    <div class="bd-example">
+  <thead>
+    <tr>
+          <th scope="col">Season-Week</th>
+          <th/><th/><th/><th/><th/><th/><th/><th/>
+    </tr>
+  </thead>
+        <tbody>
+	  <tr>
+	    <td>
+	      <select class="form-control-inline" type="text" value="" id="season" name="season">
+ 	        <option>{{ @season."-".@week}}</option>		
+		<repeat group="{{ @seasonList }}" value="{{ @item }}">
+ 	          <option>{{ @item.season."-".@item.week}}</option>
+		</repeat>
+	      </select>
+            </td>
+            <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td>
+            <td/><td/><td/><td/><td/><td/><td/>
+          </tr>
+        </tbody>
+  </div>
+  </div>
+</table>
+</form>
+<check if="{{ !empty(@oddsForNewPicks) }}">
+<true>
+<h2 id="new">Incomplete Picks</h2>
 <form method="POST" action="/addpicks">
   <div class="form align-items-center">
     <div class="bd-example">
@@ -27,7 +57,7 @@
 	  <input type="hidden" name="odds_id[{{ @ikey }}]" id="odds_id[{{ @ikey }}]" value="{{ @odds.id }}">
           <td>{{ @odds.season }}</td>
           <td>{{ @odds.week }}</td>
-          <td>{{ @odds.date }}</td>
+          <td>{{ date('D m/d g:i A',strtotime(@odds.date)) }}</td>
           <td>{{ @odds.away }}</td>
           <td>{{ @odds.home }}</td>
           <td>{{ @odds.spread }}</td>
@@ -61,8 +91,11 @@
   </div>
 </table>
 </form>
-
-<h2 id="existing">Existing Picks</h2>
+</true>
+</check>
+<check if="{{ !empty(@existingPicks) }}">
+<true>
+<h2 id="existing">Submitted Picks</h2>
 <div class="bd-example">
 <table class="table">
   <thead>
@@ -85,7 +118,7 @@
       <tr>
         <td>{{ @oddsForExistingPicks[@ikey].season }}</td>
         <td>{{ @oddsForExistingPicks[@ikey].week }}</td>
-        <td>{{ @oddsForExistingPicks[@ikey].date }}</td>
+        <td>{{ date('D m/d g:i A',strtotime(@oddsForExistingPicks[@ikey].date)) }}</td>
         <td>{{ @oddsForExistingPicks[@ikey].away }}</td>
         <td>{{ @oddsForExistingPicks[@ikey].home }}</td>
         <td>{{ @oddsForExistingPicks[@ikey].spread }}</td>
@@ -101,4 +134,46 @@
   </tbody>
 </table>
 </div>
+</true>
+</check>
+<check if="{{ !empty(@closedPicks) }}">
+<true>
+<h2 id="existing">Closed Picks</h2>
+<div class="bd-example">
+<table class="table">
+  <thead>
+    <tr>
+          <th scope="col">Season</th>
+          <th scope="col">Week</th>
+          <th scope="col">Date</th>
+          <th scope="col">Away</th>
+          <th scope="col">Home</th>
+          <th scope="col">Spread</th>
+          <th scope="col">Moneyline</th>
+          <th scope="col">Pick</th>
+          <th scope="col">ML</th>
+          <th scope="col">Lock</th>
+    </tr>
+  </thead>
+  <tbody>
+    <repeat group="{{ @closedPicks }}" key="{{ @ikey }}" value="{{ @item }}">
+	<p></p>
+      <tr>
+        <td>{{ @item.season }}</td>
+        <td>{{ @item.week }}</td>
+        <td>{{ date('D m/d g:i A',strtotime(@item.date)) }}</td>
+        <td>{{ @item.away }}</td>
+        <td>{{ @item.home }}</td>
+        <td>{{ @item.spread }}</td>
+        <td>{{ @item.moneyline }}</td>
+        <td>{{ @item.spread_pick }}</td>
+        <td>{{ @item.ml_pick }}</td>
+        <td>{{ @item.lock }}</td>
+      </tr>
+    </repeat>
+  </tbody>
+</table>
+</div>
+</true>
+</check>
 </main>

@@ -21,7 +21,7 @@
       <tr>
         <td>{{ @item.season }}</td>
         <td>{{ @item.week }}</td>
-        <td>{{ @item.date }}</td>
+        <td>{{ date('D m/d g:i A',strtotime(@item.date)) }}</td>
         <td>{{ @item.away }}</td>
         <td>{{ @item.home }}</td>
         <td>{{ @item.spread }}</td>

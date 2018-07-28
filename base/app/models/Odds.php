@@ -16,6 +16,11 @@ class Odds extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
+	public function getSeasonAndWeekList() {
+		return $this->db->exec(
+			'SELECT DISTINCT season,week FROM odds ORDER BY season DESC,week DESC;'
+		);
+	}
 
 	public function getLatestSeason() {
 		return $this->db->exec(
@@ -29,6 +34,11 @@ class Odds extends DB\SQL\Mapper{
 
 	public function getFutureOdds() {
 		$this->load(array('date>?',date("Y-m-d H:i:s")));
+		return $this->query;
+	}
+
+	public function getFutureOddsBySeasonWeek($season,$week) {
+		$this->load(array('date>? AND season=? and week=?',date("Y-m-d H:i:s"),$season,$week));
 		return $this->query;
 	}
 

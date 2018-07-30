@@ -68,7 +68,7 @@ class Odds extends DB\SQL\Mapper{
 	    $this->load(array('id=?',$id));
 	    $this->spread=$spread;
 	    $this->moneyline=$moneyline;
-	    $this->date_submitted = date("Y-m-d H:i:s");
+	    $this->date_submitted = date("Y-m-d H:i:s"); //???
 	    $this->update();
 	}
 

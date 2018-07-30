@@ -1,0 +1,77 @@
+<!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
+<main role="main" class="container">
+<!--<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>-->
+<check if="{{ empty(@ousNeedingResults) and empty(@recentOuResults)}}">
+<true>
+<h2>{{ @season }} season has not begun</h2>
+</true>
+<false>
+<check if="{{ empty(@ousNeedingResults) }}">
+<false>
+<h2 id="existing">Log Season Results for {{ @season }}</h2>
+<form method="POST" action="/addouresults">
+  <div class="form align-items-center">
+    <div class="bd-example">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">O/U</th>
+          <th scope="col">Wins</th>
+        </tr>
+      </thead>
+      <tbody>
+      <repeat group="{{ @teams }}" key="{{ @ikey }}" value="{{ @item }}">
+        <tr>
+	  <input type="hidden" name="id[{{ @ikey }}]" id="id[{{ @ikey }}]" value="{{ @ousNeedingResults[@ikey].id }}">
+          <td>{{ @item.region_name." ".@item.team_name }}</td>
+          <td>{{ @ousNeedingResults[@ikey].ou }}</td>
+	  <td><input class="form-control" type="number" value="0" id="result[{{ @ikey }}]" name="result[{{ @ikey }}]"></td>
+        </tr>
+      </repeat>
+	  <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td><td/><td/>
+        </tr>
+    </tbody>
+  </div>
+  </div>
+</table>
+</form>
+</false>
+</check>
+</false>
+</check>
+<check if="{{ empty(@recentOuResults)}}">
+<!--
+<true>
+<h2>No results yet for {{ @season }} season</h2>
+</true>
+-->
+<false>
+<h2 id="examples">Recent Results</h2>
+<div class="bd-example">
+<table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">O/U</th>
+          <th scope="col">Wins</th>
+        </tr>
+      </thead>
+  <tbody>
+    <repeat group="{{ @teams }}" key="{{ @ikey }}" value="{{ @item }}">
+	<p></p>
+      <tr>
+        <td>{{ @item.region_name." ".@item.team_name }}</td>
+        <td>{{ @recentOuResults[@ikey].ou }}</td>
+	<td>{{ @recentOuResults[@ikey].result }}</td>
+      </tr>
+    </repeat>
+      <tr>
+        <td><a class="btn btn-primary mb-2" href="/updateresults" role="button">Update</a></td><td/><td/>
+      </tr>
+  </tbody>
+</table>
+</div>
+</false>
+</check>
+</main>

@@ -1,0 +1,40 @@
+<!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
+<main role="main" class="container">
+<h2 id="ou_addnew">Set Team Win Over/Unders for {{ @season }}</h2>
+<form method="POST" action="/writeUpdatedOuOdds">
+  <div class="form align-items-center">
+    <div class="bd-example">
+      <table class="table">
+        <thead>
+          <tr><th scope="col">Due Date of O/U Picks</th></tr>
+        </thead>
+        <tbody>
+           <tr><td><input class="form-control" type="datetime-local" value="{{ @timeNow }}" id="date" name="date"></td></tr>
+        </tbody>
+      </table>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">O/U</th>
+        </tr>
+      </thead>
+      <tbody>
+      <repeat group="{{ @teams }}" key="{{ @ikey }}" value="{{ @item }}">
+        <tr>
+	  <input type="hidden" name="id[{{ @ikey }}]" id="id[{{ @ikey }}]" value="{{ @existingOuOdds[@ikey].id }}">
+          <td>{{ @item.region_name." ".@item.team_name }}</td>
+          <td><input class="form-control" type="number" value="{{ @existingOuOdds[@ikey].ou }}" step="0.5" id="ou[{{ @ikey }}]" name="ou[{{ @ikey }}]"></td>
+        </tr>
+      </repeat>
+      <tr>
+	<td>
+          <button type="submit" class="btn btn-primary mb-2">Submit</button>
+	</td>
+      </tr>
+    </tbody>
+  </div>
+  </div>
+</table>
+</form>
+</main>

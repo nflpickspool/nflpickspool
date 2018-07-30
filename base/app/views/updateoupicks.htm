@@ -1,0 +1,55 @@
+<!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
+<main role="main" class="container">
+<!--<script async src="https://cdn.carbonads.com/carbon.js?zoneid=1673&serve=C6AILKT&placement=getbootstrapcom" id="_carbonads_js"></script>-->
+
+<h2 id="existing">Update Existing Picks</h2>
+<form method="POST" action="/writeUpdatedOuPicks	">
+<div class="bd-example">
+<table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">O/U</th>
+          <th scope="col">Pick</th>
+          <th scope="col">Lock</th>
+        </tr>
+      </thead>  
+  <tbody>
+    <repeat group="{{ @teams }}" key="{{ @ikey }}" value="{{ @item }}">
+      <tr>
+	<input type="hidden" name="id[{{ @ikey }}]" id="id[{{ @ikey }}]" value="{{ @existingOus[@ikey].id }}">
+          <td>{{ @item.region_name." ".@item.team_name }}</td>
+	  <td>{{ @oddsForExistingOus[@ikey].ou }}</td>
+          <td>
+	    <select class="form-control-inline" type="text" value="" id="pick[{{ @ikey }}]" name="pick[{{ @ikey }}]">
+	      <check if="{{ @existingOus[@ikey].pick == 'O'}}">
+		<true>
+ 	       <option>O</option>
+	       <option>U</option>
+		</true>
+		<false>
+	       <option>U</option>
+ 	       <option>O</option>
+		</false>
+	      </check>
+	    </select>
+	  </td>
+	  <td>
+	    <input class="form-check-input-inline" type="checkbox" value="1" id="lock[{{ @ikey }}]" name="lock[{{ @ikey }}]"
+	      <check if="{{ @existingOus[@ikey].lock == '1'}}">
+    		<true>
+      		  checked
+    		</true>
+	      </check>
+	    >
+	  </td>
+      </tr>
+    </repeat>
+      <tr>
+        <td><button type="submit" class="btn btn-primary mb-2">Update</button></td><td/><td/><td/>
+      </tr>
+  </tbody>
+</table>
+</div>
+</form>
+</main>

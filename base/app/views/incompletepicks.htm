@@ -63,8 +63,55 @@
 </table>
 </form>
 </true>
-<false>
+</check>
+<check if="{{ !empty(@oddsForIncompleteOuPicks) }}">
+<true>
+<h2 id="new">Incomplete Team Win Over/Unders for {{ @futureOus[0].season }}</h2>
+<form method="POST" action="/addoupicks">
+  <div class="form align-items-center">
+    <div class="bd-example">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">O/U</th>
+          <th scope="col">Pick</th>
+          <th scope="col">Lock</th>
+        </tr>
+      </thead>
+      <tbody>
+      <!-- This seems bad. We should be repeating on futureOus and not teams-->
+      <repeat group="{{ @teams }}" key="{{ @ikey }}" value="{{ @item }}">
+        <tr>
+	  <input type="hidden" name="odds_id[{{ @ikey }}]" id="odds_id[{{ @ikey }}]" value="{{ @oddsForIncompleteOuPicks[@ikey].id }}">
+          <td>{{ @item.region_name." ".@item.team_name }}</td>
+	  <td>{{ @oddsForIncompleteOuPicks[@ikey].ou }}</td>
+          <td>
+	    <select class="form-control-inline" type="text" value="" id="pick[{{ @ikey }}]" name="pick[{{ @ikey }}]">
+ 	       <option>O</option>
+	       <option>U</option>
+	    </select>
+	  </td>
+	  <td>
+	    <input class="form-check-input-inline" type="checkbox" value="1" id="lock[{{ @ikey }}]" name="lock[{{ @ikey }}]">
+	  </td>
+        </tr>
+      </repeat>
+      <tr>
+	<td>
+          <button type="submit" class="btn btn-primary mb-2">Submit</button>
+	</td>
+      </tr>
+    </tbody>
+  </div>
+  </div>
+</table>
+</form>
+</true>
+</check>
+<check if="{{ @noIncompletePicks == 1 }}">
+<true>
 <h2 id="new">No Incomplete Picks for this week</h2>
-</false>
+</true>
 </check>
 </main>

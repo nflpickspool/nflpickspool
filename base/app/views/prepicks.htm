@@ -1,0 +1,138 @@
+<!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
+<main role="main" class="container">
+<h2 id="existing">View Picks</h2>
+<div class="bd-example">
+<form method="POST" action="/makeprepicks">
+<table class="table">
+  <div class="form align-items-center">
+    <div class="bd-example">
+  <thead>
+    <tr>
+          <th scope="col">Season</th>
+          <th/><th/><th/><th/><th/><th/><th/><th/>
+    </tr>
+  </thead>
+        <tbody>
+	  <tr>
+	    <td>
+	      <select class="form-control-inline" type="text" value="" id="season" name="season">
+ 	        <option>{{ @season }}</option>		
+		<repeat group="{{ @seasonList }}" value="{{ @item }}">
+ 	          <option>{{ @item.season }}</option>
+		</repeat>
+	      </select>
+            </td>
+            <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td>
+            <td/><td/><td/><td/><td/><td/><td/>
+          </tr>
+        </tbody>
+  </div>
+  </div>
+</table>
+</form>
+<check if="{{ !empty(@oddsForIncompleteOuPicks) }}">
+<true>
+<h2 id="new">Incomplete Team Win Over/Unders for {{ @season }}</h2>
+<form method="POST" action="/addoupicks">
+  <div class="form align-items-center">
+    <div class="bd-example">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">O/U</th>
+          <th scope="col">Pick</th>
+          <th scope="col">Lock</th>
+        </tr>
+      </thead>
+      <tbody>
+      <!-- This seems bad. We should be repeating on futureOus and not teams-->
+      <repeat group="{{ @teams }}" key="{{ @ikey }}" value="{{ @item }}">
+        <tr>
+	  <input type="hidden" name="odds_id[{{ @ikey }}]" id="odds_id[{{ @ikey }}]" value="{{ @oddsForIncompleteOuPicks[@ikey].id }}">
+          <td>{{ @item.region_name." ".@item.team_name }}</td>
+	  <td>{{ @oddsForIncompleteOuPicks[@ikey].ou }}</td>
+          <td>
+	    <select class="form-control-inline" type="text" value="" id="pick[{{ @ikey }}]" name="pick[{{ @ikey }}]">
+ 	       <option>O</option>
+	       <option>U</option>
+	    </select>
+	  </td>
+	  <td>
+	    <input class="form-check-input-inline" type="checkbox" value="1" id="lock[{{ @ikey }}]" name="lock[{{ @ikey }}]">
+	  </td>
+        </tr>
+      </repeat>
+      <tr>
+	<td>
+          <button type="submit" class="btn btn-primary mb-2">Submit</button>
+	</td>
+      </tr>
+    </tbody>
+  </div>
+  </div>
+</table>
+</form>
+</true>
+</check>
+
+<check if="{{ !empty(@existingOus) }}">
+<true>
+<h2 id="existing">Submitted Team Win Over/Unders for {{ @season }}</h2>
+<div class="bd-example">
+<table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">O/U</th>
+          <th scope="col">Pick</th>
+          <th scope="col">Lock</th>
+        </tr>
+      </thead>  
+      <tbody>
+      <!-- This seems bad. We should be repeating on futureOus and not teams-->
+      <repeat group="{{ @teams }}" key="{{ @ikey }}" value="{{ @item }}">
+        <tr>
+          <td>{{ @item.region_name." ".@item.team_name }}</td>
+	  <td>{{ @oddsForExistingOus[@ikey].ou }}</td>
+          <td>{{ @existingOus[@ikey].pick }}</td>
+          <td>{{ @existingOus[@ikey].lock }}</td>
+        </tr>
+      </repeat>
+      <tr>
+        <td><a class="btn btn-primary mb-2" href="/updateoupicks" role="button">Update</a></td><td/><td/><td/><td/><td/><td/><td/></td><td/></td>
+      </tr>
+    </tbody>
+</table>
+</div>
+</true>
+</check>
+<check if="{{ !empty(@closedPicks) }}">
+<true>
+<h2 id="existing">Closed Team Win Over/Unders for {{ @season }}</h2>
+<div class="bd-example">
+<table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">O/U</th>
+          <th scope="col">Pick</th>
+          <th scope="col">Lock</th>
+        </tr>
+      </thead>  
+      <tbody>
+       <repeat group="{{ @closedPicks }}" key="{{ @ikey }}" value="{{ @item }}">
+	<p></p>
+      <tr>
+        <td>{{ @item.region_name." ".@item.team_name }}</td>
+        <td>{{ @item.ou }}</td>
+        <td>{{ @item.pick }}</td>
+        <td>{{ @item.lock }}</td>
+      </tr>
+    </repeat>
+  </tbody>
+</table>
+</div>
+</true>
+</check>
+</main>

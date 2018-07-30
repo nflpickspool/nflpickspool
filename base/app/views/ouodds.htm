@@ -1,0 +1,96 @@
+<!--<main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">-->
+<main role="main" class="container">
+<h2 id="ou">View Team Win Over/Under Lines</h2>
+<form method="POST" action="/setous">
+<table class="table">
+  <div class="form align-items-center">
+    <div class="bd-example">
+  <thead>
+    <tr>
+          <th scope="col">Season</th>
+          <th/><th/><th/><th/><th/><th/><th/><th/>
+    </tr>
+  </thead>
+        <tbody>
+	  <tr>
+	    <td>
+	      <select class="form-control-inline" type="text" value="" id="season" name="season">
+		<repeat group="{{ @seasonList }}" value="{{ @item }}">
+ 	          <option>{{ @item.season }}</option>
+		</repeat>
+	      </select>
+            </td>
+            <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td>
+            <td/><td/><td/><td/><td/><td/><td/>
+          </tr>
+        </tbody>
+  </div>
+  </div>
+</table>
+</form>
+<check if="{{ !empty(@$existingOuOdds) }}">
+<true>
+<h2 id="ou_submitted">Submitted Team Win Over/Under Lines for {{ @season }}</h2>
+    <div class="bd-example">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Team</th>
+            <th scope="col">O/U</th>
+          </tr>
+        </thead>
+        <tbody>
+        <repeat group="{{ @existingOuOdds }}" key="{{ @akey }}" value="{{ @item }}">
+          <tr>
+            <td>{{ @teams[@akey].region_name." ".@teams[@akey].team_name }}</td>
+            <td>{{ @item.ou }}</td>
+          </tr>
+        </repeat>
+        <tr>
+	  <td><a class="btn btn-primary mb-2" href=/updateous>Update</a></td><td/>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+</true>
+<false>
+<h2 id="ou_addnew">Set Team Win Over/Unders for {{ @season }}</h2>
+<form method="POST" action="/addouodds">
+  <div class="form align-items-center">
+    <div class="bd-example">
+      <table class="table">
+        <thead>
+          <tr><th scope="col">Due Date of O/U Picks</th></tr>
+        </thead>
+        <tbody>
+           <tr><td><input class="form-control" type="datetime-local" value="{{ @timeNow }}" id="date" name="date"></td></tr>
+        </tbody>
+      </table>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">O/U</th>
+        </tr>
+      </thead>
+      <tbody>
+      <repeat group="{{ @teams }}" key="{{ @akey }}" value="{{ @item }}">
+        <tr>
+	  <input type="hidden" name="team_id[{{ @ikey }}]" id="team_id[{{ @ikey }}]" value="{{ @item.id }}">
+          <td>{{ @item.region_name." ".@item.team_name }}</td>
+          <td><input class="form-control" type="number" value="0" step="0.5" id="ou[{{ @ikey }}]" name="ou[{{ @ikey }}]"></td>
+        </tr>
+      </repeat>
+      <tr>
+	<td>
+          <button type="submit" class="btn btn-primary mb-2">Submit</button>
+	</td>
+      </tr>
+    </tbody>
+  </div>
+  </div>
+</table>
+</form>
+</false>
+</check>
+</main>

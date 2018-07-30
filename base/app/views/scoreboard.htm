@@ -6,34 +6,38 @@
 <table class="table">
   <div class="form align-items-center">
     <div class="bd-example">
-  <thead>
-    <tr>
+      <thead>
+        <tr>
           <th scope="col">Season</th>
           <th scope="col">Week</th>
           <th/><th/><th/><th/><th/><th/><th/>
-    </tr>
-  </thead>
-        <tbody>
-	  <tr>
-	    <td>
-	      <select class="form-control-inline" type="text" value="" id="season" name="season">
- 	        <option>2018</option>
-	      </select>
-            </td>
-	    <td>
-	      <select class="form-control-inline" type="text" value="" id="week" name="week">
- 	        <option>1</option>
-	        <option>2</option>
-	      </select>
-            </td>
-            <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td>
-            <td/><td/><td/><td/><td/><td/><td/>
-          </tr>
-        </tbody>
-  </div>
+        </tr>
+      </thead>
+      <tbody>
+	<tr>
+	  <td>
+	    <select class="form-control-inline" type="text" value="" id="season" name="season">
+ 	      <option>2018</option>
+	    </select>
+          </td>
+	  <td>
+	    <select class="form-control-inline" type="text" value="" id="week" name="week">
+	      <repeat group="{{range(1,16)}}" value="{{ @week }}">
+	        <option>{{ @week }}</option>
+	      </repeat>
+ 	        <option>Preseason</option>
+	    </select>
+          </td>
+          <td><button type="submit" class="btn btn-primary mb-2">Submit</button></td>
+          <td/><td/><td/><td/><td/><td/><td/>
+        </tr>
+      </tbody>
+    </div>
   </div>
 </table>
 </form>
+<check if="{{ @weekly == 1 }}">
+<true>
 <repeat group="{{ @users }}" key="{{ @ukey }}" value="{{ @user }}">
 <h3 id="userid">{{ @user.email }}</h3>
 <table class="table">
@@ -52,22 +56,48 @@
     </tr>
   </thead>
   <tbody>
-      <repeat group="{{ @scores }}" key="{{ @pkey }}" value="{{ @pick }}">
+      <repeat group="{{ @scores[@ukey] }}" key="{{ @pkey }}" value="{{ @pick }}">
 	<tr>
-          <td>{{ @pick[@pkey].season }}</td>
-          <td>{{ @pick[@pkey].week }}</td>
-          <td>{{ @pick[@pkey].date }}</td>
-          <td>{{ @pick[@pkey].away }}</td>
-          <td>{{ @pick[@pkey].home }}</td>
-          <td>{{ @pick[@pkey].spread }}</td>
-          <td>{{ @pick[@pkey].moneyline }}</td>
-          <td>{{ @pick[@pkey].spread_pick }}</td>
-          <td>{{ @pick[@pkey].ml_pick }}</td>
-          <td>{{ @pick[@pkey].lock }}</td>
+          <td>{{ @pick.season }}</td>
+          <td>{{ @pick.week }}</td>
+          <td>{{ date('D m/d g:i A',strtotime(@pick.date)) }}</td>
+          <td>{{ @pick.away }}</td>
+          <td>{{ @pick.home }}</td>
+          <td>{{ @pick.spread }}</td>
+          <td>{{ @pick.moneyline }}</td>
+          <td>{{ @pick.spread_pick }}</td>
+          <td>{{ @pick.ml_pick }}</td>
+          <td>{{ @pick.lock }}</td>
         </tr>
       </repeat>
   </tbody>
 </table>
 </repeat>
-</div>
+</true>
+<false>
+<repeat group="{{ @users }}" key="{{ @ukey }}" value="{{ @user }}">
+<h3 id="userid">{{ @user.email }}</h3>
+<table class="table">
+  <thead>
+    <tr>
+          <th scope="col">Team</th>
+          <th scope="col">O/U</th>
+          <th scope="col">Pick</th>
+          <th scope="col">Lock</th>
+    </tr>
+  </thead>
+  <tbody>
+      <repeat group="{{ @preseasonOus[@ukey] }}" key="{{ @pkey }}" value="{{ @item }}">
+	<tr>
+          <td>{{ @item.region_name." ".@item.team_name }}</td>
+          <td>{{ @item.ou }}</td>
+          <td>{{ @item.pick }}</td>
+          <td>{{ @item.lock }}</td>
+        </tr>
+      </repeat>
+  </tbody>
+</table>
+</repeat>
+</false>
+</check> 
 </main>

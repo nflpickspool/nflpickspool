@@ -14,6 +14,19 @@ class UserController extends Controller {
 				break;
 			}
 		}
+		//Over/Under Odds
+		$ouOdds = new OuOdds($this->db);
+		$oupicks = new OuPicks($this->db);
+
+		$futureOus = $ouOdds->getFutureOus();
+		foreach ($futureOus as &$ouObject) {
+			$existingOusForUser = $oupicks->getByOddsIdAndEmail($ouObject->id,$email);
+			if(empty($existingOusForUser)){
+				$this->f3->set('incompletePicks',1);
+				break;
+			}
+		}
+
 		$this->f3->set('view','home.htm');
         	$template=new Template;
         	echo $template->render('layout.htm');

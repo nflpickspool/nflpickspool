@@ -35,13 +35,6 @@ class MainController extends Controller {
 	//Placeholder for now
 	function registerNewUser(){
 		//var_dump($_POST);
-		$smtp = new SMTP ( 'smtp.1and1.com', 587, 'TLS', 'admin@nflpickspool.com', 'Youbestn0tmiss!' );
-
-		$smtp->set('From', '"NFL Picks Pool Admin" <admin@nflpickspool.com>');
-		$smtp->set('To', '<brandoandpat@gmail.com>');
-		$smtp->set('Subject', 'New User Registration');  
-		$smtp->set('Errors-to', '<admin@nflpickspool.com>');  
-
 		$message =     
 				"New User Registration:
 ".				"Name: " . $this->f3->get('POST.firstName') . " " . $this->f3->get('POST.lastName') . " 
@@ -52,27 +45,17 @@ class MainController extends Controller {
 ".				"Favorite NFL Team: " . $this->f3->get('POST.favoriteTeam') . "
 ".				"DOB: " . $this->f3->get('POST.dob'); 
 
-		$sent = $smtp->send($message, TRUE);
-
-		/* Keep for debug
-		$mylog = $smtp->log();
-
-		$sentText = 'not sent';
-
-		$headerText = 'does not exist';
-
-		if ($sent)
-		{
-		    $sentText = 'was sent';
-		}
-
-		if ($smtp->exists('Date'))
-		{
-		    $headerText = 'exists';
-		}
-
-		echo "email result: " . $sentText . ",mylog: " . $mylog . ", header: " . $headerText;
-		*/
+  		//email metadata
+  		$to  = 'brandoandpat@gmail.com';
+  		// subject
+  		$subject = 'NFL Picks Pool: New user registration';
+  		// To send HTML mail, the Content-type header must be set
+  		$headers  = 'MIME-Version: 1.0' . "\r\n";
+  		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+  		// Additional headers
+  		$headers .= 'From: admin@nflpickspool.com' . "\r\n";
+  		// Mail it
+  		mail($to, $subject, $message, $headers);
 		
 		$this->f3->set('view','newUserRegistered.htm');
 	}

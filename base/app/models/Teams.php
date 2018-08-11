@@ -7,7 +7,10 @@ class Teams extends DB\SQL\Mapper{
 	}
 	
 	public function all() {
-	    $this->load();
+	    $this->load(
+	    	array(),
+	    	array('order'=>'region, team')
+        );
 	    return $this->query;
 	}
 

@@ -56,15 +56,17 @@ class MainController extends Controller {
 
 	function registerNewUser(){
 		//var_dump($_POST);
+        $users = new Users($this->db);
+        $users->add();
 		$message =     
 				"New User Registration:
-".				"Name: " . $this->f3->get('POST.firstName') . " " . $this->f3->get('POST.lastName') . " 
-".				"Username: " . $this->f3->get('POST.username') . "
+".				"Name: " . $this->f3->get('POST.f_name') . " " . $this->f3->get('POST.l_name') . " 
+".				"Username: " . $this->f3->get('POST.handle') . "
 ".				"Email: " . $this->f3->get('POST.email') . "
 ".				"State: " . $this->f3->get('POST.state') . "
 ".				"Zip: " . $this->f3->get('POST.zip') . "
-".				"Favorite NFL Team: " . $this->f3->get('POST.favoriteTeam') . "
-".				"DOB: " . $this->f3->get('POST.dob'); 
+".				"Favorite NFL Team: " . $this->f3->get('POST.favorite_nfl_team') . "
+".				"DOB: " . $this->f3->get('POST.date_of_birth'); 
 
   		//email metadata
   		$to  = 'brandoandpat@gmail.com';

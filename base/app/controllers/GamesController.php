@@ -1,5 +1,5 @@
 <?php
-class GamesController extends Controller {
+class GamesController extends UserController {
 
 	function beforeroute() {
 	}

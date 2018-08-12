@@ -18,6 +18,9 @@ class MainController extends Controller {
 	}
 
 	function renderLoginPage(){
+		if($this->f3->get('SESSION.user') !== null){
+			$this->f3->reroute('/home');
+		}
 		$this->f3->set('view','login.htm');
 	}
 
@@ -27,12 +30,30 @@ class MainController extends Controller {
 		$this->f3->set('view','signup.htm');	
 	}
 
-	//Placeholder for now
 	function authenticate(){
-		$this->f3->reroute('/login');
+		 $email = $this->f3->get('POST.email');
+		 $password = $this->f3->get('POST.password');
+
+		 $users = new Users($this->db);
+		 $users->getByEmail($email);
+
+		 if($users->dry()){
+			$this->f3->reroute('/login');
+		}
+
+		if(password_verify($password, $users->password)){
+			$this->f3->set('SESSION.user',$users->handle);
+            /* To be excluded until later
+			if($users->admin === 1){
+				$this->f3->set('SESSION.admin',1);
+			}
+            */
+			$this->f3->reroute('/home');
+		} else {
+		  	$this->f3->reroute('/login');
+		}
 	}
 
-	//Placeholder for now
 	function registerNewUser(){
 		//var_dump($_POST);
 		$message =     

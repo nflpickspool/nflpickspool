@@ -1,0 +1,54 @@
+      <div class="be-content">
+        <div class="page-head">
+          <h2 class="page-head-title">{{ @league_year }} Team Win Picks</h2>
+          <nav aria-label="breadcrumb" role="navigation">
+            <ol class="breadcrumb page-head-nav">
+              <li class="breadcrumb-item"><a href="#">View My Picks</a></li>
+              <li class="breadcrumb-item"><a href="#">View Team Picks</a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="main-content container-fluid">
+	  <div class="row">
+            <div class="col-md-12">
+              <div class="card card-border-color card-border-color-primary">
+                <div class="card-body">
+		  <form method="POST" action="/addteampicks">
+		    <table class="table">
+		      <thead>
+			<tr>
+			  <th style="width:50%;">Team</th>
+			  <th style="width:25%;">O/U</th>
+			  <th style="width:25%;">Pick</th>
+			  <th style="width:25%;">Lock</th>
+			</tr>
+		      </thead>
+		      <tbody>
+			<repeat group="{{ @incompletePicks }}" value="{{ @picks }}">
+			  <tr>
+			    <td>{{ @picks.Team }}</td>
+			    <td>{{ @picks.OU }}</td>
+			    <td>
+			      <select class="form-control-inline" type="text" value="" id="pick[{{ @ikey }}]" name="pick[{{ @ikey }}]">
+ 				<option>Over</option>
+				<option>Under</option>
+			      </select>
+			    </td>
+			    <td>
+			      <div class="switch-button switch-button-yesno">
+				<input type="checkbox" name="swt8" id="swt8">
+				<span><label for="swt8"></label></span>
+			      </div>
+			    </td>
+			  </tr>
+			</repeat>
+		      </tbody>
+		    </table>
+		    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+		  </form>
+		</div>
+              </div>
+            </div>	  
+        </div>
+      </div>
+    </div>

@@ -1,5 +1,5 @@
 <?php
-class TeamWinsController extends UserController {
+class GamePicksController extends UserController {
 
 	function beforeroute() {
 	}
@@ -9,7 +9,7 @@ class TeamWinsController extends UserController {
         echo $template->render('homeLayout.htm');
 	}
 	
-	function renderViewLines(){
+	function renderViewPicks(){
         $teamWins = new TeamWins($this->db);
         $season = 2018;
         $this->f3->set('season',$season);

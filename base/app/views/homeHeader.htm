@@ -20,12 +20,11 @@
           </div>
           <div class="be-right-navbar">
             <ul class="nav navbar-nav float-right be-user-nav">
-              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-expanded="false"><img src="app/img/mcduck_icon.gif" alt="Avatar"><span class="user-name">DG Platinum</span></a>
+              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-expanded="false"><img src="app/img/mcduck_icon.gif" alt="Avatar"><span class="user-name">{{ @SESSION.user }}</span></a>
                 <div class="dropdown-menu" role="menu">     
                   <div class="user-info">
-                    <div class="user-name">DG Platinum</div>
-                    <div class="user-position online">Available</div>
-                  </div><a class="dropdown-item" href="#"><span class="icon mdi mdi-face"></span>Account</a><a class="dropdown-item" href="#"><span class="icon mdi mdi-settings"></span>Settings</a><a class="dropdown-item" href="#"><span class="icon mdi mdi-power"></span>Logout</a>
+                    <div class="user-name">{{ @SESSION.user }}</div>
+                  </div><a class="dropdown-item" href="#"><span class="icon mdi mdi-face"></span>Account</a><a class="dropdown-item" href="/logout"><span class="icon mdi mdi-power"></span>Logout</a>
                 </div>
               </li>
             </ul>
@@ -40,14 +39,25 @@
               <div class="left-sidebar-content">
                 <ul class="sidebar-elements">
                   <li class="divider">Menu</li>
+                  <li><a href="/"><i class="icon mdi mdi-home"></i><span>Home</span></a>
                   <li class="parent"><a href="#"><i class="icon mdi mdi-border-all"></i><span>View Lines</span></a>
                     <ul class="sub-menu">
                       <li><a href="/teamlines">View Team Win Totals</a>
                       </li>
-                      <li class="active"><a href="/gamelines">View Game Lines</a>
+                      <li><a href="/gamelines">View Game Lines</a>
                       </li>
                     </ul>
                   </li>
+                  <li class="parent"><a href="#"><i class="icon mdi mdi-check"></i><span>View My Picks</span></a>
+                    <ul class="sub-menu">
+                      <li><a href="/teampicks">View Team Picks</a>
+                      </li>
+                      <li><a href="/gamepicks">View Game Picks</a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li><a href="#"><i class="icon mdi mdi-check-all"></i><span>View League Picks</span></a>
+                  <li><a href="#"><i class="icon mdi mdi-layers"></i><span>Standings</span></a>
                 </ul>
               </div>
             </div>

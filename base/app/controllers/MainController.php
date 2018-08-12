@@ -18,12 +18,12 @@ class MainController extends Controller {
 	}
 
 	function renderLoginPage(){
-		$this->f3->set('view','login.htm');	
+		$this->f3->set('view','login.htm');
 	}
 
 	function renderSignUpPage(){
 		$teams = new Teams($this->db);
-            	$this->f3->set('teams',$teams->all());
+        $this->f3->set('teams',$teams->all());
 		$this->f3->set('view','signup.htm');	
 	}
 

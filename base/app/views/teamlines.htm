@@ -1,0 +1,30 @@
+      <div class="be-content">
+        <div class="page-head">
+          <h2 class="page-head-title">{{ @season }} Team Win Lines</h2>
+          <nav aria-label="breadcrumb" role="navigation">
+            <ol class="breadcrumb page-head-nav">
+              <li class="breadcrumb-item"><a href="/home">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">View Team Win Totals</a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="main-content container-fluid">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width:50%;">Team</th>
+                <th style="width:25%;">O/U</th>
+              </tr>
+            </thead>
+            <tbody>
+	      <repeat group="{{ @lines }}" value="{{ @line }}">
+		<tr>
+		  <td>{{ @line.Team }}</td>
+		  <td>{{ @line.OverUnder }}</td>
+		</tr>
+	      </repeat>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>

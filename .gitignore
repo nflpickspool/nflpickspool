@@ -1,0 +1,7 @@
+*~
+base/config.ini
+base/app/views/scrooge.png
+base/composer.json
+base/composer.lock
+base/tmp/
+base/vendor/

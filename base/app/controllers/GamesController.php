@@ -15,6 +15,7 @@ class GamesController extends Controller {
         $week = 1;
         $this->f3->set('season',$season);
         $this->f3->set('week',$week);
+        $this->f3->set('pageName',$season .' Week '. $week .' Game Lines');
         $this->f3->set('games',$games->getByLeagueYearAndWeek($season,$week));
 		$this->f3->set('view','gamelines.htm');	
 	}

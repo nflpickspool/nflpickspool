@@ -10,6 +10,7 @@ class UserController extends Controller {
 	}
 	
 	function renderHomePage(){
+        $this->f3->set('pageName','Home');
 		$this->f3->set('view','home.htm');	
 	}
 }

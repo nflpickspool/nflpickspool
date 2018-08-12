@@ -64,7 +64,7 @@ class MainController extends Controller {
 ".				"Username: " . $this->f3->get('POST.handle') . "
 ".				"Email: " . $this->f3->get('POST.email') . "
 ".				"State: " . $this->f3->get('POST.state') . "
-".				"Zip: " . $this->f3->get('POST.zip') . "
+".				"Zip: " . $this->f3->get('POST.ZIP') . "
 ".				"Favorite NFL Team: " . $this->f3->get('POST.favorite_nfl_team') . "
 ".				"DOB: " . $this->f3->get('POST.date_of_birth'); 
 

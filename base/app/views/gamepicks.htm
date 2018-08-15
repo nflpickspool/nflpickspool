@@ -1,0 +1,102 @@
+      <div class="be-content">
+        <div class="page-head">
+          <h2 class="page-head-title">{{ @league_year }} Game Picks</h2>
+          <nav aria-label="breadcrumb" role="navigation">
+            <ol class="breadcrumb page-head-nav">
+              <li class="breadcrumb-item"><a href="#">View My Picks</a></li>
+              <li class="breadcrumb-item"><a href="#">View Game Picks</a></li>
+              <li class="breadcrumb-item"><a href="#">{{ @league_year }}</a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="main-content container-fluid">
+	  <h2>No active lines available. Lines become active 24 hours before kickoff.</h2>
+	  <check if="{{ !empty(@incompletePicks) }}">
+	    <true>
+              <form method="POST" action="/addteampicks">
+		<div class="row">
+		  <div class="col-md-12">
+		    <div class="card card-border-color card-border-color-primary">
+                      <div class="card-header card-header-divider">Incomplete Picks<span class="card-subtitle">What are you waiting for? Make your picks!</span></div>
+                      <div class="card-body">
+			<table class="table">
+			  <thead>
+			    <tr>
+			      <th style="width:40%;">Team</th>
+			      <th style="width:10%;">O/U</th>
+			      <th style="width:10%;">Pick</th>
+			      <th style="width:10%;">Lock</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <repeat group="{{ @incompletePicks }}" value="{{ @picks }}" key="{{ @i }}">
+			      <tr>
+				<input type="hidden" name="player_id[{{ @i }}]" value="{{ @picks.player_id }}">
+				<input type="hidden" name="ou_id[{{ @i }}]" value="{{ @picks.ou_id }}">
+				<input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}">
+				<input type="hidden" name="league_year" value="{{ @league_year }}">
+				<td>{{ @picks.Team }}</td>
+				<td>{{ @picks.OU }}</td>
+				<td>
+				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
+ 				    <option>O</option>
+				    <option>U</option>
+				  </select>
+				</td>
+				<td>
+				  <label class="custom-control custom-checkbox custom-control-inline">
+				    <input class="custom-control-input" type="checkbox" value="1" name="is_lock[{{ @i }}]"><span class="custom-control-label"></span>
+				  </label>
+				</td>
+			      </tr>
+			    </repeat>
+			  </tbody>
+			</table>
+			<button type="submit" class="btn btn-primary btn-block">Submit</button>
+		      </div>
+		    </div>
+		  </div>	  
+		</div>
+	      </form>
+	    </true>
+	  </check>
+	  <check if="{{ !empty(@submittedPicks) }}">
+	    <true>
+	      <div class="row">
+		<div class="col-md-12">
+		  <div class="card card-border-color card-border-color-primary">
+                    <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">A list of your submitted picks</span></div>
+                    <div class="card-body">
+		      <table class="table">
+			<thead>
+			  <tr>
+			    <th style="width:40%;">Team</th>
+			    <th style="width:10%;">O/U</th>
+			    <th style="width:10%;">Pick</th>
+			    <th style="width:10%;">Lock</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  <repeat group="{{ @submittedPicks }}" value="{{ @picks }}" key="{{ @i }}">
+			    <tr>
+			      <td>{{ @picks.Team }}</td>
+			      <td>{{ @picks.OU }}</td>
+			      <td>{{ @picks.ou_pick }}</td>
+			      <td>
+				<label class="custom-control custom-checkbox custom-control-inline">
+				  <input class="custom-control-input" type="checkbox" value disabled <check if="{{ @picks.is_lock }}"><true>checked</true></check>><span class="custom-control-label"></span>
+				</label>
+			      </td>
+			    </tr>
+			  </repeat>
+			</tbody>
+		      </table>
+		      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+		    </div>
+		  </div>
+		</div>	  
+	      </div>
+            </true>
+	  </check>
+	</div>
+      </div>

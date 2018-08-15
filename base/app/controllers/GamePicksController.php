@@ -13,9 +13,8 @@ class GamePicksController extends UserController {
         $teamWins = new TeamWins($this->db);
         $season = 2018;
         $this->f3->set('season',$season);
-        $this->f3->set('pageName',$season .'  Team Wins O/Us');
-        $this->f3->set('lines',$teamWins->getByLeagueYear($season));
-		$this->f3->set('view','teamlines.htm');	
+        $this->f3->set('pageName',$season .'  Game Picks');
+        $this->f3->set('view','gamepicks.htm');	
 	}
 }
 

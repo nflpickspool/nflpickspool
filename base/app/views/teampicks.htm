@@ -5,50 +5,141 @@
             <ol class="breadcrumb page-head-nav">
               <li class="breadcrumb-item"><a href="#">View My Picks</a></li>
               <li class="breadcrumb-item"><a href="#">View Team Picks</a></li>
+              <li class="breadcrumb-item"><a href="#">{{ @league_year }}</a></li>
             </ol>
           </nav>
         </div>
         <div class="main-content container-fluid">
-	  <div class="row">
-            <div class="col-md-12">
-              <div class="card card-border-color card-border-color-primary">
-                <div class="card-body">
-		  <form method="POST" action="/addteampicks">
-		    <table class="table">
-		      <thead>
-			<tr>
-			  <th style="width:50%;">Team</th>
-			  <th style="width:25%;">O/U</th>
-			  <th style="width:25%;">Pick</th>
-			  <th style="width:25%;">Lock</th>
-			</tr>
-		      </thead>
-		      <tbody>
-			<repeat group="{{ @incompletePicks }}" value="{{ @picks }}">
-			  <tr>
-			    <td>{{ @picks.Team }}</td>
-			    <td>{{ @picks.OU }}</td>
-			    <td>
-			      <select class="form-control-inline" type="text" value="" id="pick[{{ @ikey }}]" name="pick[{{ @ikey }}]">
- 				<option>Over</option>
-				<option>Under</option>
-			      </select>
-			    </td>
-			    <td>
-			      <div class="switch-button switch-button-yesno">
-				<input type="checkbox" name="swt8" id="swt8">
-				<span><label for="swt8"></label></span>
-			      </div>
-			    </td>
-			  </tr>
-			</repeat>
-		      </tbody>
-		    </table>
-		    <button type="submit" class="btn btn-primary btn-block">Submit</button>
-		  </form>
+	  <check if="{{ !empty(@incompletePicks) }}">
+	    <true>
+              <form method="POST" action="/addteampicks">
+		<div class="row">
+		  <div class="col-md-12">
+		    <div class="card card-border-color card-border-color-primary">
+                      <div class="card-header card-header-divider">Incomplete Picks<span class="card-subtitle">What are you waiting for? Make your picks!</span></div>
+                      <div class="card-body">
+			<table class="table">
+			  <thead>
+			    <tr>
+			      <th style="width:60%;">Team</th>
+			      <th style="width:10%;">O/U</th>
+			      <th style="width:10%;">Pick</th>
+			      <th style="width:10%;">Lock</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <repeat group="{{ @incompletePicks }}" value="{{ @picks }}" key="{{ @i }}">
+			      <tr>
+				<input type="hidden" name="player_id[{{ @i }}]" value="{{ @picks.player_id }}">
+				<input type="hidden" name="ou_id[{{ @i }}]" value="{{ @picks.ou_id }}">
+				<input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}">
+				<input type="hidden" name="league_year" value="{{ @league_year }}">
+				<td>{{ @picks.Team }}</td>
+				<td>{{ @picks.OU }}</td>
+				<td>
+				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
+ 				    <option>O</option>
+				    <option>U</option>
+				  </select>
+				</td>
+				<td>
+				  <input type="hidden" name="is_lock[{{ @i }}]" id="is_lock{{@i}}" value="0"/>
+				  <label class="custom-control custom-checkbox custom-control-inline">
+				    <input class="custom-control-input" type="checkbox" value="1" name="is_lock[{{ @i }}]"><span class="custom-control-label"></span>
+				  </label>
+				</td>
+			      </tr>
+			    </repeat>
+			  </tbody>
+			</table>
+			<button type="submit" class="btn btn-primary btn-block">Submit</button>
+		      </div>
+		    </div>
+		  </div>	  
 		</div>
-              </div>
-            </div>	  
-        </div>
+	      </form>
+	    </true>
+	  </check>
+	  <check if="{{ !empty(@submittedPicks) }}">
+	    <true>
+              <form method="POST" action="/updateteampicks">
+		<div class="row">
+		  <div class="col-md-12">
+		    <div class="card card-border-color card-border-color-primary">
+                      <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle"></span></div>
+                      <div class="card-body">
+			<table class="table">
+			  <thead>
+			    <tr>
+			      <th style="width:60%;">Team</th>
+			      <th style="width:10%;">O/U</th>
+			      <th style="width:10%;">Pick</th>
+			      <th style="width:10%;">Lock</th>
+			      <th style="width:10%;">Edit</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <repeat group="{{ @submittedPicks }}" value="{{ @picks }}" key="{{ @i }}">
+			      <tr>
+				<input type="hidden" name="id[{{ @i }}]" value="{{ @picks.id }}" id="id{{@i}}" disabled>
+				<input type="hidden" name="player_id[{{ @i }}]" value="{{ @picks.player_id }}" id="player_id{{@i}}" disabled>
+				<input type="hidden" name="ou_id[{{ @i }}]" value="{{ @picks.ou_id }}" id="ou_id{{@i}}" disabled>
+				<input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}" id="team_id{{@i}}" disabled>
+				<input type="hidden" name="league_year" value="{{ @league_year }}" id="league_year{{@i}}" disabled>
+				<td>{{ @picks.Team }}</td>
+				<td>{{ @picks.OU }}</td>
+				<td>
+				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]" id="ou_pick{{@i}}" disabled>
+ 				    <check if="{{ @picks.ou_pick == 'O'}}">
+				      <true>
+ 					<option>O</option>
+					<option>U</option>
+				      </true>
+				      <false>
+					<option>U</option>
+ 					<option>O</option>
+				      </false>
+				    </check>
+				  </select>
+				</td>
+				<td>
+				<input type="hidden" name="is_lock[{{ @i }}]" id="hidden_is_lock{{@i}}" value="0" disabled>  
+				<label class="custom-control custom-checkbox custom-control-inline">
+				  <input class="custom-control-input" type="checkbox" name="is_lock[{{ @i }}]" id="is_lock{{@i}}" value="1" disabled <check if="{{ @picks.is_lock }}"><true>checked</true></check>><span class="custom-control-label"></span>
+				</label>
+			      </td>
+				<td>
+				  <div id="edit{{@i}}">
+				    <button type="button" class="btn btn-primary" onclick="updatePick({{@i}})"><i class="icon mdi mdi-edit"></i></button>
+				  </div>
+				</td>
+			      </tr>
+			    </repeat>
+			  </tbody>
+			</table>
+			<div id="update_btn" style="display:none">
+			  <button type="submit" class="btn btn-primary btn-block">Update</button>
+			</div>
+		      </div>
+		    </div>
+		  </div>	  
+		</div>
+	      </form>
+            </true>
+	  </check>
+	</div>
       </div>
-    </div>
+      <script>
+	function updatePick(row_num) {
+	document.getElementById("edit"+row_num).style.display = "none";
+	document.getElementById("id"+row_num).disabled = false;
+	document.getElementById("player_id"+row_num).disabled = false;
+	document.getElementById("ou_id"+row_num).disabled = false;
+	document.getElementById("team_id"+row_num).disabled = false;
+	document.getElementById("league_year"+row_num).disabled = false;	
+	document.getElementById("ou_pick"+row_num).disabled = false;	
+	document.getElementById("hidden_is_lock"+row_num).disabled = false;	
+	document.getElementById("is_lock"+row_num).disabled = false;	
+	document.getElementById('update_btn').style.display = "block";
+	}
+      </script>

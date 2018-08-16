@@ -16,6 +16,18 @@ class Games extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
+    public function getLeagueYearList() {
+		return $this->db->exec(
+			'SELECT DISTINCT league_year FROM games ORDER BY league_year DESC;'
+		);
+	}
+
+    public function getWeekListForLeagueYear($league_year) {
+		return $this->db->exec(
+			'SELECT DISTINCT league_week FROM games WHERE league_year = '.$league_year.' ORDER BY league_week DESC;'
+		);
+	}
+
     public function getByLeagueYearAndWeek($season,$week) {
         return $this->db->exec(
             "SELECT ".

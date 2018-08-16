@@ -40,19 +40,69 @@
                 <ul class="sidebar-elements">
                   <li class="divider">Menu</li>
                   <li><a href="/home"><i class="icon mdi mdi-home"></i><span>Home</span></a>
-                  <li class="parent"><a href="#"><i class="icon mdi mdi-eye"></i><span>View Lines</span></a>
+		  <li class="parent"><a href="#"><i class="icon mdi mdi-eye"></i><span>View Lines</span></a>
                     <ul class="sub-menu">
-                      <li><a href="/teamlines">View Team Win Totals</a>
+                      <li class="parent"><a href=""><i class="icon mdi mdi-undefined"></i><span>View Team Win Totals</span></a>
+                        <ul class="sub-menu">
+			  <repeat group="{{ @teamWinsYearList }}" value="{{ @tw_year }}" key="{{ @i }}">
+			    <form name="teamLinesForm{{ @i }}" method="POST" action="/teamlines">
+			      <input type="hidden" name="league_year" value="{{ @tw_year.league_year }}">
+                              <li><a href="#" onclick="postForm('teamLinesForm{{@i}}')"><i class="icon mdi mdi-undefined"></i><span>{{ @tw_year.league_year }}</span></a>
+                              </li>
+			    </form>
+			  </repeat>
+                        </ul>
                       </li>
-                      <li><a href="/gamelines">View Game Lines</a>
+                      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>View Game Lines</span></a>
+			<repeat group="{{ @gamesYearList }}" value="{{ @g_year }}" key="{{ @a }}">
+                          <ul class="sub-menu">
+                            <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>{{ @g_year.league_year }}</span></a>
+			      <repeat group="{{ @gamesWeekList[@a] }}" value="{{ @g_week }}" key="{{ @b }}"> 
+				<ul class="sub-menu"><li>
+				  <form name="gameLinesForm{{ @a.@b }}" method="POST" action="/gamelines">
+				    <input type="hidden" name="league_year" value="{{ @g_year.league_year }}">
+				    <input type="hidden" name="league_week" value="{{ @g_week['league_week'] }}">
+				    <li><a href="#" onclick="postForm('gameLinesForm{{@a.@b}}')"><i class="icon mdi mdi-undefined"></i><span>Week {{ @g_week['league_week'] }}</span></a>
+				    </li>
+				  </form>
+				</ul>
+			      </repeat>
+                            </li>
+                          </ul>
+			</repeat>
                       </li>
                     </ul>
                   </li>
-                  <li class="parent"><a href="#"><i class="icon mdi mdi-check"></i><span>View My Picks</span></a>
+		  <li class="parent"><a href="#"><i class="icon mdi mdi-check"></i><span>View My Picks</span></a>
                     <ul class="sub-menu">
-                      <li><a href="/teampicks">View Team Picks</a>
+                      <li class="parent"><a href=""><i class="icon mdi mdi-undefined"></i><span>View Team Picks</span></a>
+                        <ul class="sub-menu">
+			  <repeat group="{{ @teamWinsYearList }}" value="{{ @tw_year }}" key="{{ @i }}">
+			    <form name="teamPicksForm{{ @i }}" method="POST" action="/teampicks">
+			      <input type="hidden" name="league_year" value="{{ @tw_year.league_year }}">
+                              <li><a href="#" onclick="postForm('teamPicksForm{{@i}}')"><i class="icon mdi mdi-undefined"></i><span>{{ @tw_year.league_year }}</span></a>
+                              </li>
+			    </form>
+			  </repeat>
+                        </ul>
                       </li>
-                      <li><a href="/gamepicks">View Game Picks</a>
+                      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>View Game Picks</span></a>
+			<repeat group="{{ @gamesYearList }}" value="{{ @g_year }}" key="{{ @a }}">
+                          <ul class="sub-menu">
+                            <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>{{ @g_year.league_year }}</span></a>
+			      <repeat group="{{ @gamesWeekList[@a] }}" value="{{ @g_week }}" key="{{ @b }}"> 
+				<ul class="sub-menu"><li>
+				  <form name="gamePicksForm{{ @a.@b }}" method="POST" action="/gamepicks">
+				    <input type="hidden" name="league_year" value="{{ @g_year.league_year }}">
+				    <input type="hidden" name="league_week" value="{{ @g_week['league_week'] }}">
+				    <li><a href="#" onclick="postForm('gamePicksForm{{@a.@b}}')"><i class="icon mdi mdi-undefined"></i><span>Week {{ @g_week['league_week'] }}</span></a>
+				    </li>
+				  </form>
+				</ul>
+			      </repeat>
+                            </li>
+                          </ul>
+			</repeat>
                       </li>
                     </ul>
                   </li>
@@ -64,3 +114,8 @@
           </div>
         </div>
       </div>
+      <script>
+	function postForm(form_num) {
+	document.forms[form_num].submit();
+	}
+      </script>

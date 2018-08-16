@@ -18,7 +18,7 @@ class TeamPicksController extends UserController {
 	
 	function renderViewPicks(){
         $teamPicks = new TeamPicks($this->db);
-        $league_year = 2018;
+        $league_year = $this->f3->get('POST.league_year');
         $this->f3->set('league_year',$league_year);
         $this->f3->set('incompletePicks',$teamPicks->getNullPicksByHandleAndLeagueYear($this->f3->get('SESSION.user'),$league_year));
         $this->f3->set('submittedPicks',$teamPicks->getNotNullPicksByHandleAndLeagueYear($this->f3->get('SESSION.user'),$league_year));

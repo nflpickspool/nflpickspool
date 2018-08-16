@@ -1,9 +1,6 @@
 <?php
 class GamesController extends UserController {
 
-	function beforeroute() {
-	}
-
 	function afterroute() {
 		$template=new Template;
         echo $template->render('homeLayout.htm');
@@ -11,12 +8,12 @@ class GamesController extends UserController {
 	
 	function renderViewLines(){
         $games = new Games($this->db);
-        $season = 2018;
-        $week = 1;
-        $this->f3->set('season',$season);
-        $this->f3->set('week',$week);
-        $this->f3->set('pageName',$season .' Week '. $week .' Game Lines');
-        $this->f3->set('games',$games->getByLeagueYearAndWeek($season,$week));
+        $league_year = $this->f3->get('POST.league_year');
+        $league_week = $this->f3->get('POST.league_week');
+        $this->f3->set('season',$league_year);
+        $this->f3->set('week',$league_week);
+        $this->f3->set('pageName',$league_year .' Week '. $league_week .' Game Lines');
+        $this->f3->set('games',$games->getByLeagueYearAndWeek($league_year,$league_week));
 		$this->f3->set('view','gamelines.htm');	
 	}
 }

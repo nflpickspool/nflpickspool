@@ -5,26 +5,31 @@
             <ol class="breadcrumb page-head-nav">
               <li class="breadcrumb-item"><a href="#">View Lines</a></li>
               <li class="breadcrumb-item"><a href="/teamlines">View Team Win Totals</a></li>
+              <li class="breadcrumb-item"><a href="/teamlines">{{ @season }}</a></li>
             </ol>
           </nav>
         </div>
         <div class="main-content container-fluid">
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width:50%;">Team</th>
-                <th style="width:25%;">O/U</th>
-              </tr>
-            </thead>
-            <tbody>
-	      <repeat group="{{ @lines }}" value="{{ @line }}">
-		<tr>
-		  <td>{{ @line.Team }}</td>
-		  <td>{{ @line.OverUnder }}</td>
-		</tr>
-	      </repeat>
-            </tbody>
-          </table>
+	  <div class="col-md-3">
+	    <div class="card card-border-color card-border-color-primary">
+              <table class="table">
+		<thead>
+		  <tr>
+                    <th style="width:50%;">Team</th>
+                    <th style="width:25%;">O/U</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <repeat group="{{ @lines }}" value="{{ @line }}">
+		    <tr>
+		      <td>{{ @line.Team }}</td>
+		      <td>{{ @line.OverUnder }}</td>
+		    </tr>
+		  </repeat>
+		</tbody>
+              </table>
+            </div>
+	  </div>
         </div>
       </div>
     </div>

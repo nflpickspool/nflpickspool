@@ -16,6 +16,12 @@ class TeamPicks extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
+    public function getLeagueYearList() {
+		return $this->db->exec(
+			'SELECT DISTINCT league_year FROM team_wins ORDER BY league_year DESC;'
+		);
+	}
+
 	public function getNullPicksByHandleAndLeagueYear($handle,$league_year) {
             return $this->db->exec(
                 "SELECT u.id AS player_id, ".

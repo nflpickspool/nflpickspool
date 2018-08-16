@@ -9,28 +9,32 @@
           </nav>
         </div>
         <div class="main-content container-fluid">
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width:20%;">Game</th>
-                <th style="width:20%;">Time</th>
-                <th style="width:20%;">Point Spread</th>
-                <th style="width:5%;">ML</th>
-                <th style="width:5%;">O/U</th>
-              </tr>
-            </thead>
-            <tbody>
-	      <repeat group="{{ @games }}" value="{{ @game }}">
-		<tr>
-		  <td>{{ @game.Matchup }}</td>
-		  <td>{{ date('D m/d g:i A',strtotime(@game.Kickoff)) }}</td>
-		  <td>{{ @game.Favorite . " -". @game.PointSpread }}</td>
-		  <td>{{ @game.MoneyLine }}</td>
-		  <td>{{ @game.OverUnder }}</td>
-		</tr>
-	      </repeat>
-            </tbody>
-          </table>
+	  <div class="col-md-6">
+	    <div class="card card-border-color card-border-color-primary">
+              <table class="table">
+		<thead>
+		  <tr>
+                    <th style="width:20%;">Game</th>
+                    <th style="width:20%;">Time</th>
+                    <th style="width:20%;">Point Spread</th>
+                    <th style="width:10%;">ML</th>
+                    <th style="width:10%;">O/U</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <repeat group="{{ @games }}" value="{{ @game }}">
+		    <tr>
+		      <td>{{ @game.Matchup }}</td>
+		      <td>{{ date('D m/d g:i A',strtotime(@game.Kickoff)) }}</td>
+		      <td>{{ @game.Favorite . " -". @game.PointSpread }}</td>
+		      <td>{{ @game.MoneyLine }}</td>
+		      <td>{{ @game.OverUnder }}</td>
+		    </tr>
+		  </repeat>
+		</tbody>
+              </table>
+            </div>
+	  </div>
         </div>
       </div>
     </div>

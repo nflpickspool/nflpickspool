@@ -16,6 +16,12 @@ class TeamWins extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
+    public function getLeagueYearList() {
+		return $this->db->exec(
+			'SELECT DISTINCT league_year FROM team_wins ORDER BY league_year DESC;'
+		);
+	}
+
     public function getByLeagueYear($season) {
         return $this->db->exec(
             "SELECT ".

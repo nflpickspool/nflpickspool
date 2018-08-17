@@ -22,7 +22,7 @@ class TeamPicks extends DB\SQL\Mapper{
 		);
 	}
 
-	public function getNullPicksByHandleAndLeagueYear($handle,$league_year) {
+	public function getNullPicksByIdAndLeagueYear($id,$league_year) {
             return $this->db->exec(
                 "SELECT u.id AS player_id, ".
                 "tw.id AS ou_id, ".
@@ -38,11 +38,11 @@ class TeamPicks extends DB\SQL\Mapper{
                 "ON tw.id = tp.ou_id ".
                 "WHERE tw.league_year = " . $league_year . " AND".
                 " tp.ou_pick IS NULL AND ".
-                "u.handle = '" . $handle . "';"
+                "u.id = '" . $id . "';"
             );
     } 
 
-	public function getNotNullPicksByHandleAndLeagueYear($handle,$league_year) {
+	public function getNotNullPicksByIdAndLeagueYear($id,$league_year) {
             return $this->db->exec(
                 "SELECT tp.id AS id, ".
                 "u.id AS player_id, ".
@@ -60,7 +60,7 @@ class TeamPicks extends DB\SQL\Mapper{
                 "ON tw.id = tp.ou_id ".
                 "WHERE tw.league_year = " . $league_year . " AND".
                 " tp.ou_pick IS NOT NULL AND ".
-                "u.handle = '" . $handle . "';"
+                "u.id = '" . $id . "';"
             );
     } 
 

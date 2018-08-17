@@ -24,9 +24,42 @@ class UserController extends Controller {
 	}
 	
 	function renderHomePage(){
+        $user = new User($this->db);
+        $user->getById($this->f3->get('SESSION.user'));
+        $this->f3->set('handle',$user->handle);
         $this->f3->set('pageName','Home');
 		$this->f3->set('view','home.htm');	
 	}
+    
+	function renderProfile(){
+        $this->f3->set('pageName','Profile');
+		$this->f3->set('view','profile.htm');	
+	}
+
+	function renderForgotPassword(){
+        $this->f3->set('pageName','Profile');
+		$this->f3->set('view','profile.htm');	
+	}
+
+    function updatePassword(){
+		$user_id = $this->f3->get('SESSION.user');
+		$user = new User($this->db);
+		$user->getById($user_id);
+		$currentPassword = $this->f3->get('POST.currentPassword');
+		$newPassword = $this->f3->get('POST.newPassword');
+		$repeatPassword = $this->f3->get('POST.repeatPassword');
+		if(!password_verify($currentPassword, $user->password)){
+			$this->f3->set('passwordResult','Incorrect current password');
+		} else if($newPassword !== $repeatPassword) {
+			$this->f3->set('passwordResult','New passwords do not match');
+		} else {
+			$passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
+			$user->editPassword($user_id,$passwordHash);
+			$this->f3->set('passwordResult','Password changed successfully');
+		}
+        $this->renderProfile();
+
+    }
     
 	function logout(){
 		$this->f3->clear('SESSION.user');

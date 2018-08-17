@@ -1,6 +1,6 @@
 <?php
 
-class Users extends DB\SQL\Mapper{
+class User extends DB\SQL\Mapper{
 
 	public function __construct(DB\SQL $db) {
 	    parent::__construct($db,'users');
@@ -18,6 +18,7 @@ class Users extends DB\SQL\Mapper{
 
 	public function getByEmail($email) {
 	    $this->load(array('email=?',$email));
+	    return $this->query;
 	}
 
 	public function add() {
@@ -28,6 +29,12 @@ class Users extends DB\SQL\Mapper{
 	public function edit($id) {
 	    $this->load(array('id=?',$id));
 	    $this->copyFrom('POST');
+	    $this->update();
+	}
+
+    public function editPassword($id,$passwordHash) {
+	    $this->load(array('id=?',$id));
+	    $this->password=$passwordHash;
 	    $this->update();
 	}
 	

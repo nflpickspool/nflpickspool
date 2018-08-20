@@ -88,7 +88,28 @@ class MainController extends Controller {
   		$headers .= 'From: admin@nflpickspool.com' . "\r\n";
   		// Mail it
   		mail($to, $subject, $message, $headers);
-		
+
+        $to = $this->f3->get('POST.email');
+        $subject = "Welcome to Picks Pool!";
+
+        //Welcome message
+        $message =
+            "<html>".
+            "<head>".
+            "<title>Welcome to Picks Pool!</title>".
+            "</head>".
+            "<body>".
+            "<p>To complete your registration for the 2018 NFL Season, please confirm payment with a Picks Pool admin.</p>".
+            "<p>Once payment is received, you will gain access to our Sportsbook and begin to view odds and make selections!</p>".
+            "<p>To get acquainted with the rules of the season-long game, read the rules here: nflpickspool.com/about</p>".
+            "<p>To get acquainted with the rules of the season-long game, read the rules here: nflpickspool.com/about</p>".
+            "<p>Thank you for joining and Good Luck!</p>".
+            "<p>-Miser Mouse</p>".
+            "</body>".
+            "</html>"
+            ;
+  		mail($to, $subject, $message, $headers);
+        
 		$this->f3->set('view','newUserRegistered.htm');
 	}
 

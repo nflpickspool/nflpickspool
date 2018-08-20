@@ -67,15 +67,23 @@ class MainController extends Controller {
         $user->favorite_nfl_team=$this->f3->get('POST.favorite_nfl_team');
         $user->password=password_hash($this->f3->get('POST.password'),PASSWORD_DEFAULT);
         $user->save();
-        $message =     
-				"New User Registration:
-".				"Name: " . $this->f3->get('POST.f_name') . " " . $this->f3->get('POST.l_name') . " 
-".				"Username: " . $this->f3->get('POST.handle') . "
-".				"Email: " . $this->f3->get('POST.email') . "
-".				"State: " . $this->f3->get('POST.state') . "
-".				"Zip: " . $this->f3->get('POST.ZIP') . "
-".				"Favorite NFL Team: " . $this->f3->get('POST.favorite_nfl_team') . "
-".				"DOB: " . $this->f3->get('POST.date_of_birth'); 
+        $message =
+            "<html>".
+            "<head>".
+            "</head>".
+            "<body>".
+            "<p>New User Registration:</p>".
+            "<p>Name: " . $this->f3->get('POST.f_name')." ".$this->f3->get('POST.l_name')."</p>". 
+            "<p>Username: " . $this->f3->get('POST.handle')."</p>".
+            "<p>Email: " . $this->f3->get('POST.email')."</p>".
+            "<p>State: " . $this->f3->get('POST.state')."</p>".
+            "<p>Zip: " . $this->f3->get('POST.ZIP')."</p>".
+            "<p>Favorite NFL Team: " . $this->f3->get('POST.favorite_nfl_team')."</p>".
+            "<p>DOB: " . $this->f3->get('POST.date_of_birth')."</p>".
+            "<p>Referred By: " . $this->f3->get('referral')."</p>".
+            "</body>".
+            "</html>"
+            ; 
 
   		// subject
   		$subject = 'NFL Picks Pool: New user registration';
@@ -101,7 +109,6 @@ class MainController extends Controller {
             "<body>".
             "<p>To complete your registration for the 2018 NFL Season, please confirm payment with a Picks Pool admin.</p>".
             "<p>Once payment is received, you will gain access to our Sportsbook and begin to view odds and make selections!</p>".
-            "<p>To get acquainted with the rules of the season-long game, read the rules here: nflpickspool.com/about</p>".
             "<p>To get acquainted with the rules of the season-long game, read the rules here: nflpickspool.com/about</p>".
             "<p>Thank you for joining and Good Luck!</p>".
             "<p>-Miser Mouse</p>".

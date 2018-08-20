@@ -80,7 +80,7 @@ class MainController extends Controller {
             "<p>Zip: " . $this->f3->get('POST.ZIP')."</p>".
             "<p>Favorite NFL Team: " . $this->f3->get('POST.favorite_nfl_team')."</p>".
             "<p>DOB: " . $this->f3->get('POST.date_of_birth')."</p>".
-            "<p>Referred By: " . $this->f3->get('referral')."</p>".
+            "<p>Referred By: " . $this->f3->get('POST.referral')."</p>".
             "</body>".
             "</html>"
             ; 

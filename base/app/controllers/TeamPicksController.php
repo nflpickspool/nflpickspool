@@ -7,7 +7,7 @@ class TeamPicksController extends UserController {
         $teamPicks->team_id = $this->f3->get('POST.team_id')[$x];
         $teamPicks->league_year = $this->f3->get('POST.league_year');
         $teamPicks->ou_pick = $this->f3->get('POST.ou_pick')[$x];
-        $teamPicks->is_lock = $this->f3->get('POST.is_lock')[$x];
+        $teamPicks->wager = $this->f3->get('POST.wager')[$x];
         $teamPicks->date_submitted = date("Y-m-d H:i:s");
     }
     
@@ -29,7 +29,11 @@ class TeamPicksController extends UserController {
     function addTeamPicks(){
         foreach(array_keys($this->f3->get('POST.ou_pick')) as &$x){
             $teamPicks = new TeamPicks($this->db);
-            $this->extractDataFromPost($teamPicks,$x);
+            //Make sure this pick hasn't been made before
+            $teamPicks->load(array('ou_id=? AND player_id=?',$this->f3->get('POST.ou_id')[$x],$this->f3->get('POST.player_id')[$x]));
+            if($teamPicks->dry()){
+                $this->extractDataFromPost($teamPicks,$x);
+            }
             $teamPicks->save();
         }
         $this->renderViewPicks();

@@ -40,9 +40,74 @@
                 <ul class="sidebar-elements">
                   <li class="divider">Menu</li>
                   <li><a href="/home"><i class="icon mdi mdi-home"></i><span>Home</span></a>
-		  <li class="parent"><a href="#"><i class="icon mdi mdi-eye"></i><span>View Lines</span></a>
+                  <li class="parent"><a href="#"><i class="icon mdi mdi-collection-item"></i><span>My Leagues</span></a>
                     <ul class="sub-menu">
-                      <li class="parent"><a href=""><i class="icon mdi mdi-undefined"></i><span>View Team Win Totals</span></a>
+                      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>2018 Season All Players</span></a>
+			<ul class="sub-menu">
+			  <li><a href="#"><i class="icon mdi mdi-undefined"></i><span>League Standings</span></a>
+			  <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>League Picks</span></a>
+			    <ul class="sub-menu">
+			      <li><a href="#"><i class="icon mdi mdi-undefined"></i><span>Team Win Total Picks</span></a>
+			      <li><a href="#"><i class="icon mdi mdi-undefined"></i><span>Game Line Picks</span></a>
+			      <li><a href="#"><i class="icon mdi mdi-undefined"></i><span>Suicide Picks</span></a>
+			    </ul>
+			</ul>
+                    </ul>
+                  </li>
+		  <li class="parent"><a href="#"><i class="icon mdi mdi-check"></i><span>My Picks</span></a>
+                    <ul class="sub-menu">
+                      <li class="parent"><a href=""><i class="icon mdi mdi-undefined"></i><span>Team Win Total Picks</span></a>
+                        <ul class="sub-menu">
+			  <repeat group="{{ @teamWinsYearList }}" value="{{ @tw_year }}" key="{{ @i }}">
+			    <form name="teamPicksForm{{ @i }}" method="POST" action="/teampicks">
+			      <input type="hidden" name="league_year" value="{{ @tw_year.league_year }}">
+                              <li><a href="#" onclick="postForm('teamPicksForm{{@i}}')"><i class="icon mdi mdi-undefined"></i><span>{{ @tw_year.league_year }}</span></a>
+                              </li>
+			    </form>
+			  </repeat>
+                        </ul>
+                      </li>
+                      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>Game Picks</span></a>
+			<repeat group="{{ @gamesYearList }}" value="{{ @g_year }}" key="{{ @a }}">
+                          <ul class="sub-menu">
+                            <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>{{ @g_year.league_year }}</span></a>
+			      <repeat group="{{ @gamesWeekList[@a] }}" value="{{ @g_week }}" key="{{ @b }}"> 
+				<ul class="sub-menu"><li>
+				  <form name="gamePicksForm{{ @a.@b }}" method="POST" action="/gamepicks">
+				    <input type="hidden" name="league_year" value="{{ @g_year.league_year }}">
+				    <input type="hidden" name="league_week" value="{{ @g_week['league_week'] }}">
+				    <li><a href="#" onclick="postForm('gamePicksForm{{@a.@b}}')"><i class="icon mdi mdi-undefined"></i><span>Week {{ @g_week['league_week'] }}</span></a>
+				    </li>
+				  </form>
+				</ul>
+			      </repeat>
+                            </li>
+                          </ul>
+			</repeat>
+                      </li>
+		      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>Suicide Picks</span></a>
+			<repeat group="{{ @gamesYearList }}" value="{{ @g_year }}" key="{{ @a }}">
+                          <ul class="sub-menu">
+                            <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>{{ @g_year.league_year }}</span></a>
+			      <repeat group="{{ @gamesWeekList[@a] }}" value="{{ @g_week }}" key="{{ @b }}"> 
+				<ul class="sub-menu"><li>
+				  <form name="suicidePicksForm{{ @a.@b }}" method="POST" action="/suicidepicks">
+				    <input type="hidden" name="league_year" value="{{ @g_year.league_year }}">
+				    <input type="hidden" name="league_week" value="{{ @g_week['league_week'] }}">
+				    <li><a href="#" onclick="postForm('suicidePicksForm{{@a.@b}}')"><i class="icon mdi mdi-undefined"></i><span>Week {{ @g_week['league_week'] }}</span></a>
+				    </li>
+				  </form>
+				</ul>
+			      </repeat>
+                            </li>
+                          </ul>
+			</repeat>
+                      </li>
+                    </ul>
+                  </li>
+		  <li class="parent"><a href="#"><i class="icon mdi mdi-book"></i><span>Sportsbook</span></a>
+                    <ul class="sub-menu">
+                      <li class="parent"><a href=""><i class="icon mdi mdi-undefined"></i><span>Team Win Total Odds</span></a>
                         <ul class="sub-menu">
 			  <repeat group="{{ @teamWinsYearList }}" value="{{ @tw_year }}" key="{{ @i }}">
 			    <form name="teamLinesForm{{ @i }}" method="POST" action="/teamlines">
@@ -53,7 +118,7 @@
 			  </repeat>
                         </ul>
                       </li>
-                      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>View Game Lines</span></a>
+                      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>Football Game Odds</span></a>
 			<repeat group="{{ @gamesYearList }}" value="{{ @g_year }}" key="{{ @a }}">
                           <ul class="sub-menu">
                             <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>{{ @g_year.league_year }}</span></a>
@@ -73,41 +138,6 @@
                       </li>
                     </ul>
                   </li>
-		  <li class="parent"><a href="#"><i class="icon mdi mdi-check"></i><span>View My Picks</span></a>
-                    <ul class="sub-menu">
-                      <li class="parent"><a href=""><i class="icon mdi mdi-undefined"></i><span>View Team Picks</span></a>
-                        <ul class="sub-menu">
-			  <repeat group="{{ @teamWinsYearList }}" value="{{ @tw_year }}" key="{{ @i }}">
-			    <form name="teamPicksForm{{ @i }}" method="POST" action="/teampicks">
-			      <input type="hidden" name="league_year" value="{{ @tw_year.league_year }}">
-                              <li><a href="#" onclick="postForm('teamPicksForm{{@i}}')"><i class="icon mdi mdi-undefined"></i><span>{{ @tw_year.league_year }}</span></a>
-                              </li>
-			    </form>
-			  </repeat>
-                        </ul>
-                      </li>
-                      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>View Game Picks</span></a>
-			<repeat group="{{ @gamesYearList }}" value="{{ @g_year }}" key="{{ @a }}">
-                          <ul class="sub-menu">
-                            <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>{{ @g_year.league_year }}</span></a>
-			      <repeat group="{{ @gamesWeekList[@a] }}" value="{{ @g_week }}" key="{{ @b }}"> 
-				<ul class="sub-menu"><li>
-				  <form name="gamePicksForm{{ @a.@b }}" method="POST" action="/gamepicks">
-				    <input type="hidden" name="league_year" value="{{ @g_year.league_year }}">
-				    <input type="hidden" name="league_week" value="{{ @g_week['league_week'] }}">
-				    <li><a href="#" onclick="postForm('gamePicksForm{{@a.@b}}')"><i class="icon mdi mdi-undefined"></i><span>Week {{ @g_week['league_week'] }}</span></a>
-				    </li>
-				  </form>
-				</ul>
-			      </repeat>
-                            </li>
-                          </ul>
-			</repeat>
-                      </li>
-                    </ul>
-                  </li>
-                  <li><a href="#"><i class="icon mdi mdi-check-all"></i><span>View League Picks</span></a>
-                  <li><a href="#"><i class="icon mdi mdi-layers"></i><span>Standings</span></a>
                 </ul>
               </div>
             </div>

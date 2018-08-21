@@ -51,7 +51,7 @@ class TeamPicks extends DB\SQL\Mapper{
                 "CONCAT(t.region, ' ',t.team) AS Team, ".
                 "tw.wins_line AS OU, ".
                 "tp.ou_pick, ".
-                "tp.is_lock ".
+                "tp.wager ".
                 "FROM teams t ".
                 "CROSS JOIN users u ".
                 "LEFT JOIN team_wins AS tw ".

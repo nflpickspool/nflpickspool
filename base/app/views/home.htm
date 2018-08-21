@@ -1,14 +1,30 @@
       <div class="be-content">
-        <div class="page-head">
-          <h2 class="page-head-title">Home</h2>
-          <nav aria-label="breadcrumb" role="navigation">
-            <ol class="breadcrumb page-head-nav">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-            </ol>
-          </nav>
-        </div>
-        <div class="main-content container-fluid">
-          <h3 class="text-center">Welcome to NFL Picks Pool!</h3>
+        <div class="page-head"></div>
+        <div class="main-content container-fluid text-center">
+          <h3>Welcome to NFL Picks Pool!</h3>
+	  <div class="py-3 text-center">
+            <div class="btn-group btn-space">
+	      <button class="btn btn-success dropdown-toggle btn-lg" type="button" data-toggle="dropdown">Make Picks! <span class="icon-dropdown mdi mdi-chevron-down"></span></button>
+	      <div class="dropdown-menu" role="menu">
+		<form name="greenWeekPicksForm" method="POST" action="/gamepicks">
+		  <input type="hidden" name="league_year" value="{{ @gamesWeekList[0][0]['league_year'] }}">
+		  <input type="hidden" name="league_week" value="{{ @gamesWeekList[0][0]['league_week'] }}">
+		  <li><a class="dropdown-item" href="#" onclick="postForm('greenWeekPicksForm')">Make Week {{ @gamesWeekList[0][0]['league_week']}} Picks</a>
+		  </li>
+		</form>
+		<form name="greenWeekSuicideForm" method="POST" action="/suicidepicks">
+		  <input type="hidden" name="league_year" value="{{ @gamesWeekList[0][0]['league_year'] }}">
+		  <input type="hidden" name="league_week" value="{{ @gamesWeekList[0][0]['league_week'] }}">
+		  <li><a class="dropdown-item" href="#" onclick="postForm('greenWeekSuicideForm')">Make Suicide Pick</a>
+		  </li>
+		</form>
+		<form name="greenTeamWinsForm" method="POST" action="/teampicks">
+		  <input type="hidden" name="league_year" value="{{ @teamWinsYearList[0]['league_year'] }}">
+		  <li><a class="dropdown-item" href="#" onclick="postForm('greenTeamWinsForm')">Make Team Win Total Picks</a>
+		  </li>
+		</form>
+	      </div>
+	    </div>
+          </div>
         </div>
       </div>
-    </div>

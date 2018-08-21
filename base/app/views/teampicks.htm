@@ -3,8 +3,8 @@
           <h2 class="page-head-title">{{ @league_year }} Team Win Picks</h2>
           <nav aria-label="breadcrumb" role="navigation">
             <ol class="breadcrumb page-head-nav">
-              <li class="breadcrumb-item"><a href="#">View My Picks</a></li>
-              <li class="breadcrumb-item"><a href="#">View Team Picks</a></li>
+              <li class="breadcrumb-item"><a href="#">My Picks</a></li>
+              <li class="breadcrumb-item"><a href="#">Team Win Total Picks</a></li>
               <li class="breadcrumb-item"><a href="#">{{ @league_year }}</a></li>
             </ol>
           </nav>
@@ -43,10 +43,11 @@
 				  </select>
 				</td>
 				<td>
-				  <input type="hidden" name="is_lock[{{ @i }}]" id="is_lock{{@i}}" value="0"/>
-				  <label class="custom-control custom-checkbox custom-control-inline">
-				    <input class="custom-control-input" type="checkbox" value="1" name="is_lock[{{ @i }}]"><span class="custom-control-label"></span>
-				  </label>
+				  <select class="form-control-inline" type="char" value="" name="wager[{{ @i }}]">
+ 				    <option value="1"></option>
+				    <option value="2">Lock</option>
+				    <option value="3">Iron</option>
+				  </select>
 				</td>
 			      </tr>
 			    </repeat>
@@ -103,11 +104,12 @@
 				  </select>
 				</td>
 				<td>
-				<input type="hidden" name="is_lock[{{ @i }}]" id="hidden_is_lock{{@i}}" value="0" disabled>  
-				<label class="custom-control custom-checkbox custom-control-inline">
-				  <input class="custom-control-input" type="checkbox" name="is_lock[{{ @i }}]" id="is_lock{{@i}}" value="1" disabled <check if="{{ @picks.is_lock }}"><true>checked</true></check>><span class="custom-control-label"></span>
-				</label>
-			      </td>
+				  <select class="form-control-inline" value="" name="wager[{{ @i }}]" id="wager{{@i}}" disabled>
+ 				    <option value="1" <check if="{{ @picks.wager == '1'}}"><true> selected</true></check>></option>
+ 				    <option value="2" <check if="{{ @picks.wager == '2'}}"><true> selected</true></check>>Lock</option>
+ 				    <option value="3" <check if="{{ @picks.wager == '3'}}"><true> selected</true></check>>Iron</option>
+				  </select>
+				</td>
 				<td>
 				  <div id="edit{{@i}}">
 				    <button type="button" class="btn btn-primary" onclick="updatePick({{@i}})"><i class="icon mdi mdi-edit"></i></button>
@@ -138,8 +140,7 @@
 	document.getElementById("team_id"+row_num).disabled = false;
 	document.getElementById("league_year"+row_num).disabled = false;	
 	document.getElementById("ou_pick"+row_num).disabled = false;	
-	document.getElementById("hidden_is_lock"+row_num).disabled = false;	
-	document.getElementById("is_lock"+row_num).disabled = false;	
+	document.getElementById("wager"+row_num).disabled = false;	
 	document.getElementById('update_btn').style.display = "block";
 	}
       </script>

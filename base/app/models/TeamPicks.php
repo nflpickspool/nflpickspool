@@ -38,7 +38,8 @@ class TeamPicks extends DB\SQL\Mapper{
                 "ON tw.id = tp.ou_id ".
                 "WHERE tw.league_year = " . $league_year . " AND".
                 " tp.ou_pick IS NULL AND ".
-                "u.id = '" . $id . "';"
+                "u.id = '" . $id . "'".
+                "ORDER BY Team;"
             );
     } 
 
@@ -60,7 +61,8 @@ class TeamPicks extends DB\SQL\Mapper{
                 "ON tw.id = tp.ou_id ".
                 "WHERE tw.league_year = " . $league_year . " AND".
                 " tp.ou_pick IS NOT NULL AND ".
-                "u.id = '" . $id . "';"
+                "u.id = '" . $id . "'".
+                "ORDER BY Team;"
             );
     } 
 

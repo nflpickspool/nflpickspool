@@ -10,11 +10,6 @@ class TeamPicksController extends UserController {
         $teamPicks->wager = $this->f3->get('POST.wager')[$x];
         $teamPicks->date_submitted = date("Y-m-d H:i:s");
     }
-    
-	function afterroute() {
-		$template=new Template;
-        echo $template->render('homeLayout.htm');
-	}
 	
 	function renderViewPicks(){
         $teamPicks = new TeamPicks($this->db);

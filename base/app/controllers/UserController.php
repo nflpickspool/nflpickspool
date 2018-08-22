@@ -6,6 +6,10 @@ class UserController extends Controller {
 			$this->f3->reroute('/login');
 			exit;
 		}
+        $user = new User($this->db);
+        $user->getById($this->f3->get('SESSION.user'));
+        $this->f3->set('handle',$user->handle);
+
         $teamWins = new TeamWins($this->db);
         $this->f3->set('teamWinsYearList',$teamWins->getLeagueYearList());
         $games = new Games($this->db);
@@ -24,9 +28,6 @@ class UserController extends Controller {
 	}
 	
 	function renderHomePage(){
-        $user = new User($this->db);
-        $user->getById($this->f3->get('SESSION.user'));
-        $this->f3->set('handle',$user->handle);
         $this->f3->set('pageName','Home');
 		$this->f3->set('view','home.htm');	
 	}

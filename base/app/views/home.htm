@@ -7,13 +7,13 @@
 	      <button class="btn btn-success dropdown-toggle btn-lg" type="button" data-toggle="dropdown">Make Picks! <span class="icon-dropdown mdi mdi-chevron-down"></span></button>
 	      <div class="dropdown-menu" role="menu">
 		<form name="greenWeekPicksForm" method="POST" action="/gamepicks">
-		  <input type="hidden" name="league_year" value="{{ @gamesWeekList[0][0]['league_year'] }}">
+		  <input type="hidden" name="league_year" value="{{ @gamesYearList[0].league_year }}">
 		  <input type="hidden" name="league_week" value="{{ @gamesWeekList[0][0]['league_week'] }}">
 		  <li><a class="dropdown-item" href="#" onclick="postForm('greenWeekPicksForm')">Make Week {{ @gamesWeekList[0][0]['league_week']}} Picks</a>
 		  </li>
 		</form>
 		<form name="greenWeekSuicideForm" method="POST" action="/suicidepicks">
-		  <input type="hidden" name="league_year" value="{{ @gamesWeekList[0][0]['league_year'] }}">
+		  <input type="hidden" name="league_year" value="{{ @gamesYearList[0].league_year }}">
 		  <input type="hidden" name="league_week" value="{{ @gamesWeekList[0][0]['league_week'] }}">
 		  <li><a class="dropdown-item" href="#" onclick="postForm('greenWeekSuicideForm')">Make Suicide Pick</a>
 		  </li>
@@ -28,3 +28,4 @@
           </div>
         </div>
       </div>
+      

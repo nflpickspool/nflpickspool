@@ -111,7 +111,7 @@ class MainController extends Controller {
             "<p>Once payment is received, you will gain access to our Sportsbook and begin to view odds and make selections!</p>".
             "<p>To get acquainted with the rules of the season-long game, read the rules here: nflpickspool.com/about</p>".
             "<p>Thank you for joining and Good Luck!</p>".
-            "<p>-Miser Mouse</p>".
+            "<p>-Commish</p>".
             "</body>".
             "</html>"
             ;

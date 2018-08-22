@@ -1,57 +1,84 @@
       <div class="be-content">
         <div class="page-head">
-          <h2 class="page-head-title">{{ @league_year }} Game Picks</h2>
+          <h2 class="page-head-title">{{ @league_year }} Week {{ @league_week }} Game Picks</h2>
           <nav aria-label="breadcrumb" role="navigation">
             <ol class="breadcrumb page-head-nav">
               <li class="breadcrumb-item"><a href="#">My Picks</a></li>
               <li class="breadcrumb-item"><a href="#">Game Picks</a></li>
               <li class="breadcrumb-item"><a href="#">{{ @league_year }}</a></li>
+              <li class="breadcrumb-item"><a href="#">Week {{ @league_week }}</a></li>
             </ol>
           </nav>
         </div>
         <div class="main-content container-fluid">
-	  <h2>No active lines available. Lines typically become available 1 week before kickoff.</h2>
 	  <check if="{{ !empty(@incompletePicks) }}">
 	    <true>
-              <form method="POST" action="/addteampicks">
+              <form method="POST" action="/addgamepicks">
 		<div class="row">
 		  <div class="col-md-12">
 		    <div class="card card-border-color card-border-color-primary">
                       <div class="card-header card-header-divider">Incomplete Picks<span class="card-subtitle">What are you waiting for? Make your picks!</span></div>
                       <div class="card-body">
-			<table class="table">
-			  <thead>
-			    <tr>
-			      <th style="width:40%;">Team</th>
-			      <th style="width:10%;">O/U</th>
-			      <th style="width:10%;">Pick</th>
-			      <th style="width:10%;">Lock</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <repeat group="{{ @incompletePicks }}" value="{{ @picks }}" key="{{ @i }}">
+			<div class="table-responsive noSwipe">
+			  <table class="table">
+			    <thead>
 			      <tr>
-				<input type="hidden" name="player_id[{{ @i }}]" value="{{ @picks.player_id }}">
-				<input type="hidden" name="ou_id[{{ @i }}]" value="{{ @picks.ou_id }}">
-				<input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}">
-				<input type="hidden" name="league_year" value="{{ @league_year }}">
-				<td>{{ @picks.Team }}</td>
-				<td>{{ @picks.OU }}</td>
-				<td>
-				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
- 				    <option>O</option>
-				    <option>U</option>
-				  </select>
-				</td>
-				<td>
-				  <label class="custom-control custom-checkbox custom-control-inline">
-				    <input class="custom-control-input" type="checkbox" value="1" name="is_lock[{{ @i }}]"><span class="custom-control-label"></span>
-				  </label>
-				</td>
+				<th style="width:15%;">Game</th>
+				<th style="width:15%;">Time</th>
+				<th style="width:10%;">Point Spread</th>
+				<th style="width:10%;">Money Line</th>
+				<th style="width:10%;">Total Points O/U</th>
+				<th style="width:10%;">Spread Pick</th>
+				<th style="width:10%;">Lock</th>
+				<th style="width:10%;">Money Line Pick</th>
+				<th style="width:10%;">Total Points O/U Pick</th>
 			      </tr>
-			    </repeat>
-			  </tbody>
-			</table>
+			    </thead>
+			    <tbody>
+			      <repeat group="{{ @incompletePicks }}" value="{{ @game }}" key="{{ @i }}">
+				<tr>
+				  <input type="hidden" name="user_id[{{ @i }}]" value="{{ @game.user_id }}">
+				  <input type="hidden" name="game_id[{{ @i }}]" value="{{ @game.game_id }}">
+				  <input type="hidden" name="league_year" value="{{ @league_year }}">
+				  <input type="hidden" name="league_week" value="{{ @league_week }}">
+
+				  <td>{{ @game.Matchup }}</td>
+				  <td>{{ date('D m/d g:i A',strtotime(@game.Kickoff)) }}</td>
+				  <td>{{ @game.Favorite . " -". @game.PointSpread }}</td>
+				  <td>{{ @game.MoneyLine }}</td>
+				  <td>{{ @game.OverUnder }}</td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="spread_pick[{{ @i }}]">
+				      <option value="{{ @game.away_id}}">{{ @game.away }}</option>
+				      <option value="{{ @game.home_id}}">{{ @game.home }}</option>
+				    </select>
+				  </td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="wager[{{ @i }}]">
+ 				      <option value="1"></option>
+				      <option value="2">Lock</option>
+				      <option value="3">Iron</option>
+				    </select>
+				  </td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="money_pick[{{ @i }}]">
+				      <option></option>
+				      <option value="{{ @game.away_id}}">{{ @game.away }}</option>
+				      <option value="{{ @game.home_id}}">{{ @game.home }}</option>
+				    </select>
+				  </td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
+ 				      <option></option>
+ 				      <option>O</option>
+				      <option>U</option>
+				    </select>
+				  </td>
+				</tr>
+			      </repeat>
+			    </tbody>
+			  </table>
+			</div>
 			<button type="submit" class="btn btn-primary btn-block">Submit</button>
 		      </div>
 		    </div>
@@ -67,30 +94,66 @@
 		  <div class="card card-border-color card-border-color-primary">
                     <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">A list of your submitted picks</span></div>
                     <div class="card-body">
-		      <table class="table">
-			<thead>
-			  <tr>
-			    <th style="width:40%;">Team</th>
-			    <th style="width:10%;">O/U</th>
-			    <th style="width:10%;">Pick</th>
-			    <th style="width:10%;">Lock</th>
-			  </tr>
-			</thead>
-			<tbody>
-			  <repeat group="{{ @submittedPicks }}" value="{{ @picks }}" key="{{ @i }}">
-			    <tr>
-			      <td>{{ @picks.Team }}</td>
-			      <td>{{ @picks.OU }}</td>
-			      <td>{{ @picks.ou_pick }}</td>
-			      <td>
-				<label class="custom-control custom-checkbox custom-control-inline">
-				  <input class="custom-control-input" type="checkbox" value disabled <check if="{{ @picks.is_lock }}"><true>checked</true></check>><span class="custom-control-label"></span>
-				</label>
-			      </td>
-			    </tr>
-			  </repeat>
-			</tbody>
-		      </table>
+		      	<div class="table-responsive noSwipe">
+			  <table class="table">
+			    <thead>
+			      <tr>
+				<th style="width:15%;">Game</th>
+				<th style="width:15%;">Time</th>
+				<th style="width:10%;">Point Spread</th>
+				<th style="width:10%;">Money Line</th>
+				<th style="width:10%;">Total Points O/U</th>
+				<th style="width:10%;">Spread Pick</th>
+				<th style="width:10%;">Lock</th>
+				<th style="width:10%;">Money Line Pick</th>
+				<th style="width:10%;">Total Points O/U Pick</th>
+			      </tr>
+			    </thead>
+			    <tbody>
+			      <repeat group="{{ @submittedPicks }}" value="{{ @game }}" key="{{ @i }}">
+				<tr>
+				  <input type="hidden" name="user_id[{{ @i }}]" value="{{ @game.user_id }}">
+				  <input type="hidden" name="game_id[{{ @i }}]" value="{{ @game.game_id }}">
+				  <input type="hidden" name="league_year" value="{{ @league_year }}">
+				  <input type="hidden" name="league_week" value="{{ @league_week }}">
+
+				  <td>{{ @game.Matchup }}</td>
+				  <td>{{ date('D m/d g:i A',strtotime(@game.Kickoff)) }}</td>
+				  <td>{{ @game.Favorite . " -". @game.PointSpread }}</td>
+				  <td>{{ @game.MoneyLine }}</td>
+				  <td>{{ @game.OverUnder }}</td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="spread_pick[{{ @i }}]">
+				      <option value="{{ @game.away_id}}">{{ @game.away }}</option>
+				      <option value="{{ @game.home_id}}">{{ @game.home }}</option>
+				    </select>
+				  </td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="wager[{{ @i }}]">
+ 				      <option value="1"></option>
+				      <option value="2">Lock</option>
+				      <option value="3">Iron</option>
+				    </select>
+				  </td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="money_pick[{{ @i }}]">
+				      <option></option>
+				      <option value="{{ @game.away_id}}">{{ @game.away }}</option>
+				      <option value="{{ @game.home_id}}">{{ @game.home }}</option>
+				    </select>
+				  </td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
+ 				      <option></option>
+ 				      <option>O</option>
+				      <option>U</option>
+				    </select>
+				  </td>
+				</tr>
+			      </repeat>
+			    </tbody>
+			  </table>
+			</div>
 		      <button type="submit" class="btn btn-primary btn-block">Submit</button>
 		    </div>
 		  </div>

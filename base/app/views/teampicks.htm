@@ -16,7 +16,7 @@
 		<div class="row">
 		  <div class="col-md-12">
 		    <div class="card card-border-color card-border-color-primary">
-                      <div class="card-header card-header-divider">Incomplete Picks<span class="card-subtitle">What are you waiting for? Make your picks!</span></div>
+                      <div class="card-header card-header-divider">Incomplete Picks<span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>You may edit your picks until September 6th at 6:00pm EDT. At this time, all picks are final.</span></div>
                       <div class="card-body">
 			<table class="table">
 			  <thead>
@@ -38,8 +38,8 @@
 				<td>{{ @picks.OU }}</td>
 				<td>
 				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
- 				    <option>O</option>
-				    <option>U</option>
+ 				    <option value="O">Over</option>
+				    <option value="U">Under</option>
 				  </select>
 				</td>
 				<td>
@@ -67,7 +67,7 @@
 		<div class="row">
 		  <div class="col-md-12">
 		    <div class="card card-border-color card-border-color-primary">
-                      <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle"></span></div>
+                      <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>You may edit your picks until September 6th at 6:00pm EDT. At this time, all picks are final.</span></div>
                       <div class="card-body">
 			<table class="table">
 			  <thead>
@@ -93,12 +93,12 @@
 				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]" id="ou_pick{{@i}}" disabled>
  				    <check if="{{ @picks.ou_pick == 'O'}}">
 				      <true>
- 					<option>O</option>
-					<option>U</option>
+ 					<option value="O">Over</option>
+					<option value="U">Under</option>
 				      </true>
 				      <false>
-					<option>U</option>
- 					<option>O</option>
+					<option value="U">Under</option>
+ 					<option value="O">Over</option>
 				      </false>
 				    </check>
 				  </select>

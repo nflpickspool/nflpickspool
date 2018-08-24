@@ -34,6 +34,16 @@ class GamePicksController extends UserController {
         }
         $this->renderViewPicks();
     }
+    
+    function updateGamePicks(){
+        foreach(array_keys($this->f3->get('POST.spread_pick')) as &$x){
+            $gamePicks = new GamePicks($this->db);
+            $gamePicks->load(array('game_id=? AND user_id=?',$this->f3->get('POST.game_id')[$x],$this->f3->get('POST.user_id')[$x]));
+            $this->extractDataFromPost($gamePicks,$x);
+            $gamePicks->update();
+        }
+        $this->renderViewPicks();
+    }
 
 }
 

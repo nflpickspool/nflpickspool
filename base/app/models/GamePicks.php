@@ -77,7 +77,10 @@ class GamePicks extends DB\SQL\Mapper{
             "point_spread AS 'PointSpread', ".
             "money_line AS 'MoneyLine', ".
             "ou AS 'OverUnder', ".
-            "gp.spread_pick AS spread_pick ".
+            "gp.spread_pick AS spread_pick, ".
+            "gp.wager AS wager, ".
+            "gp.money_pick AS money_pick, ".
+            "gp.ou_pick AS ou_pick ".
 
             "FROM games AS g ".
             "CROSS JOIN users AS u ".

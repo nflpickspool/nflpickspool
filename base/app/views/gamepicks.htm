@@ -11,6 +11,16 @@
           </nav>
         </div>
         <div class="main-content container-fluid">
+	  <check if="{{ empty(@incompletePicks) and empty(@submittedPicks)}}">
+	    <true>
+	      <h2>No active lines available. Lines typically become available 1 week before kickoff.</h2>
+	      <form name="sbForm" method="POST" action="/gamelines">
+		<input type="hidden" name="league_year" value="{{ @gamesYearList[0].league_year }}">
+		<input type="hidden" name="league_week" value="{{ @gamesWeekList[0][0]['league_week'] }}">
+		<h3>Click <a href="#" onclick="postForm('sbForm')">HERE</a> to view the sportsbook</h3>
+	      </form>
+	    </true>
+	  </check>
 	  <check if="{{ !empty(@incompletePicks) }}">
 	    <true>
               <form method="POST" action="/addgamepicks">
@@ -70,8 +80,8 @@
 				  <td>
 				    <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
  				      <option></option>
- 				      <option>O</option>
-				      <option>U</option>
+ 				      <option value="O">Over</option>
+				      <option value="U">Under</option>
 				    </select>
 				  </td>
 				</tr>
@@ -89,17 +99,18 @@
 	  </check>
 	  <check if="{{ !empty(@submittedPicks) }}">
 	    <true>
-	      <div class="row">
-		<div class="col-md-12">
-		  <div class="card card-border-color card-border-color-primary">
-                    <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">A list of your submitted picks</span></div>
-                    <div class="card-body">
+	      <form method="POST" action="/updategamepicks">
+		<div class="row">
+		  <div class="col-md-12">
+		    <div class="card card-border-color card-border-color-primary">
+                      <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">A list of your submitted picks</span></div>
+                      <div class="card-body">
 		      	<div class="table-responsive noSwipe">
 			  <table class="table">
 			    <thead>
 			      <tr>
-				<th style="width:15%;">Game</th>
-				<th style="width:15%;">Time</th>
+				<th style="width:10%;">Game</th>
+				<th style="width:10%;">Time</th>
 				<th style="width:10%;">Point Spread</th>
 				<th style="width:10%;">Money Line</th>
 				<th style="width:10%;">Total Points O/U</th>
@@ -107,15 +118,16 @@
 				<th style="width:10%;">Lock</th>
 				<th style="width:10%;">Money Line Pick</th>
 				<th style="width:10%;">Total Points O/U Pick</th>
+				<th style="width:10%;">Edit</th>
 			      </tr>
 			    </thead>
 			    <tbody>
 			      <repeat group="{{ @submittedPicks }}" value="{{ @game }}" key="{{ @i }}">
 				<tr>
-				  <input type="hidden" name="user_id[{{ @i }}]" value="{{ @game.user_id }}">
-				  <input type="hidden" name="game_id[{{ @i }}]" value="{{ @game.game_id }}">
-				  <input type="hidden" name="league_year" value="{{ @league_year }}">
-				  <input type="hidden" name="league_week" value="{{ @league_week }}">
+				  <input type="hidden" name="user_id[{{ @i }}]" id="user_id{{ @i }}" value="{{ @game.user_id }}" disabled>
+				  <input type="hidden" name="game_id[{{ @i }}]" id="game_id{{ @i }}" value="{{ @game.game_id }}" disabled>
+				  <input type="hidden" name="league_year" id="league_year{{ @i }}" value="{{ @league_year }}" disabled>
+				  <input type="hidden" name="league_week" id="league_week{{ @i }}" value="{{ @league_week }}" disabled>
 
 				  <td>{{ @game.Matchup }}</td>
 				  <td>{{ date('D m/d g:i A',strtotime(@game.Kickoff)) }}</td>
@@ -123,43 +135,69 @@
 				  <td>{{ @game.MoneyLine }}</td>
 				  <td>{{ @game.OverUnder }}</td>
 				  <td>
-				    <select class="form-control-inline" type="char" value="" name="spread_pick[{{ @i }}]">
-				      <option value="{{ @game.away_id}}">{{ @game.away }}</option>
-				      <option value="{{ @game.home_id}}">{{ @game.home }}</option>
+				    <select class="form-control-inline" type="char" value="" name="spread_pick[{{ @i }}]" id="spread_pick{{ @i }}" disabled>
+				      <option value="{{ @game.away_id}}" <check if="{{ @game.spread_pick == @game.away_id}}"><true> selected</true></check>>{{ @game.away }}</option>
+				      <option value="{{ @game.home_id}}" <check if="{{ @game.spread_pick == @game.home_id}}"><true> selected</true></check>>{{ @game.home }}</option>
 				    </select>
 				  </td>
 				  <td>
-				    <select class="form-control-inline" type="char" value="" name="wager[{{ @i }}]">
- 				      <option value="1"></option>
-				      <option value="2">Lock</option>
-				      <option value="3">Iron</option>
+				    <select class="form-control-inline" type="char" value="" name="wager[{{ @i }}]" id="wager{{ @i }}" disabled>
+ 				      <option value="1" <check if="{{ @game.wager == '1'}}"><true> selected</true></check>></option>
+				      <option value="2" <check if="{{ @game.wager == '2'}}"><true> selected</true></check>>Lock</option>
+				      <option value="3" <check if="{{ @game.wager == '3'}}"><true> selected</true></check>>Iron</option>
 				    </select>
 				  </td>
 				  <td>
-				    <select class="form-control-inline" type="char" value="" name="money_pick[{{ @i }}]">
+				    <select class="form-control-inline" type="char" value="" name="money_pick[{{ @i }}]" id="money_pick{{ @i }}" disabled>
 				      <option></option>
-				      <option value="{{ @game.away_id}}">{{ @game.away }}</option>
-				      <option value="{{ @game.home_id}}">{{ @game.home }}</option>
+				      <option value="{{ @game.away_id}}" <check if="{{ @game.money_pick == @game.away_id}}"><true> selected</true></check>>{{ @game.away }}</option>
+				      <option value="{{ @game.home_id}}" <check if="{{ @game.money_pick == @game.home_id}}"><true> selected</true></check>>{{ @game.home }}</option>
 				    </select>
 				  </td>
 				  <td>
-				    <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
+				    <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]" id="ou_pick{{ @i }}" disabled>
  				      <option></option>
- 				      <option>O</option>
-				      <option>U</option>
+ 				      <option value="O" <check if="{{ @game.ou_pick == 'O'}}"><true> selected</true></check>>Over</option>
+				      <option value="U" <check if="{{ @game.ou_pick == 'U'}}"><true> selected</true></check>>Under</option>
 				    </select>
+				  </td>
+				  <td>
+				    <check if="{{ strtotime(@game.Kickoff) > time()+(60*5) }}">
+				      <true>
+					<div id="edit{{@i}}">
+					  <button type="button" class="btn btn-primary" onclick="updateGamePick({{@i}})"><i class="icon mdi mdi-edit"></i></button>
+					</div>
+				      </true>
+				    </check>
 				  </td>
 				</tr>
 			      </repeat>
 			    </tbody>
 			  </table>
+			  <div id="update_btn" style="display:none">
+			    <button type="submit" class="btn btn-primary btn-block">Update</button>
+			  </div>
 			</div>
-		      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+		      </div>
 		    </div>
-		  </div>
-		</div>	  
-	      </div>
+		  </div>	  
+		</div>
+	      </form>
             </true>
 	  </check>
 	</div>
       </div>
+      <script>
+	function updateGamePick(row_num) {
+	document.getElementById("edit"+row_num).style.display = "none";
+	document.getElementById("user_id"+row_num).disabled = false;
+	document.getElementById("game_id"+row_num).disabled = false;
+	document.getElementById("league_year"+row_num).disabled = false;
+	document.getElementById("league_week"+row_num).disabled = false;
+	document.getElementById("spread_pick"+row_num).disabled = false;	
+	document.getElementById("wager"+row_num).disabled = false;	
+	document.getElementById("money_pick"+row_num).disabled = false;	
+	document.getElementById("ou_pick"+row_num).disabled = false;	
+	document.getElementById('update_btn').style.display = "block";
+	}
+      </script>

@@ -1,10 +1,22 @@
 <main role="main">
       <div class="container text-center">
-        <div class="py-3 text-center">
-          <h1>Successful Registration</h1>
-        </div>
-          <p>You're Almost There! Once We Have Received Payment, You Will Gain Access to View the Sportsbook and Make Picks!</p>
-          <p>If paying by credit card, please add $15 to your fee. You may also use Venmo.</p>
-          <a class="btn btn-primary btn-lg" href="https://paypal.me/pickspool">PayPal</a>
+        <check if="{{ @alreadyRegistered == 1}}">
+	  <false>
+            <div class="py-3 text-center">
+	      <h1>Successful Registration</h1>
+            </div>
+            <p>You're Almost There! Once We Have Received Payment, You Will Gain Access to View the Sportsbook and Make Picks!</p>
+            <p>If paying by credit card, please add $15 to your fee. You may also use Venmo.</p>
+            <a class="btn btn-primary btn-lg" href="https://paypal.me/pickspool">PayPal</a>
+	  </false>
+	  <true>
+	    <div class="py-3 text-center">
+	      <h1>Already registered?</h1>
+            </div>
+            <p>The email address you entered is already associated with an account.</p>
+            <p>Click below to reset your password.</p>
+            <a class="btn btn-primary btn-lg" href="/forgotpassword">Reset Password</a>
+	  </true>
+	</check>
       </div>
 </main>

@@ -16,6 +16,12 @@ class Games extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
+    public function getLeagueYearStartTime($league_year) {
+		return $this->db->exec(
+            'SELECT MIN(kickoff_time) AS startTime FROM games WHERE league_year = '.$league_year.';'
+		);
+	}
+    
     public function getLeagueYearList() {
 		return $this->db->exec(
 			'SELECT DISTINCT league_year FROM games ORDER BY league_year DESC;'

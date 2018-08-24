@@ -111,9 +111,13 @@
 				  </select>
 				</td>
 				<td>
-				  <div id="edit{{@i}}">
-				    <button type="button" class="btn btn-primary" onclick="updateTeamPick({{@i}})"><i class="icon mdi mdi-edit"></i></button>
-				  </div>
+				  <check if="{{ strtotime(@startTime[0]['startTime']) > time()+(60*120) }}">
+				    <true>
+				      <div id="edit{{@i}}">
+					<button type="button" class="btn btn-primary" onclick="updateTeamPick({{@i}})"><i class="icon mdi mdi-edit"></i></button>
+				      </div>
+				    </true>
+				  </check>
 				</td>
 			      </tr>
 			    </repeat>

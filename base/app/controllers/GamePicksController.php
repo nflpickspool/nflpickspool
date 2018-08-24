@@ -28,22 +28,27 @@ class GamePicksController extends UserController {
             //Make sure this pick hasn't been made before
             $gamePicks->load(array('game_id=? AND user_id=?',$this->f3->get('POST.game_id')[$x],$this->f3->get('POST.user_id')[$x]));
             if($gamePicks->dry()){
-                $this->extractDataFromPost($gamePicks,$x);
+                //Also check that the pick came in on time (kickoff - 5 minutes)
+                if(strtotime($this->f3->get('POST.Kickoff')[$x]) > time()+(60*5)){
+                    $this->extractDataFromPost($gamePicks,$x);
+                    $gamePicks->save();
+                }
             }
-            $gamePicks->save();
         }
         $this->renderViewPicks();
     }
     
     function updateGamePicks(){
         foreach(array_keys($this->f3->get('POST.spread_pick')) as &$x){
-            $gamePicks = new GamePicks($this->db);
-            $gamePicks->load(array('game_id=? AND user_id=?',$this->f3->get('POST.game_id')[$x],$this->f3->get('POST.user_id')[$x]));
-            $this->extractDataFromPost($gamePicks,$x);
-            $gamePicks->update();
+            //Check that the pick came in on time (kickoff - 5 minutes)
+            if(strtotime($this->f3->get('POST.Kickoff')[$x]) > time()+(60*5)){
+                $gamePicks = new GamePicks($this->db);
+                $gamePicks->load(array('game_id=? AND user_id=?',$this->f3->get('POST.game_id')[$x],$this->f3->get('POST.user_id')[$x]));
+                $this->extractDataFromPost($gamePicks,$x);
+                $gamePicks->update();
+            }
         }
         $this->renderViewPicks();
     }
-
 }
 

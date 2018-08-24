@@ -49,6 +49,7 @@
 				<tr>
 				  <input type="hidden" name="user_id[{{ @i }}]" value="{{ @game.user_id }}">
 				  <input type="hidden" name="game_id[{{ @i }}]" value="{{ @game.game_id }}">
+				  <input type="hidden" name="Kickoff[{{ @i }}]" id="Kickoff{{ @i }}" value="{{ @game.Kickoff }}">
 				  <input type="hidden" name="league_year" value="{{ @league_year }}">
 				  <input type="hidden" name="league_week" value="{{ @league_week }}">
 
@@ -103,7 +104,7 @@
 		<div class="row">
 		  <div class="col-md-12">
 		    <div class="card card-border-color card-border-color-primary">
-                      <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">A list of your submitted picks</span></div>
+                      <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">A list of your submitted picks. They can be update up until 5 minutes before kickoff.</span></div>
                       <div class="card-body">
 		      	<div class="table-responsive noSwipe">
 			  <table class="table">
@@ -126,6 +127,7 @@
 				<tr>
 				  <input type="hidden" name="user_id[{{ @i }}]" id="user_id{{ @i }}" value="{{ @game.user_id }}" disabled>
 				  <input type="hidden" name="game_id[{{ @i }}]" id="game_id{{ @i }}" value="{{ @game.game_id }}" disabled>
+				  <input type="hidden" name="Kickoff[{{ @i }}]" id="Kickoff{{ @i }}" value="{{ @game.Kickoff }}" disabled>
 				  <input type="hidden" name="league_year" id="league_year{{ @i }}" value="{{ @league_year }}" disabled>
 				  <input type="hidden" name="league_week" id="league_week{{ @i }}" value="{{ @league_week }}" disabled>
 
@@ -192,6 +194,7 @@
 	document.getElementById("edit"+row_num).style.display = "none";
 	document.getElementById("user_id"+row_num).disabled = false;
 	document.getElementById("game_id"+row_num).disabled = false;
+	document.getElementById("Kickoff"+row_num).disabled = false;
 	document.getElementById("league_year"+row_num).disabled = false;
 	document.getElementById("league_week"+row_num).disabled = false;
 	document.getElementById("spread_pick"+row_num).disabled = false;	

@@ -28,6 +28,7 @@ class TeamPicks extends DB\SQL\Mapper{
                 "tw.id AS ou_id, ".
                 "t.id AS team_id, ".
                 "CONCAT(t.region, ' ',t.team) AS Team, ".
+                "CONCAT(t.conference, ' ',t.division) AS Division, ".
                 "tw.wins_line AS OU, ".
                 "tp.ou_pick ".
                 "FROM teams t ".
@@ -39,7 +40,7 @@ class TeamPicks extends DB\SQL\Mapper{
                 "WHERE tw.league_year = " . $league_year . " AND".
                 " tp.ou_pick IS NULL AND ".
                 "u.id = '" . $id . "'".
-                "ORDER BY Team;"
+                "ORDER BY Division,Team;"
             );
     } 
 
@@ -50,6 +51,7 @@ class TeamPicks extends DB\SQL\Mapper{
                 "tw.id AS ou_id, ".
                 "t.id AS team_id, ".
                 "CONCAT(t.region, ' ',t.team) AS Team, ".
+                "CONCAT(t.conference, ' ',t.division) AS Division, ".
                 "tw.wins_line AS OU, ".
                 "tp.ou_pick, ".
                 "tp.wager ".
@@ -62,7 +64,7 @@ class TeamPicks extends DB\SQL\Mapper{
                 "WHERE tw.league_year = " . $league_year . " AND".
                 " tp.ou_pick IS NOT NULL AND ".
                 "u.id = '" . $id . "'".
-                "ORDER BY Team;"
+                "ORDER BY Division,Team;"
             );
     } 
 

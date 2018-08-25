@@ -16,13 +16,14 @@
 		<div class="row">
 		  <div class="col-md-12">
 		    <div class="card card-border-color card-border-color-primary">
-                      <div class="card-header card-header-divider">Incomplete Picks<span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>You may edit your picks until September 6th at 6:00pm EDT. At this time, all picks are final.</span></div>
+                      <div class="card-header card-header-divider">Incomplete Picks<span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>You may edit your picks until September 6th at 6:00pm EDT. At this time, all picks are final.<br><b>These Lines are ACTIVE. Over/Under Lines Will become FINAL on September 4th, 2018 at midnight.<b></span></div>
                       <div class="card-body">
 			<table class="table">
 			  <thead>
 			    <tr>
-			      <th style="width:60%;">Team</th>
-			      <th style="width:10%;">O/U</th>
+			      <th style="width:40%;">Team</th>
+			      <th style="width:20%;">Division</th>
+			      <th style="width:10%;">Total Wins</th>
 			      <th style="width:10%;">Pick</th>
 			      <th style="width:10%;">Lock</th>
 			    </tr>
@@ -35,6 +36,7 @@
 				<input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}">
 				<input type="hidden" name="league_year" value="{{ @league_year }}">
 				<td>{{ @picks.Team }}</td>
+				<td>{{ @picks.Division }}</td>
 				<td>{{ @picks.OU }}</td>
 				<td>
 				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
@@ -67,13 +69,14 @@
 		<div class="row">
 		  <div class="col-md-12">
 		    <div class="card card-border-color card-border-color-primary">
-                      <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>You may edit your picks until September 6th at 6:00pm EDT. At this time, all picks are final.</span></div>
+                      <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>You may edit your picks until September 6th at 6:00pm EDT. At this time, all picks are final.<br><b>These Lines are ACTIVE. Over/Under Lines Will become FINAL on September 4th, 2018 at midnight.<b></span></div>
                       <div class="card-body">
 			<table class="table">
 			  <thead>
 			    <tr>
-			      <th style="width:60%;">Team</th>
-			      <th style="width:10%;">O/U</th>
+			      <th style="width:40%;">Team</th>
+			      <th style="width:20%;">Division</th>
+			      <th style="width:10%;">Total Wins</th>
 			      <th style="width:10%;">Pick</th>
 			      <th style="width:10%;">Lock</th>
 			      <th style="width:10%;">Edit</th>
@@ -88,6 +91,7 @@
 				<input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}" id="team_id{{@i}}" disabled>
 				<input type="hidden" name="league_year" value="{{ @league_year }}" id="league_year{{@i}}" disabled>
 				<td>{{ @picks.Team }}</td>
+				<td>{{ @picks.Division }}</td>
 				<td>{{ @picks.OU }}</td>
 				<td>
 				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]" id="ou_pick{{@i}}" disabled>

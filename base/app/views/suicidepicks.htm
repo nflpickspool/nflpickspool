@@ -10,93 +10,114 @@
           </nav>
         </div>
         <div class="main-content container-fluid">
-	  <h2>No active lines available. Lines typically become available 1 week before kickoff.</h2>
-	  <check if="{{ !empty(@incompletePicks) }}">
+	  <check if="{{ @alive === 0 }}">
 	    <true>
-              <form method="POST" action="/addteampicks">
-		<div class="row">
-		  <div class="col-md-12">
-		    <div class="card card-border-color card-border-color-primary">
-                      <div class="card-header card-header-divider">Incomplete Picks<span class="card-subtitle">What are you waiting for? Make your picks!</span></div>
-                      <div class="card-body">
-			<table class="table">
-			  <thead>
-			    <tr>
-			      <th style="width:40%;">Team</th>
-			      <th style="width:10%;">O/U</th>
-			      <th style="width:10%;">Pick</th>
-			      <th style="width:10%;">Lock</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <repeat group="{{ @incompletePicks }}" value="{{ @picks }}" key="{{ @i }}">
-			      <tr>
-				<input type="hidden" name="player_id[{{ @i }}]" value="{{ @picks.player_id }}">
-				<input type="hidden" name="ou_id[{{ @i }}]" value="{{ @picks.ou_id }}">
-				<input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}">
-				<input type="hidden" name="league_year" value="{{ @league_year }}">
-				<td>{{ @picks.Team }}</td>
-				<td>{{ @picks.OU }}</td>
-				<td>
-				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
- 				    <option>O</option>
-				    <option>U</option>
-				  </select>
-				</td>
-				<td>
-				  <label class="custom-control custom-checkbox custom-control-inline">
-				    <input class="custom-control-input" type="checkbox" value="1" name="is_lock[{{ @i }}]"><span class="custom-control-label"></span>
-				  </label>
-				</td>
-			      </tr>
-			    </repeat>
-			  </tbody>
-			</table>
-			<button type="submit" class="btn btn-primary btn-block">Submit</button>
-		      </div>
-		    </div>
-		  </div>	  
-		</div>
-	      </form>
+	      <h2>You have been eliminated from the Suicide Picks Pool!</h2><br/>
 	    </true>
-	  </check>
-	  <check if="{{ !empty(@submittedPicks) }}">
-	    <true>
-	      <div class="row">
-		<div class="col-md-12">
-		  <div class="card card-border-color card-border-color-primary">
-                    <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">A list of your submitted picks</span></div>
-                    <div class="card-body">
-		      <table class="table">
-			<thead>
-			  <tr>
-			    <th style="width:40%;">Team</th>
-			    <th style="width:10%;">O/U</th>
-			    <th style="width:10%;">Pick</th>
-			    <th style="width:10%;">Lock</th>
-			  </tr>
-			</thead>
-			<tbody>
-			  <repeat group="{{ @submittedPicks }}" value="{{ @picks }}" key="{{ @i }}">
-			    <tr>
-			      <td>{{ @picks.Team }}</td>
-			      <td>{{ @picks.OU }}</td>
-			      <td>{{ @picks.ou_pick }}</td>
-			      <td>
-				<label class="custom-control custom-checkbox custom-control-inline">
-				  <input class="custom-control-input" type="checkbox" value disabled <check if="{{ @picks.is_lock }}"><true>checked</true></check>><span class="custom-control-label"></span>
-				</label>
-			      </td>
-			    </tr>
-			  </repeat>
-			</tbody>
-		      </table>
-		      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+	    <false>
+	      <check if="{{ !empty(@availableTeams) AND @closed===NULL}}">
+		<true>
+		  <form method="POST" action=<check if="{{ @existingPick===NULL }}"><true>"/addsuicidepick"</true><false>"/updatesuicidepick"</false></check>>
+		    <div class="row">
+		      <div class="col-md-12 col-sm-8 col-lg-6">
+			<div class="card card-border-color card-border-color-primary">
+			  <div class="card-header card-header-divider">Suicide Pick<span class="card-subtitle">What are you waiting for? Make your picks!</span></div>
+			  <div class="card-body">
+			    <div class="form-group row">
+			      <div class="col-12">
+				<div class="input-group mb-3">
+				  <input type="hidden" name="league_year" value="{{ @league_year }}">
+				  <input type="hidden" name="league_week" value="{{ @league_week }}">
+				  <input type="hidden" name="user_id" value="{{ @user_id }}">
+				  <select class="form-control" id="pick" name="pick" <check if="{{@existingPick===NULL}}"><false>disabled</false></check>>
+				    <check if="{{ @existingPick===NULL }}">
+				      <true>
+					<option selected>Click to Select Suicide Team</option>
+				      </true>
+				    </check>
+				    <repeat group="{{ @availableTeams}}" value="{{ @team }}">
+				      <option value="{{ @team.team_id.'|'.@team.kickoff_time.'|'.@team.game_id }}" 
+					      <check if="{{@existingPick == @team.team_id}}">
+						<true>
+						  selected
+						</true>
+					      </check>
+					      >{{@team.team.' '.@team.point_spread.' '.@team.other_team.' '.date('D m/d g:i A',strtotime(@team.kickoff_time)) }}</option>
+				    </repeat>
+				  </select>
+				  <check if="{{ @existingPick===NULL AND @closed===NULL}}">
+				    <false>
+				      <div id="edit" class="input-group-append">
+					<button type="button" class="btn btn-primary" onclick="updateSuicidePick()">
+					  <i class="icon mdi mdi-edit"></i>
+					</button>
+				      </div>
+				      <button id="update_btn" style="display:none" type="submit" class="btn btn-primary btn-block">Update</button>
+				    </false>
+				    <true>
+				      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+				    </true>
+				  </check>
+				</div>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		      </div>	  
 		    </div>
-		  </div>
-		</div>	  
-	      </div>
-            </true>
+		  </form>
+		</true>
+	      </check>
+	    </false>
 	  </check>
-	</div>
+	  <div class="row">
+	    <div class="col-md-12 col-sm-8 col-lg-6">
+	      <div class="card card-border-color card-border-color-primary">
+                <div class="card-header card-header-divider">Previous Picks<span class="card-subtitle">A list of your previous suicide picks</span></div>
+                <div class="card-body">
+		  <table class="table">
+		    <thead>
+		      <tr>
+			<th style="width:20%;">Week</th>
+			<th style="width:60%;">Team</th>
+			<th style="width:20%;">Result</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <repeat group="{{ @previousPicks }}" value="{{ @picks }}" key="{{ @i }}">
+			<tr>
+			  <td>{{ @picks.league_week }}</td>
+			  <td>{{ @picks.team }}</td>
+			  <td>
+			    <check if="{{ @picks.correct === NULL }}">
+			      <true>
+				<check if="{{ @closed === NULL }}">
+				  <true>Submitted</true>
+				  <false>Closed</false>
+				</check>
+			      </true>
+			      <false>
+				<check if="{{ @picks.correct == 1 }}">
+				  <true>Survived</true>
+				  <false>Eliminated</false>
+				</check>
+			      </false>
+			    </check>
+			  </td>
+			</tr>
+		      </repeat>
+		    </tbody>
+		  </table>
+		</div>
+	      </div>
+	    </div>	  
+	  </div>
+        </div>
       </div>
+      <script>
+	function updateSuicidePick() {
+	document.getElementById("edit").style.display = "none";
+	document.getElementById("pick").disabled = false;	
+	document.getElementById('update_btn').style.display = "block";
+	}
+      </script>

@@ -88,19 +88,13 @@
 		      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>Suicide Picks</span></a>
 			<repeat group="{{ @gamesYearList }}" value="{{ @g_year }}" key="{{ @a }}">
                           <ul class="sub-menu">
-                            <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>{{ @g_year.league_year }}</span></a>
-			      <repeat group="{{ @gamesWeekList[@a] }}" value="{{ @g_week }}" key="{{ @b }}"> 
-				<ul class="sub-menu"><li>
-				  <form name="suicidePicksForm{{ @a.@b }}" method="POST" action="/suicidepicks">
-				    <input type="hidden" name="league_year" value="{{ @g_year.league_year }}">
-				    <input type="hidden" name="league_week" value="{{ @g_week['league_week'] }}">
-				    <li><a href="#" onclick="postForm('suicidePicksForm{{@a.@b}}')"><i class="icon mdi mdi-undefined"></i><span>Week {{ @g_week['league_week'] }}</span></a>
-				    </li>
-				  </form>
-				</ul>
-			      </repeat>
-                            </li>
-                          </ul>
+			    <form name="suicidePicksForm{{ @a.@b }}" method="POST" action="/suicidepicks">
+			      <input type="hidden" name="league_year" value="{{ @g_year.league_year }}">
+			      <input type="hidden" name="league_week" value="{{ @gamesWeekList[0][0]['league_week'] }}">
+			      <li><a href="#" onclick="postForm('suicidePicksForm{{@a.@b}}')"><i class="icon mdi mdi-undefined"></i><span>{{ @g_year.league_year }}</span></a>
+			      </li>
+			    </form>
+			  </ul>
 			</repeat>
                       </li>
                     </ul>

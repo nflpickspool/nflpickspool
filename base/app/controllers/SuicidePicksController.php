@@ -34,7 +34,7 @@ class SuicidePicksController extends UserController {
         if(!$closed){
             $alive=$suicidePicks->checkIfAlive($user_id,$league_year);
             //Only get list of available teams if still alive
-            if($alive[0]['alive']==0){
+            if(!empty($alive) and $alive[0]['alive']==='0'){
                 $this->f3->set('alive',0);
             } else {
                 $this->f3->set('availableTeams',$suicidePicks->getAvailableTeamsForWeek($user_id,$league_year,$league_week));

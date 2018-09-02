@@ -32,6 +32,11 @@ class UserController extends Controller {
 		$this->f3->set('view','home.htm');	
 	}
     
+	function renderRules(){
+        $this->f3->set('pageName','Rules');
+		$this->f3->set('view','about.htm');	
+	}
+
 	function renderProfile(){
         $this->f3->set('pageName','Profile');
 		$this->f3->set('view','profile.htm');	

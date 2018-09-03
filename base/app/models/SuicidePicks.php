@@ -36,7 +36,7 @@ class SuicidePicks extends DB\SQL\Mapper{
             "FROM suicide_picks ".
             "GROUP BY league_year, user_id ".
             "HAVING league_year = ".$league_year ." ".
-            "AND ".$user_id.";"
+            "AND user_id = ".$user_id.";"
 		);
 	}
 
@@ -108,6 +108,7 @@ class SuicidePicks extends DB\SQL\Mapper{
             "sp.correct ".
             "FROM suicide_picks as sp ".
             "CROSS JOIN users AS u ".
+            "ON sp.user_id = u.id ".
             "LEFT JOIN teams AS t ".
             "ON sp.suicide_pick = t.id ".
             "WHERE sp.league_year =  ".$league_year." ". 

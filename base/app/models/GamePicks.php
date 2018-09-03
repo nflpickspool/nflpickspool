@@ -48,7 +48,7 @@ class GamePicks extends DB\SQL\Mapper{
             "LEFT JOIN stadiums AS s ".
             "  ON stadium = s.id ".
             "LEFT JOIN game_picks AS gp ".
-            "  ON g.id = gp.game_id ".
+            "  ON g.id = gp.game_id AND u.id = gp.user_id ".
 
             "WHERE league_year = ". $league_year .
             " AND league_week = ". $league_week .
@@ -93,7 +93,7 @@ class GamePicks extends DB\SQL\Mapper{
             "LEFT JOIN stadiums AS s ".
             "  ON stadium = s.id ".
             "LEFT JOIN game_picks AS gp ".
-            "  ON g.id = gp.game_id ".
+            "  ON g.id = gp.game_id AND u.id = gp.user_id ".
 
             "WHERE league_year = ". $league_year .
             " AND league_week = ". $league_week .

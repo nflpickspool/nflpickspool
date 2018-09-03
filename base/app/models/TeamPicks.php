@@ -36,7 +36,7 @@ class TeamPicks extends DB\SQL\Mapper{
                 "LEFT JOIN team_wins AS tw ".
                 "ON t.id = tw.team ".
                 "LEFT JOIN team_picks AS tp ".
-                "ON tw.id = tp.ou_id ".
+                "ON tw.id = tp.ou_id AND u.id = tp.player_id ".
                 "WHERE tw.league_year = " . $league_year . " AND".
                 " tp.ou_pick IS NULL AND ".
                 "u.id = '" . $id . "'".
@@ -60,7 +60,7 @@ class TeamPicks extends DB\SQL\Mapper{
                 "LEFT JOIN team_wins AS tw ".
                 "ON t.id = tw.team ".
                 "LEFT JOIN team_picks AS tp ".
-                "ON tw.id = tp.ou_id ".
+                "ON tw.id = tp.ou_id AND u.id = tp.player_id ".
                 "WHERE tw.league_year = " . $league_year . " AND".
                 " tp.ou_pick IS NOT NULL AND ".
                 "u.id = '" . $id . "'".

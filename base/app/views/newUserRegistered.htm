@@ -7,7 +7,13 @@
             </div>
             <p>You're Almost There! Once We Have Received Payment, You Will Gain Access to View the Sportsbook and Make Picks!</p>
             <p>If paying by credit card, please add $15 to your fee. You may also use Venmo.</p>
-            <a class="btn btn-primary btn-lg" href="https://paypal.me/pickspool">PayPal</a>
+	    <div id="btns">
+              <a class="btn btn-primary btn-lg" href="https://paypal.me/pickspool">PayPal</a>
+              <button class="btn btn-primary btn-lg" onclick="showVenmoMessage()">Venmo</button>
+	    </div>
+	    <div id="venmoMessage" style="display:none">
+	      <p>Please Venmo your fee to @Patrick-McNamara-19</p>
+            </div>
 	  </false>
 	  <true>
 	    <div class="py-3 text-center">
@@ -19,4 +25,10 @@
 	  </true>
 	</check>
       </div>
+      <script>
+	function showVenmoMessage() {
+	document.getElementById('btns').style.display = "none";
+	document.getElementById('venmoMessage').style.display = "block";
+	}
+      </script>
 </main>

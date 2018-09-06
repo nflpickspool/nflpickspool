@@ -18,43 +18,45 @@
 		    <div class="card card-border-color card-border-color-primary">
                       <div class="card-header card-header-divider">Incomplete Picks<span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>You may edit your picks until September 6th at 6:00pm EDT. At this time, all picks are final.<br><b>These Lines are ACTIVE. Over/Under Lines Will become FINAL on September 4th, 2018 at midnight.<b></span></div>
                       <div class="card-body">
-			<table class="table">
-			  <thead>
-			    <tr>
-			      <th style="width:40%;">Team</th>
-			      <th style="width:20%;">Division</th>
-			      <th style="width:10%;">Total Wins</th>
-			      <th style="width:10%;">Pick</th>
-			      <th style="width:10%;">Lock</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <repeat group="{{ @incompletePicks }}" value="{{ @picks }}" key="{{ @i }}">
+			<div class="table-responsive noSwipe">
+			  <table class="table">
+			    <thead>
 			      <tr>
-				<input type="hidden" name="player_id[{{ @i }}]" value="{{ @picks.player_id }}">
-				<input type="hidden" name="ou_id[{{ @i }}]" value="{{ @picks.ou_id }}">
-				<input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}">
-				<input type="hidden" name="league_year" value="{{ @league_year }}">
-				<td>{{ @picks.Team }}</td>
-				<td>{{ @picks.Division }}</td>
-				<td>{{ @picks.OU }}</td>
-				<td>
-				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
- 				    <option value="O">Over</option>
-				    <option value="U">Under</option>
-				  </select>
-				</td>
-				<td>
-				  <select class="form-control-inline" type="char" value="" name="wager[{{ @i }}]">
- 				    <option value="1"></option>
-				    <option value="2">Lock</option>
-				    <option value="3">Iron</option>
-				  </select>
-				</td>
+				<th style="width:40%;">Team</th>
+				<th style="width:20%;">Division</th>
+				<th style="width:10%;">Total Wins</th>
+				<th style="width:10%;">Pick</th>
+				<th style="width:10%;">Lock</th>
 			      </tr>
-			    </repeat>
-			  </tbody>
-			</table>
+			    </thead>
+			    <tbody>
+			      <repeat group="{{ @incompletePicks }}" value="{{ @picks }}" key="{{ @i }}">
+				<tr>
+				  <input type="hidden" name="player_id[{{ @i }}]" value="{{ @picks.player_id }}">
+				  <input type="hidden" name="ou_id[{{ @i }}]" value="{{ @picks.ou_id }}">
+				  <input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}">
+				  <input type="hidden" name="league_year" value="{{ @league_year }}">
+				  <td>{{ @picks.Team }}</td>
+				  <td>{{ @picks.Division }}</td>
+				  <td>{{ @picks.OU }}</td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]">
+ 				      <option value="O">Over</option>
+				      <option value="U">Under</option>
+				    </select>
+				  </td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="wager[{{ @i }}]">
+ 				      <option value="1"></option>
+				      <option value="2">Lock</option>
+				      <option value="3">Iron</option>
+				    </select>
+				  </td>
+				</tr>
+			      </repeat>
+			    </tbody>
+			  </table>
+			</div>
 			<button type="submit" class="btn btn-primary btn-block">Submit</button>
 		      </div>
 		    </div>
@@ -71,62 +73,64 @@
 		    <div class="card card-border-color card-border-color-primary">
                       <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>You may edit your picks until September 6th at 6:00pm EDT. At this time, all picks are final.<br><b>These Lines are ACTIVE. Over/Under Lines Will become FINAL on September 4th, 2018 at midnight.<b></span></div>
                       <div class="card-body">
-			<table class="table">
-			  <thead>
-			    <tr>
-			      <th style="width:40%;">Team</th>
-			      <th style="width:20%;">Division</th>
-			      <th style="width:10%;">Total Wins</th>
-			      <th style="width:10%;">Pick</th>
-			      <th style="width:10%;">Lock</th>
-			      <th style="width:10%;">Edit</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <repeat group="{{ @submittedPicks }}" value="{{ @picks }}" key="{{ @i }}">
+			<div class="table-responsive noSwipe">
+			  <table class="table">
+			    <thead>
 			      <tr>
-				<input type="hidden" name="id[{{ @i }}]" value="{{ @picks.id }}" id="id{{@i}}" disabled>
-				<input type="hidden" name="player_id[{{ @i }}]" value="{{ @picks.player_id }}" id="player_id{{@i}}" disabled>
-				<input type="hidden" name="ou_id[{{ @i }}]" value="{{ @picks.ou_id }}" id="ou_id{{@i}}" disabled>
-				<input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}" id="team_id{{@i}}" disabled>
-				<input type="hidden" name="league_year" value="{{ @league_year }}" id="league_year{{@i}}" disabled>
-				<td>{{ @picks.Team }}</td>
-				<td>{{ @picks.Division }}</td>
-				<td>{{ @picks.OU }}</td>
-				<td>
-				  <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]" id="ou_pick{{@i}}" disabled>
- 				    <check if="{{ @picks.ou_pick == 'O'}}">
-				      <true>
- 					<option value="O">Over</option>
-					<option value="U">Under</option>
-				      </true>
-				      <false>
-					<option value="U">Under</option>
- 					<option value="O">Over</option>
-				      </false>
-				    </check>
-				  </select>
-				</td>
-				<td>
-				  <select class="form-control-inline" value="" name="wager[{{ @i }}]" id="wager{{@i}}" disabled>
- 				    <option value="1" <check if="{{ @picks.wager == '1'}}"><true> selected</true></check>></option>
- 				    <option value="2" <check if="{{ @picks.wager == '2'}}"><true> selected</true></check>>Lock</option>
- 				    <option value="3" <check if="{{ @picks.wager == '3'}}"><true> selected</true></check>>Iron</option>
-				  </select>
-				</td>
-				<td>
-				  <check if="{{ strtotime(@startTime[0]['startTime']) > time()+(60*120) }}">
-				    <true>
-				      <div id="edit{{@i}}">
-					<button type="button" class="btn btn-primary" onclick="updateTeamPick({{@i}})"><i class="icon mdi mdi-edit"></i></button>
-				      </div>
-				    </true>
-				  </check>
-				</td>
+				<th style="width:40%;">Team</th>
+				<th style="width:20%;">Division</th>
+				<th style="width:10%;">Total Wins</th>
+				<th style="width:10%;">Pick</th>
+				<th style="width:10%;">Lock</th>
+				<th style="width:10%;">Edit</th>
 			      </tr>
-			    </repeat>
-			  </tbody>
-			</table>
+			    </thead>
+			    <tbody>
+			      <repeat group="{{ @submittedPicks }}" value="{{ @picks }}" key="{{ @i }}">
+				<tr>
+				  <input type="hidden" name="id[{{ @i }}]" value="{{ @picks.id }}" id="id{{@i}}" disabled>
+				  <input type="hidden" name="player_id[{{ @i }}]" value="{{ @picks.player_id }}" id="player_id{{@i}}" disabled>
+				  <input type="hidden" name="ou_id[{{ @i }}]" value="{{ @picks.ou_id }}" id="ou_id{{@i}}" disabled>
+				  <input type="hidden" name="team_id[{{ @i }}]" value="{{ @picks.team_id }}" id="team_id{{@i}}" disabled>
+				  <input type="hidden" name="league_year" value="{{ @league_year }}" id="league_year{{@i}}" disabled>
+				  <td>{{ @picks.Team }}</td>
+				  <td>{{ @picks.Division }}</td>
+				  <td>{{ @picks.OU }}</td>
+				  <td>
+				    <select class="form-control-inline" type="char" value="" name="ou_pick[{{ @i }}]" id="ou_pick{{@i}}" disabled>
+ 				      <check if="{{ @picks.ou_pick == 'O'}}">
+					<true>
+ 					  <option value="O">Over</option>
+					  <option value="U">Under</option>
+					</true>
+					<false>
+					  <option value="U">Under</option>
+ 					  <option value="O">Over</option>
+					</false>
+				      </check>
+				    </select>
+				  </td>
+				  <td>
+				    <select class="form-control-inline" value="" name="wager[{{ @i }}]" id="wager{{@i}}" disabled>
+ 				      <option value="1" <check if="{{ @picks.wager == '1'}}"><true> selected</true></check>></option>
+ 				      <option value="2" <check if="{{ @picks.wager == '2'}}"><true> selected</true></check>>Lock</option>
+ 				      <option value="3" <check if="{{ @picks.wager == '3'}}"><true> selected</true></check>>Iron</option>
+				    </select>
+				  </td>
+				  <td>
+				    <check if="{{ strtotime(@startTime[0]['startTime']) > time()+(60*120) }}">
+				      <true>
+					<div id="edit{{@i}}">
+					  <button type="button" class="btn btn-primary" onclick="updateTeamPick({{@i}})"><i class="icon mdi mdi-edit"></i></button>
+					</div>
+				      </true>
+				    </check>
+				  </td>
+				</tr>
+			      </repeat>
+			    </tbody>
+			  </table>
+			</div>
 			<div id="update_btn" style="display:none">
 			  <button type="submit" class="btn btn-primary btn-block">Update</button>
 			</div>

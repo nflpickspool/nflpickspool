@@ -47,7 +47,17 @@
 			  <li><a href="#"><i class="icon mdi mdi-undefined"></i><span>League Standings</span></a>
 			  <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>League Picks</span></a>
 			    <ul class="sub-menu">
-			      <li><a href="#"><i class="icon mdi mdi-undefined"></i><span>Team Win Total Picks</span></a>
+			      <li class="parent"><a href=""><i class="icon mdi mdi-undefined"></i><span>Team Win Total Picks</span></a>
+				<ul class="sub-menu">
+				  <repeat group="{{ @teamWinsYearList }}" value="{{ @tw_year }}" key="{{ @i }}">
+				    <form name="viewLeagueTeamPicksForm{{ @i }}" method="POST" action="/leaguepicksteam">
+				      <input type="hidden" name="league_year" value="{{ @tw_year.league_year }}">
+				      <li><a href="#" onclick="postForm('viewLeagueTeamPicksForm{{@i}}')"><i class="icon mdi mdi-undefined"></i><span>{{ @tw_year.league_year }}</span></a>
+				      </li>
+				    </form>
+				  </repeat>
+				</ul>
+			      </li>
 			      <li><a href="#"><i class="icon mdi mdi-undefined"></i><span>Game Line Picks</span></a>
 			      <li><a href="#"><i class="icon mdi mdi-undefined"></i><span>Suicide Picks</span></a>
 			    </ul>

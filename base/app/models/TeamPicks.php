@@ -66,7 +66,43 @@ class TeamPicks extends DB\SQL\Mapper{
                 "u.id = '" . $id . "'".
                 "ORDER BY Division,Team;"
             );
-    } 
+    }
+
+	public function getLeaguePicksByLeagueYear($league_year) {
+        $sql = "
+            SELECT
+            GROUP_CONCAT(DISTINCT
+              CONCAT(
+                'max(case when player_id = ',
+                player_id,
+                ' THEN CONCAT(ou_pick,'','',wager) END) AS `',
+                handle,
+                '`'
+              )
+            ) AS `pivot_columns`
+            FROM team_picks AS tp
+            LEFT JOIN users as u
+            ON tp.player_id = u.id"
+            ;
+        $stmt = $this->db->pdo()->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $stmt->closeCursor();
+        $pivot_columns = $row['pivot_columns'];
+
+        $sql = "
+            SELECT CONCAT(t.region, ' ',t.team) AS Team, 
+            CONCAT(t.conference, ' ',t.division) AS Division,
+            {$pivot_columns}
+            FROM team_picks AS tp
+            LEFT JOIN teams AS t
+            ON tp.team_id = t.id
+            GROUP BY team_id
+            ORDER BY Division,Team"
+            ;
+        return $this->db->exec($sql);
+    }
+    
 
 	public function add() {
 	    $this->copyFrom('POST');

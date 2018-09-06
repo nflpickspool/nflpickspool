@@ -1,0 +1,64 @@
+      <div class="be-content">
+        <div class="page-head">
+          <h2 class="page-head-title">{{ @league_year }} League Picks Team Win Totals</h2>
+          <nav aria-label="breadcrumb" role="navigation">
+            <ol class="breadcrumb page-head-nav">
+              <li class="breadcrumb-item"><a href="#">League Picks</a></li>
+              <li class="breadcrumb-item"><a href="#">Team Win Total Picks</a></li>
+              <li class="breadcrumb-item"><a href="#">{{ @league_year }}</a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="main-content container-fluid">
+	  <check if="{{ strtotime(@startTime[0]['startTime']) > time()+(60*120) }}">
+	    <true>
+	      <h2>Picks only viewable after the season starts! Check back 2 hours before kickoff!</h2>
+	    </true>
+	    <false>
+	      <div class="row">
+		<div class="col-md-12">
+		  <div class="card card-border-color card-border-color-primary">
+                    <div class="card-header card-header-divider">League Picks</div>
+                    <div class="card-body">
+		      <div class="table-responsive noSwipe">
+			<table class="table">
+			  <thead>
+			    <tr>
+			      <th style="width:10%;">Team</th>
+			      <th style="width:10%;">Division</th>
+			      <repeat group="{{ range(2,count(current(@leaguePicks))-1) }}" value="{{ @i }}">
+				<th class="text-center" style="width:5%;">{{array_keys(@leaguePicks[0])[@i]}}</th>
+			      </repeat>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <repeat group="{{ @leaguePicks }}" key="{{@a}}" value="{{ @picks }}">
+			      <tr>
+				<td>{{ @picks.Team }}</td>
+				<td>{{ @picks.Division }}</td>
+				<repeat group="{{ range(2,count(current(@leaguePicks))-1) }}" value="{{ @i }}">
+				  <td align="center">
+				    <check if="{{ explode(',',array_values(@leaguePicks[@a])[@i])[0] == 'O' }}">
+				      <true>Over</true>
+				      <false>Under</false>
+				    </check>
+				    <check if="{{ explode(',',array_values(@leaguePicks[@a])[@i])[1] == '2' }}">
+				      <true><br>Lock</true>
+				    </check>
+				    <check if="{{ explode(',',array_values(@leaguePicks[@a])[@i])[1] == '3' }}">
+				      <true><br>Iron</true>
+				    </check>
+				  </td>
+				</repeat>
+			      </tr>
+			    </repeat>
+			  </tbody>
+			</table>
+		      </div>
+		    </div>
+		  </div>
+		</div>	  
+	      </div>
+	    </false>
+	  </check>
+	</div>

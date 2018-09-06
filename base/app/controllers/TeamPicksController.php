@@ -56,5 +56,15 @@ class TeamPicksController extends UserController {
         $this->renderViewPicks();
         //$this->f3->set('view','post.htm');
     }
-}
 
+    function renderLeaguePicks(){
+        $teamPicks = new TeamPicks($this->db);
+        $league_year = $this->f3->get('POST.league_year');
+        $this->f3->set('league_year',$league_year);
+        $games = new Games($this->db);
+        $this->f3->set('startTime',$games->getLeagueYearStartTime($league_year));
+        $this->f3->set('leaguePicks',$teamPicks->getLeaguePicksByLeagueYear($league_year));
+        $this->f3->set('pageName','League Picks for '. $league_year .'  Team Wins O/Us');
+		$this->f3->set('view','leaguepicksteam.htm');	
+    }
+}

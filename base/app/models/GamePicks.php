@@ -105,6 +105,9 @@ class GamePicks extends DB\SQL\Mapper{
     }
 
     public function getLeaguePicksByLeagueYearAndWeek($league_year,$league_week) {
+        $sql="SET SESSION group_concat_max_len = 4096";
+        $stmt = $this->db->pdo()->prepare($sql);
+        $stmt->execute();
         $sql = "
             SELECT
             GROUP_CONCAT(DISTINCT

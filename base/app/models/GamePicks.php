@@ -54,6 +54,7 @@ class GamePicks extends DB\SQL\Mapper{
             " AND league_week = ". $league_week .
             " AND u.id = '" . $id . "'".
             " AND gp.spread_pick IS NULL ".
+            " AND kickoff_time > NOW() ".
             " ORDER BY Kickoff;"
             );
     } 
@@ -102,7 +103,64 @@ class GamePicks extends DB\SQL\Mapper{
             " ORDER BY Kickoff;"
             );
     }
-    
+
+    public function getLeaguePicksByLeagueYearAndWeek($league_year,$league_week) {
+        $sql = "
+            SELECT
+            GROUP_CONCAT(DISTINCT
+              CONCAT(
+                'max(case when user_id = ',
+                user_id,
+                ' THEN CONCAT(spread_pick,'','',wager,'','',money_pick,'','',ou_pick) END) AS `',
+                handle,
+                '`'
+              )
+            ) AS `pivot_columns`
+            FROM game_picks AS gp
+            LEFT JOIN users as u
+            ON gp.user_id = u.id"
+            ;
+        $stmt = $this->db->pdo()->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $stmt->closeCursor();
+        $pivot_columns = $row['pivot_columns'];
+
+        $sql = "
+            SELECT 
+            CONCAT(ta.team, ' ', '@', ' ', th.team) AS Matchup,
+            ta.id AS away_id,
+            UPPER(ta.abb) AS away,
+            th.id AS home_id,
+            UPPER(th.abb) AS home,
+            kickoff_time AS Kickoff,
+            ft.team AS Favorite,
+            point_spread AS 'PointSpread',
+            money_line AS 'MoneyLine',
+            ou AS 'OverUnder',
+            {$pivot_columns}
+            FROM games AS g
+            LEFT JOIN teams AS ta
+            ON away = ta.id
+            LEFT JOIN teams AS th
+            ON home = th.id
+            LEFT JOIN teams AS ft
+            ON favorite = ft.id
+            LEFT JOIN game_picks AS gp
+            ON g.id = gp.game_id
+            WHERE league_year = ". $league_year ."
+            AND league_week = ". $league_week ."
+            AND kickoff_time < NOW()
+            GROUP BY Matchup,away_id,away,home_id,home,
+            Kickoff,Favorite,PointSpread,MoneyLine,OverUnder
+            ORDER BY Kickoff;"
+            ;
+            
+        return $this->db->exec($sql);
+
+
+    }
+
 	public function add() {
 	    $this->copyFrom('POST');
 	    $this->save();

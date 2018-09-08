@@ -97,6 +97,7 @@ class TeamPicks extends DB\SQL\Mapper{
             FROM team_picks AS tp
             LEFT JOIN teams AS t
             ON tp.team_id = t.id
+            WHERE tp.league_year = ".$league_year."
             GROUP BY team_id
             ORDER BY Division,Team"
             ;

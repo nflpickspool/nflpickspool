@@ -10,7 +10,7 @@
           </nav>
         </div>
         <div class="main-content container-fluid">
-	  <check if="{{ !empty(@incompletePicks) }}">
+	  <check if="{{ !empty(@incompletePicks) and strtotime(@startTime[0]['startTime']) > time()+(60*120)}}">
 	    <true>
               <form method="POST" action="/addteampicks">
 		<div class="row">

@@ -1,0 +1,94 @@
+      <div class="be-content">
+        <div class="page-head">
+          <h2 class="page-head-title">{{ @league_year }} Week {{ @league_week }} League Picks</h2>
+          <nav aria-label="breadcrumb" role="navigation">
+            <ol class="breadcrumb page-head-nav">
+              <li class="breadcrumb-item"><a href="#">League Picks</a></li>
+              <li class="breadcrumb-item"><a href="#">Game Picks</a></li>
+              <li class="breadcrumb-item"><a href="#">{{ @league_year }}</a></li>
+              <li class="breadcrumb-item"><a href="#">Week {{ @league_week }}</a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="main-content container-fluid">
+	  <check if="{{ empty(@leaguePicks) }}">
+	    <true>
+	      <h2>No Picks Yet. Check back after kickoff!</h2>
+	    </true>
+	    <false>
+	      <div class="row">
+		<div class="col-md-12">
+		  <div class="card card-border-color card-border-color-primary">
+                    <div class="card-header card-header-divider">League Picks</div>
+                    <div class="card-body">
+		      <div class="table-responsive noSwipe">
+			<table class="table">
+			  <thead>
+			    <tr>
+			      <th/><th/><th/><th/><th/>
+			      <repeat group="{{ range(10,count(current(@leaguePicks))-1) }}" value="{{ @i }}">
+				<th class="text-center" style="width:5%;" colspan="3">{{array_keys(@leaguePicks[0])[@i]}}</th>
+			      </repeat>
+			    </tr>
+			    <tr>
+			      <th style="width:10%;">Matchup</th>
+			      <th style="width:10%;">Kickoff</th>
+			      <th style="width:10%;">Point Spread</th>
+			      <th style="width:10%;">ML</th>
+			      <th style="width:10%;">O/U</th>
+			      <repeat group="{{ range(10,count(current(@leaguePicks))-1) }}" value="{{ @i }}">
+				<th class="text-center">Pick</th>
+				<th class="text-center">ML</th>
+				<th class="text-center">O/U</th>
+			      </repeat>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr>
+			    </tr>
+			    <repeat group="{{ @leaguePicks }}" key="{{@a}}" value="{{ @picks }}">
+			      <tr>
+				<td>{{ @picks.Matchup }}</td>
+				<td>{{ date('D m/d g:i A',strtotime(@picks.Kickoff)) }}</td>
+				<td>{{ @picks.Favorite . " -". @picks.PointSpread }}</td>
+				<td>{{ @picks.MoneyLine }}</td>
+				<td>{{ @picks.OverUnder }}</td>
+				<repeat group="{{ range(10,count(current(@leaguePicks))-1) }}" value="{{ @i }}">
+				  <td align="center">
+				    <check if="{{@picks.away_id == explode(',',array_values(@leaguePicks[@a])[@i])[0]}}">
+				      <true>{{ @picks.away }}</true>
+				    </check>
+				    <check if="{{@picks.home_id == explode(',',array_values(@leaguePicks[@a])[@i])[0]}}">
+				      <true>{{ @picks.home }}</true>
+				    </check>
+				    <check if="{{ explode(',',array_values(@leaguePicks[@a])[@i])[1] == '2' }}">
+				      <true><br>Lock</true>
+				    </check>
+				    <check if="{{ explode(',',array_values(@leaguePicks[@a])[@i])[1] == '3' }}">
+				      <true><br>Iron</true>
+				    </check>
+				  </td>
+				  <td align="center">
+				    <check if="{{@picks.away_id == explode(',',array_values(@leaguePicks[@a])[@i])[2]}}">
+				      <true>{{ @picks.away }}</true>
+				    </check>
+				    <check if="{{@picks.home_id == explode(',',array_values(@leaguePicks[@a])[@i])[2]}}">
+				      <true>{{ @picks.home }}</true>
+				    </check>
+				  </td>
+				  <td align="center">
+				    {{explode(',',array_values(@leaguePicks[@a])[@i])[3]}}
+				  </td>
+				</repeat>
+			      </tr>
+			    </repeat>
+			  </tbody>
+			</table>
+		      </div>
+		    </div>
+		  </div>
+		</div>	  
+	      </div>
+	    </false>
+	  </check>
+	</div>

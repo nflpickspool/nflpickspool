@@ -10,9 +10,9 @@
           </nav>
         </div>
         <div class="main-content container-fluid">
-	  <check if="{{ strtotime(@startTime[0]['startTime']) > time()+(60*120) }}">
+	  <check if="{{ empty(@leaguePicks) }}">
 	    <true>
-	      <h2>Picks only viewable after the season starts! Check back 2 hours before kickoff!</h2>
+	      <h2>No Picks Yet. Check back after games begin!</h2>
 	    </true>
 	    <false>
 	      <div class="row">

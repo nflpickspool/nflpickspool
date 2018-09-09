@@ -117,6 +117,48 @@ class SuicidePicks extends DB\SQL\Mapper{
         );
     }
 
+    	public function getLeaguePicksByLeagueYear($league_year) {
+        $sql = "
+            SELECT
+            GROUP_CONCAT(DISTINCT
+              CONCAT(
+                'max(case when user_id = ',
+                user_id,
+                ' THEN CONCAT(suicide_pick,'','',t.team) END) AS `',
+                handle,
+                '`'
+              )
+            ) AS `pivot_columns`
+            FROM suicide_picks AS sp
+            LEFT JOIN users as u
+            ON sp.user_id = u.id
+            LEFT JOIN teams AS t
+            ON sp.suicide_pick = t.id"
+            ;
+        $stmt = $this->db->pdo()->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $stmt->closeCursor();
+        $pivot_columns = $row['pivot_columns'];
+
+        $sql = "
+            SELECT
+            sp.league_week AS Week,
+            {$pivot_columns}
+            FROM suicide_picks AS sp
+            LEFT JOIN games as g
+            ON sp.game_id = g.id
+            LEFT JOIN teams AS t
+            ON sp.suicide_pick = t.id
+            WHERE sp.league_year = ".$league_year."
+            AND kickoff_time < NOW()
+            GROUP BY Week
+            ORDER BY Week"
+            ;
+            
+        return $this->db->exec($sql);
+    }
+
 	public function add() {
 	    $this->copyFrom('POST');
 	    $this->save();

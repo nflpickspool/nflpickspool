@@ -76,7 +76,17 @@
 				  </ul>
 				</repeat>
 			      </li>
-			      <li><a href="#"><i class="icon mdi mdi-undefined"></i><span>Suicide Picks</span></a>
+			      <li class="parent"><a href=""><i class="icon mdi mdi-undefined"></i><span>Suicide Picks</span></a>
+				<ul class="sub-menu">
+				  <repeat group="{{ @teamWinsYearList }}" value="{{ @tw_year }}" key="{{ @i }}">
+				    <form name="viewLeagueSuicidePicksForm{{ @i }}" method="POST" action="/leaguepickssuicide">
+				      <input type="hidden" name="league_year" value="{{ @tw_year.league_year }}">
+				      <li><a href="#" onclick="postForm('viewLeagueSuicidePicksForm{{@i}}')"><i class="icon mdi mdi-undefined"></i><span>{{ @tw_year.league_year }}</span></a>
+				      </li>
+				    </form>
+				  </repeat>
+				</ul>
+			      </li>
 			    </ul>
 			</ul>
                     </ul>

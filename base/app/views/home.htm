@@ -25,7 +25,31 @@
 		</form>
 	      </div>
 	    </div>
+	  </div>
+	  <div class="py-3 text-center">
+            <div class="btn-group btn-space">
+	      <button class="btn btn-primary dropdown-toggle btn-lg" type="button" data-toggle="dropdown">View Picks! <span class="icon-dropdown mdi mdi-chevron-down"></span></button>
+	      <div class="dropdown-menu" role="menu">
+		<form name="blueWeekPicksForm" method="POST" action="/leaguepicksgames">
+		  <input type="hidden" name="league_year" value="{{ @gamesYearList[0].league_year }}">
+		  <input type="hidden" name="league_week" value="{{ @gamesWeekList[0][0]['league_week'] }}">
+		  <li><a class="dropdown-item" href="#" onclick="postForm('blueWeekPicksForm')">Week {{ @gamesWeekList[0][0]['league_week']}} Picks</a>
+		  </li>
+		</form>
+		<form name="blueWeekSuicideForm" method="POST" action="/leaguepickssuicide">
+		  <input type="hidden" name="league_year" value="{{ @gamesYearList[0].league_year }}">
+		  <input type="hidden" name="league_week" value="{{ @gamesWeekList[0][0]['league_week'] }}">
+		  <li><a class="dropdown-item" href="#" onclick="postForm('blueWeekSuicideForm')">Suicide Picks</a>
+		  </li>
+		</form>
+		<form name="blueTeamWinsForm" method="POST" action="/leaguepicksteam">
+		  <input type="hidden" name="league_year" value="{{ @teamWinsYearList[0]['league_year'] }}">
+		  <li><a class="dropdown-item" href="#" onclick="postForm('blueTeamWinsForm')">Team Win Total Picks</a>
+		  </li>
+		</form>
+	      </div>
+	    </div>
           </div>
-        </div>
+	</div>
       </div>
       

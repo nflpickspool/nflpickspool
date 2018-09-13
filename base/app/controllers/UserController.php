@@ -72,5 +72,19 @@ class UserController extends Controller {
 		$this->f3->clear('SESSION.admin');
 		$this->f3->reroute('/login');
 	}
+
+    function enterResults(){
+        if($this->f3->get('SESSION.user') > 2){
+			$this->f3->reroute('/home');
+			exit;
+		}
+
+        $games = new Games($this->db);
+        $this->f3->set('gamesNeedingResults', $games->getPastGamesWithoutResults());
+        $this->f3->set('recentResults', $games->getRecentResults());
+
+        $this->f3->set('pageName','Enter Results');
+		$this->f3->set('view','enterresults.htm');	
+	}
 }
 

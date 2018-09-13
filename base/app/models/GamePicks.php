@@ -11,11 +11,11 @@ class GamePicks extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
-	public function getById($id) {
-	    $this->load(array('id=?',$id));
+	public function getByGameId($game_id) {
+	    $this->load(array('game_id=?',$game_id));
 	    return $this->query;
 	}
-
+    
     public function getNullPicksByIdAndLeagueYearWeek($id,$league_year,$league_week) {
             return $this->db->exec(
             "SELECT ".
@@ -114,7 +114,7 @@ class GamePicks extends DB\SQL\Mapper{
               CONCAT(
                 'max(case when user_id = ',
                 user_id,
-                ' THEN CONCAT(spread_pick,'','',wager,'','',money_pick,'','',ou_pick) END) AS `',
+                ' THEN CONCAT(spread_pick,'','',wager,'','',money_pick,'','',ou_pick,'','',spread_points,'','',money_points,'','',ou_points) END) AS `',
                 handle,
                 '`'
               )
@@ -132,6 +132,7 @@ class GamePicks extends DB\SQL\Mapper{
         $sql = "
             SELECT 
             CONCAT(ta.team, ' ', '@', ' ', th.team) AS Matchup,
+            CONCAT(UPPER(ta.abb), ' ', g.away_score, ', ', UPPER(th.abb), ' ',g.home_score) AS Result,
             ta.id AS away_id,
             UPPER(ta.abb) AS away,
             th.id AS home_id,
@@ -154,14 +155,12 @@ class GamePicks extends DB\SQL\Mapper{
             WHERE league_year = ". $league_year ."
             AND league_week = ". $league_week ."
             AND kickoff_time < NOW()
-            GROUP BY Matchup,away_id,away,home_id,home,
+            GROUP BY Matchup,Result,away_id,away,home_id,home,
             Kickoff,Favorite,PointSpread,MoneyLine,OverUnder
             ORDER BY Kickoff;"
             ;
             
         return $this->db->exec($sql);
-
-
     }
 
 	public function add() {
@@ -174,6 +173,15 @@ class GamePicks extends DB\SQL\Mapper{
 	    $this->copyFrom('POST');
 	    $this->update();
 	}
+
+    public function editPoints($game_id,$user_id,$spread_points,$money_points,$ou_points) {
+	    $this->load(array('game_id=? AND user_id=?',$game_id,$user_id));
+	    $this->spread_points=$spread_points;
+	    $this->money_points=$money_points;
+	    $this->ou_points=$ou_points;
+	    $this->update();
+	}
+
 	
 	public function delete($id) {
 	    $this->load(array('id=?',$id));

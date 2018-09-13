@@ -170,6 +170,14 @@
                     </ul>
                   </li>
 		  <li><a href="/rules"><i class="icon mdi mdi-info"></i><span>Rules</span></a>
+		    <check if="{{ @SESSION.user < 3 }}">
+		      <true>
+			<li class="parent"><a href="#"><i class="icon mdi mdi-wrench"></i><span>Admin</span></a>
+			  <ul class="sub-menu">
+			    <li><a href="/enterresults"><i class="icon mdi mdi-undefined"></i><span>Enter results</span></a>
+			  </ul>
+		      </true>
+		    </check>
                 </ul>
               </div>
             </div>

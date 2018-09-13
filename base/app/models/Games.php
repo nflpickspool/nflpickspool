@@ -63,7 +63,53 @@ class Games extends DB\SQL\Mapper{
 		);
 	}
 
+   	public function getRecentResults() {
+        $sql = "
+            SELECT
+            g.id AS game_id,
+            g.kickoff_time, 
+            ta.team AS away,
+            g.away_score,
+            th.team AS home,
+            g.home_score
+            FROM games as g
+            LEFT JOIN teams AS ta
+            ON away = ta.id
+            LEFT JOIN teams AS th
+            ON home = th.id
+            WHERE kickoff_time < NOW()
+            AND (
+            away_score IS NOT NULL 
+            AND
+            home_score IS NOT NULL
+            )
+            ORDER BY kickoff_time
+            LIMIT 16";
+        return $this->db->exec($sql);
+	}
 
+   	public function getPastGamesWithoutResults() {
+        $sql = "
+            SELECT
+            g.id AS game_id,
+            g.kickoff_time, 
+            ta.team AS away,
+            th.team AS home
+            FROM games as g
+            LEFT JOIN teams AS ta
+            ON away = ta.id
+            LEFT JOIN teams AS th
+            ON home = th.id
+            WHERE kickoff_time < NOW()
+            AND (
+            away_score IS NULL 
+            OR
+            home_score IS NULL
+            )
+            ORDER BY kickoff_time";
+        return $this->db->exec($sql);
+	}
+	
 	public function add() {
 	    $this->copyFrom('POST');
 	    $this->save();

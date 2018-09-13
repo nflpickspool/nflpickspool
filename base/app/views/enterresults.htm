@@ -1,0 +1,115 @@
+      <div class="be-content">
+        <div class="page-head">
+          <h2 class="page-head-title">{{ @season }} Week {{ @week }} Lines</h2>
+          <nav aria-label="breadcrumb" role="navigation">
+            <ol class="breadcrumb page-head-nav">
+              <li class="breadcrumb-item"><a href="#">View Lines</a></li>
+              <li class="breadcrumb-item"><a href="/gamelines">View Game Lines</a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="main-content container-fluid">
+	  <div class="row">
+	    <div class="col-lg-6 col-md-12">
+	      <form method="POST" action="/addgamescores">
+		<div class="card card-border-color card-border-color-primary">
+		  <div class="card-header card-header-divider">Past Games Without Results</div>
+		  <div class="card-body">
+		    <table class="table">
+		      <thead>
+			<tr>
+			  <th style="width:20%;">Kickoff</th>
+			  <th style="width:15%;">Away</th>
+			  <th style="width:20%;"></th>
+			  <th style="width:15%;">Home</th>
+			  <th style="width:20%;"></th>
+			  <th style="width:10%;">Edit</th>
+			</tr>
+		      </thead>
+		      <tbody>
+			<repeat group="{{ @gamesNeedingResults }}" value="{{ @game }}" key="{{ @i }}">
+			  <tr>
+			    <input type="hidden" name="game_id[{{ @i }}]" id="game_id{{ @i }}" value="{{ @game.game_id }}" disabled>
+			    <td>{{ date('D m/d g:i A',strtotime(@game.kickoff_time)) }}</td>
+			    <td>{{ @game.away }}</td>
+			    <td><input class="form-control" type="number" value="0" id="away_score{{ @i }}" name="away_score[{{ @i }}]" disabled></td>
+			    <td>{{ @game.home }}</td>
+			    <td><input class="form-control" type="number" value="0" id="home_score{{ @i }}" name="home_score[{{ @i }}]" disabled></td>
+			    <td>
+			      <div id="edit{{@i}}">
+				<button type="button" class="btn btn-primary" onclick="newGameScore({{@i}})"><i class="icon mdi mdi-edit"></i></button>
+			      </div>
+			    </td>
+			  </tr>
+			</repeat>
+		      </tbody>
+		    </table>
+		    <div id="update_btn" style="display:none">
+		      <button type="submit" class="btn btn-primary btn-block">Update</button>
+		    </div>
+		  </div>  
+		</div>
+	      </form>
+	    </div>
+	    <div class="col-lg-6 col-md-12">
+	      <form method="POST" action="/addgamescores">
+	    	<div class="card card-border-color card-border-color-primary">
+		  <div class="card-header card-header-divider">Recent Results</div>
+		  <div class="card-body">
+		    <table class="table">
+		      <thead>
+			<tr>
+			  <th style="width:20%;">Kickoff</th>
+			  <th style="width:15%;">Away</th>
+			  <th style="width:20%;"></th>
+			  <th style="width:15%;">Home</th>
+			  <th style="width:20%;"></th>
+			  <th style="width:10%;">Edit</th>
+			</tr>
+		      </thead>
+		      <tbody>
+			<repeat group="{{ @recentResults }}" value="{{ @game }}" key="{{ @i }}">
+			  <tr>
+			    <input type="hidden" name="game_id[{{ @i }}]" id="ugame_id{{ @i }}" value="{{ @game.game_id }}" disabled>
+			    <td>{{ date('D m/d g:i A',strtotime(@game.kickoff_time)) }}</td>
+			    <td>{{ @game.away }}</td>
+			    <td><input class="form-control" type="number" value="{{ @game.away_score }}" id="uaway_score{{ @i }}" name="away_score[{{ @i }}]" disabled></td>
+			    <td>{{ @game.home }}</td>
+			    <td><input class="form-control" type="number" value="{{ @game.home_score }}" id="uhome_score{{ @i }}" name="home_score[{{ @i }}]" disabled></td>
+			    <td>
+			      <div id="uedit{{@i}}">
+				<button type="button" class="btn btn-primary" onclick="updateGameScore({{@i}})"><i class="icon mdi mdi-edit"></i></button>
+			      </div>
+			    </td>
+			  </tr>
+			</repeat>
+		      </tbody>
+		    </table>
+		    <div id="uupdate_btn" style="display:none">
+		      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+		    </div>
+		  </div>
+		</div>
+	      </form>
+	    </div>
+	  </div>
+	</div>
+      </div>
+      <script>
+	function newGameScore(row_num) {
+	document.getElementById("edit"+row_num).style.display = "none";
+	document.getElementById("game_id"+row_num).disabled = false;
+	document.getElementById("away_score"+row_num).disabled = false;
+	document.getElementById("home_score"+row_num).disabled = false;
+	document.getElementById('update_btn').style.display = "block";
+	}
+      </script>
+      <script>
+	function updateGameScore(row_num) {
+	document.getElementById("uedit"+row_num).style.display = "none";
+	document.getElementById("ugame_id"+row_num).disabled = false;
+	document.getElementById("uaway_score"+row_num).disabled = false;
+	document.getElementById("uhome_score"+row_num).disabled = false;
+	document.getElementById('uupdate_btn').style.display = "block";
+	}
+      </script>

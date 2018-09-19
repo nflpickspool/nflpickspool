@@ -56,7 +56,18 @@
 				<td>{{ @picks.OverUnder }}</td>
 				<td>{{ @picks.Result }}</td>
 				<repeat group="{{ range(11,count(current(@leaguePicks))-1) }}" value="{{ @i }}">
-				  <td align="center">
+				  <td align="center"
+				      <check if="{{explode(',',array_values(@leaguePicks[@a])[@i])[4]<0}}">
+					<true>
+					  class="table-danger"
+					</true>
+				      </check>
+				      <check if="{{explode(',',array_values(@leaguePicks[@a])[@i])[4]>0}}">
+					<true>
+					  class="table-success"
+					</true>
+				      </check>
+				      >
 				    <check if="{{@picks.away_id == explode(',',array_values(@leaguePicks[@a])[@i])[0]}}">
 				      <true>{{ @picks.away }}</true>
 				    </check>
@@ -72,7 +83,18 @@
 				    </check>
 				    <br><b>{{explode(',',array_values(@leaguePicks[@a])[@i])[4]}}</b>
 				  </td>
-				  <td align="center">
+				  <td align="center"
+				      <check if="{{explode(',',array_values(@leaguePicks[@a])[@i])[5]<0}}">
+					<true>
+					  class="table-danger"
+					</true>
+				      </check>
+				      <check if="{{explode(',',array_values(@leaguePicks[@a])[@i])[5]>0}}">
+					<true>
+					  class="table-success"
+					</true>
+				      </check>
+				      >
 				    <check if="{{@picks.away_id == explode(',',array_values(@leaguePicks[@a])[@i])[2]}}">
 				      <true>{{ @picks.away }}</true>
 				    </check>
@@ -81,7 +103,18 @@
 				    </check>
 				    <br><br><b>{{explode(',',array_values(@leaguePicks[@a])[@i])[5]}}</b>
 				  </td>
-				  <td align="center">
+				  <td align="center"
+				      <check if="{{explode(',',array_values(@leaguePicks[@a])[@i])[6]<0}}">
+					<true>
+					  class="table-danger"
+					</true>
+				      </check>
+				      <check if="{{explode(',',array_values(@leaguePicks[@a])[@i])[6]>0}}">
+					<true>
+					  class="table-success"
+					</true>
+				      </check>
+				      >
 				    {{explode(',',array_values(@leaguePicks[@a])[@i])[3]}}
 				    <br><br><b>{{explode(',',array_values(@leaguePicks[@a])[@i])[6]}}</b>
 				  </td>

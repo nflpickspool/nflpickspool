@@ -79,7 +79,7 @@ class GamesController extends UserController {
 				}
 			}
 			//If no moneyline pick or tie, no points
-			if($ml_pick === "" or $resultSpread === 0){
+			if($ml_pick === 0 or $resultSpread === 0){
 				$pts_ml = 0;
 			} else {
 				//Home Team Won

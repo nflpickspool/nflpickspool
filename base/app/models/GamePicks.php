@@ -157,7 +157,7 @@ class GamePicks extends DB\SQL\Mapper{
             AND kickoff_time < NOW()
             GROUP BY Matchup,Result,away_id,away,home_id,home,
             Kickoff,Favorite,PointSpread,MoneyLine,OverUnder
-            ORDER BY Kickoff;"
+            ORDER BY Kickoff,Matchup;"
             ;
             
         return $this->db->exec($sql);

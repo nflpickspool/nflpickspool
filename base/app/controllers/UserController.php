@@ -32,6 +32,13 @@ class UserController extends Controller {
 		$this->f3->set('view','home.htm');	
 	}
     
+	function renderStandings(){
+        $gamePicks = new GamePicks($this->db);
+        $this->f3->set('standings',$gamePicks->getStandings());
+        $this->f3->set('pageName','Standings');
+		$this->f3->set('view','standings.htm');	
+	}
+    
 	function renderRules(){
         $this->f3->set('pageName','Rules');
 		$this->f3->set('view','about.htm');	

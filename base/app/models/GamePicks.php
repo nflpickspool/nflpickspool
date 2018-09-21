@@ -163,6 +163,24 @@ class GamePicks extends DB\SQL\Mapper{
         return $this->db->exec($sql);
     }
 
+	public function getStandings() {
+        $sql = "
+            SELECT
+            u.f_name,
+            u.handle,
+            SUM(g.spread_points+g.money_points+g.ou_points) AS total,
+            SUM(g.spread_points) AS spread_points,
+            SUM(g.money_points) AS money_points,
+            SUM(g.ou_points) AS ou_points
+            FROM game_picks AS g
+            LEFT JOIN users AS u
+            ON g.user_id = u.id
+            GROUP BY user_id
+            ORDER BY total DESC"
+            ;
+        return $this->db->exec($sql);
+	}
+
 	public function add() {
 	    $this->copyFrom('POST');
 	    $this->save();

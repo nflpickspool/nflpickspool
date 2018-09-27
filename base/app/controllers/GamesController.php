@@ -17,6 +17,43 @@ class GamesController extends UserController {
 		$this->f3->set('view','gamelines.htm');	
 	}
 
+    function addGame(){
+        if($this->f3->get('SESSION.user') > 2){
+			$this->f3->reroute('/home');
+			exit;
+		}
+
+        $games = new Games($this->db);
+        $games->add();
+        $this->f3->reroute('/addgames');
+    }
+
+    function updateGame(){
+        if($this->f3->get('SESSION.user') > 2){
+			$this->f3->reroute('/home');
+			exit;
+		}
+
+        foreach(array_keys($this->f3->get('POST.id')) as &$x){
+            $games = new Games($this->db);
+            $games->load(array('id=?',$this->f3->get('POST.id')[$x]));
+            $games->league_year = $this->f3->get('POST.league_year')[$x];
+            $games->league_week = $this->f3->get('POST.league_week')[$x];
+            $games->kickoff_time = $this->f3->get('POST.kickoff_time')[$x];
+            $games->network = $this->f3->get('POST.network')[$x];
+            $games->away = $this->f3->get('POST.away')[$x];
+            $games->home = $this->f3->get('POST.home')[$x];
+            $games->favorite = $this->f3->get('POST.favorite')[$x];
+            $games->point_spread = $this->f3->get('POST.point_spread')[$x];
+            $games->money_line = $this->f3->get('POST.money_line')[$x];
+            $games->ou = $this->f3->get('POST.ou')[$x];
+            $games->update();
+        }
+
+        $this->f3->reroute('/addgames');
+    }
+
+
     function addGameScores(){
         //$this->f3->set('view','post.htm');
         foreach(array_keys($this->f3->get('POST.game_id')) as &$x){

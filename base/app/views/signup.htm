@@ -75,7 +75,7 @@
                 <select class="custom-select d-block w-100" name="favorite_nfl_team" required>
                   <option value="">Choose...</option>
                   <repeat group="{{ @teams }}" value="{{ @team }}">
-                    <option value="{{ @team.id }}">{{ @team.region." ".@team.team }}</option>
+                    <option value="{{ @team.id }}">{{ @team.team }}</option>
 	          </repeat>
                 </select>
                 <div class="invalid-feedback">

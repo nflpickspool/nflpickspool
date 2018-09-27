@@ -1,0 +1,35 @@
+      <div class="be-content">
+        <div class="page-head">
+          <h2 class="page-head-title">Standings</h2>
+        </div>
+        <div class="main-content container-fluid">
+	  <div class="col-md-12">
+	    <div class="card card-border-color card-border-color-primary">
+              <table class="table table-bordered">
+		<thead>
+		  <tr>
+                    <th style="width:20%;">Name</th>
+                    <th style="width:20%;">Handle</th>
+                    <th style="width:15%;" class="text-center">Total</th>
+                    <th style="width:15%;" class="text-center">Point Spread Points</th>
+                    <th style="width:15%;" class="text-center">Money Line Points</th>
+                    <th style="width:15%;" class="text-center">OU Points</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <repeat group="{{ @standings }}" value="{{ @user }}">
+		    <tr>
+		      <td>{{ @user.f_name }}</td>
+		      <td>{{ @user.handle }}</td>
+		      <td align="center"><b>{{ @user.total }}</b></td>
+		      <td align="center">{{ @user.spread_points }}</td>
+		      <td align="center">{{ @user.money_points }}</td>
+		      <td align="center">{{ @user.ou_points }}</td>
+		    </tr>
+		  </repeat>
+		</tbody>
+              </table>
+            </div>
+	  </div>
+        </div>
+      </div>

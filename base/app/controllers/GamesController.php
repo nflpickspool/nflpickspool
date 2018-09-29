@@ -98,7 +98,7 @@ class GamesController extends UserController {
             $ou_pick=$picksObject->ou_pick;
 
 			//Push
-			if($resultSpread === $spread){
+			if($resultSpread == $spread){
 				$pts_spread = 0;
 			//Home Team Covered Spread
 			} else if ($resultSpread < $spread) {

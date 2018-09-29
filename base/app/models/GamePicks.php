@@ -163,6 +163,45 @@ class GamePicks extends DB\SQL\Mapper{
         return $this->db->exec($sql);
     }
 
+    public function getLeaguePicksTotalsByLeagueYearAndWeek($league_year,$league_week) {
+        $sql="SET SESSION group_concat_max_len = 4096";
+        $stmt = $this->db->pdo()->prepare($sql);
+        $stmt->execute();
+        $sql = "
+            SELECT
+            GROUP_CONCAT(DISTINCT
+              CONCAT(
+                'sum(case when user_id = ',
+                user_id,
+                ' THEN CONCAT(spread_points,'','',money_points,'','',ou_points) END) AS `',
+                handle,
+                '`'
+              )
+            ) AS `pivot_columns`
+            FROM game_picks AS gp
+            LEFT JOIN users as u
+            ON gp.user_id = u.id"
+            ;
+        $stmt = $this->db->pdo()->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $stmt->closeCursor();
+        $pivot_columns = $row['pivot_columns'];
+
+        $sql = "
+            SELECT 
+            {$pivot_columns}
+            FROM games AS g
+            LEFT JOIN game_picks AS gp
+            ON g.id = gp.game_id
+            WHERE league_year = ". $league_year ."
+            AND league_week = ". $league_week ."
+            AND kickoff_time < NOW();"
+            ;
+            
+        return $this->db->exec($sql);
+    }
+
 	public function getStandings() {
         $sql = "
             SELECT

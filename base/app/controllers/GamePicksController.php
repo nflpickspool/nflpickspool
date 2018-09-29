@@ -58,6 +58,7 @@ class GamePicksController extends UserController {
         $league_week = $this->f3->get('POST.league_week');
         $this->f3->set('league_week',$league_week);
         $this->f3->set('leaguePicks',$gamePicks->getLeaguePicksByLeagueYearAndWeek($league_year,$league_week));
+        $this->f3->set('leaguePickTotals',$gamePicks->getLeaguePicksTotalsByLeagueYearAndWeek($league_year,$league_week));
         $this->f3->set('pageName','League Picks for '. $league_year .' Week '.$league_week);
 		$this->f3->set('view','leaguepicksgames.htm');	
     }

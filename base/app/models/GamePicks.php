@@ -173,7 +173,7 @@ class GamePicks extends DB\SQL\Mapper{
               CONCAT(
                 'sum(case when user_id = ',
                 user_id,
-                ' THEN CONCAT(spread_points,'','',money_points,'','',ou_points) END) AS `',
+                ' THEN spread_points+money_points+ou_points END) AS `',
                 handle,
                 '`'
               )

@@ -31,6 +31,12 @@
 			      </repeat>
 			    </tr>
 			    <tr>
+			      <th colspan="6"></th>
+			      <repeat group="{{ range(11,count(current(@leaguePicks))-1) }}" value="{{ @i }}" key="{{@a}}">
+				<th class="text-center" style="width:5%;" colspan="3">{{ array_values(@leaguePickTotals[0])[@a]}}</th>
+			      </repeat>
+			    </tr>
+			    <tr>
 			      <th style="width:10%;">Matchup</th>
 			      <th style="width:10%;">Kickoff</th>
 			      <th style="width:10%;">Point Spread</th>

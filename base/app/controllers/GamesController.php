@@ -155,8 +155,8 @@ class GamesController extends UserController {
 					}	
 				}
 			}
-            //If no moneyline pick or tie, no points
-			if($ou_pick === "" or $totalScore === $ou){
+            //If no ou pick or push, no points
+			if($ou_pick === "" or $totalScore == $ou){
 				$pts_ou = 0;
 			} else {
                 //Total score over OU

@@ -25,16 +25,22 @@ class TeamWins extends DB\SQL\Mapper{
     public function getByLeagueYear($season) {
         return $this->db->exec(
             "SELECT ".
+            "tw.id, ".
             "CONCAT( ".
             "t.region, ' ',".
             "t.team) AS Team, ".
-            "wins_line AS 'OverUnder' ".
+            "CONCAT(t.conference, ' ',t.division) AS Division, ".
+            "wins_line AS 'OverUnder', ".
+            "wins_actual, ".
+            "losses, ".
+            "ties ".
 
-            "FROM team_wins ".
+            "FROM team_wins as tw ".
             "LEFT JOIN teams AS t ".
-            "  ON team_wins.team = t.id ".
+            "  ON tw.team = t.id ".
 
-            "WHERE league_year = ". $season .";"
+            "WHERE league_year = ". $season .
+            " ORDER BY Division,Team;"
 		);
 	}
 

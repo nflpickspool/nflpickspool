@@ -16,6 +16,11 @@ class TeamPicks extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
+	public function getByOuId($ou_id) {
+	    $this->load(array('ou_id=?',$ou_id));
+	    return $this->query;
+	}
+
     public function getLeagueYearList() {
 		return $this->db->exec(
 			'SELECT DISTINCT league_year FROM team_wins ORDER BY league_year DESC;'
@@ -75,7 +80,7 @@ class TeamPicks extends DB\SQL\Mapper{
               CONCAT(
                 'max(case when player_id = ',
                 player_id,
-                ' THEN CONCAT(ou_pick,'','',wager) END) AS `',
+                ' THEN CONCAT(ou_pick,'','',wager,'','',points) END) AS `',
                 handle,
                 '`'
               )
@@ -93,12 +98,16 @@ class TeamPicks extends DB\SQL\Mapper{
         $sql = "
             SELECT CONCAT(t.region, ' ',t.team) AS Team, 
             CONCAT(t.conference, ' ',t.division) AS Division,
+            tw.wins_line AS Line,
+            CONCAT(tw.wins_actual,'-',tw.losses,'-',tw.ties) AS Record,
             {$pivot_columns}
             FROM team_picks AS tp
             LEFT JOIN teams AS t
             ON tp.team_id = t.id
+            LEFT JOIN team_wins AS tw
+            ON tp.team_id = tw.team
             WHERE tp.league_year = ".$league_year."
-            GROUP BY team_id
+            GROUP BY team_id,Line,Record
             ORDER BY Division,Team"
             ;
         return $this->db->exec($sql);
@@ -115,6 +124,12 @@ class TeamPicks extends DB\SQL\Mapper{
 	    $this->copyFrom('POST');
 	    $this->update();
 	}
+
+    public function editPoints($id,$points) {
+        $this->load(array('id=?',$id));
+	    $this->points=$points;
+	    $this->update();
+    }
 	
 	public function delete($id) {
 	    $this->load(array('id=?',$id));

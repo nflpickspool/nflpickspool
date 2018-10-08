@@ -1,0 +1,58 @@
+      <div class="be-content">
+        <div class="page-head">
+          <h2 class="page-head-title">Update {{ @league_year }} Team Win Totals</h2>
+        </div>
+        <div class="main-content container-fluid">
+	  <div class="col-md-6">
+	    <div class="card card-border-color card-border-color-primary">
+	      <form method="POST" action="/editteamwins">
+		<table class="table">
+		  <thead>
+		    <tr>
+                      <th style="width:20%;">Team</th>
+                      <th style="width:20%;">Division</th>
+                      <th style="width:15%;">O/U</th>
+                      <th style="width:15%;">Wins</th>
+                      <th style="width:15%;">Losses</th>
+                      <th style="width:15%;">Ties</th>
+		      <th style="width:10%;">Edit</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <input type="hidden" name="league_year" id="league_year" value="{{ @league_year }}">
+		    <repeat group="{{ @teamWinsList }}" value="{{ @line }}" key="{{ @i }}">
+		      <tr>
+			<input type="hidden" name="id[{{ @i }}]" id="id{{ @i }}" value="{{ @line.id }}" disabled>
+			<td>{{ @line.Team }}</td>
+			<td>{{ @line.Division }}</td>
+			<td>{{ @line.OverUnder }}</td>
+			<td><input class="form-control" type="number" value="{{@line.wins_actual}}" id="wins_actual{{ @i }}" name="wins_actual[{{ @i }}]" disabled></td>
+			<td><input class="form-control" type="number" value="{{@line.losses}}" id="losses{{ @i }}" name="losses[{{ @i }}]" disabled></td>
+			<td><input class="form-control" type="number" value="{{@line.ties}}" id="ties{{ @i }}" name="ties[{{ @i }}]" disabled></td>
+			<td>
+			  <div id="edit{{@i}}">
+			    <button type="button" class="btn btn-primary" onclick="updateTeamRecord({{@i}})"><i class="icon mdi mdi-edit"></i></button>
+			  </div>
+			</td>
+		      </tr>
+		    </repeat>
+		  </tbody>
+		</table>
+		<div id="update_btn" style="display:none">
+		  <button type="submit" class="btn btn-primary btn-block">Submit</button>
+		</div>
+	      </form>
+            </div>
+	  </div>
+        </div>
+      </div>
+      <script>
+	function updateTeamRecord(row_num) {
+	document.getElementById("edit"+row_num).style.display = "none";
+	document.getElementById("id"+row_num).disabled = false;
+	document.getElementById("wins_actual"+row_num).disabled = false;
+	document.getElementById("losses"+row_num).disabled = false;
+	document.getElementById("ties"+row_num).disabled = false;
+	document.getElementById('update_btn').style.display = "block";
+	}
+      </script>

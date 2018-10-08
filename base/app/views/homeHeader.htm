@@ -176,6 +176,17 @@
 			  <ul class="sub-menu">
 			    <li><a href="/addgames"><i class="icon mdi mdi-undefined"></i><span>Add Games</span></a>
 			    <li><a href="/enterresults"><i class="icon mdi mdi-undefined"></i><span>Enter Results</span></a>
+			    <li class="parent"><a href=""><i class="icon mdi mdi-undefined"></i><span>Update Team Win Totals</span></a>
+			      <ul class="sub-menu">
+				<repeat group="{{ @teamWinsYearList }}" value="{{ @tw_year }}" key="{{ @i }}">
+				  <form name="updateTeamWinsForm{{ @i }}" method="POST" action="/updateteamwins">
+				    <input type="hidden" name="league_year" value="{{ @tw_year.league_year }}">
+				    <li><a href="#" onclick="postForm('updateTeamWinsForm{{@i}}')"><i class="icon mdi mdi-undefined"></i><span>{{ @tw_year.league_year }}</span></a>
+				    </li>
+				  </form>
+				</repeat>
+			      </ul>
+			    </li>
 			  </ul>
 		      </true>
 		    </check>

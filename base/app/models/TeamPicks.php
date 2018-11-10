@@ -125,9 +125,10 @@ class TeamPicks extends DB\SQL\Mapper{
 	    $this->update();
 	}
 
-    public function editPoints($id,$points) {
+    public function editPoints($id,$points,$result) {
         $this->load(array('id=?',$id));
 	    $this->points=$points;
+	    $this->result=$result;
 	    $this->update();
     }
 	

@@ -100,19 +100,24 @@ class GamesController extends UserController {
 			//Push
 			if($resultSpread == $spread){
 				$pts_spread = 0;
+                $result_spread ='T';
 			//Home Team Covered Spread
 			} else if ($resultSpread < $spread) {
 				if($spread_pick === $home){
 					$pts_spread = $wager;
+                    $result_spread = 'W';
 				} else {
 					$pts_spread = 1-$wager;
+                    $result_spread = 'L';
 				}
 			//Home Team did not cover spread
 			} else {
 				if($spread_pick === $home){
 					$pts_spread = 1-$wager;
+                    $result_spread = 'L';
 				} else {
 					$pts_spread = $wager;
+                    $result_spread = 'W';
 				}
 			}
 			//If no moneyline pick or tie, no points
@@ -155,28 +160,37 @@ class GamesController extends UserController {
 					}	
 				}
 			}
-            //If no ou pick or push, no points
-			if($ou_pick === "" or $totalScore == $ou){
+            //If no ou pick, no points, result incomplete
+			if($ou_pick === ""){
 				$pts_ou = 0;
+                $result_ou = 'I';
+            //If push, no points, result tie
+			} else if($totalScore == $ou){
+				$pts_ou = 0;
+                $result_ou = 'T';
 			} else {
                 //Total score over OU
                 if($totalScore > $ou){
                     if($ou_pick === "O"){
+                        $result_ou = 'W';
                         $pts_ou = 1;
                     } else {
                         $pts_ou = -1;
+                        $result_ou = 'L';
                     }
                 //Total score under OU
                 } else {
                     if($ou_pick === "O"){
                         $pts_ou = -1;
+                        $result_ou = 'L';
                     } else {
                         $pts_ou = 1;
+                        $result_ou = 'W';
                     }
 
                 }
             }
-			$picksObject->editPoints($picksObject->game_id,$picksObject->user_id,$pts_spread,$pts_ml,$pts_ou);
+			$picksObject->editPoints($picksObject->game_id,$picksObject->user_id,$pts_spread,$result_spread,$pts_ml,$pts_ou,$result_ou);
 		}
     }
 }

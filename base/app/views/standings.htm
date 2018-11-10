@@ -5,30 +5,59 @@
         <div class="main-content container-fluid">
 	  <div class="col-md-12">
 	    <div class="card card-border-color card-border-color-primary">
-              <table class="table table-bordered">
-		<thead>
-		  <tr>
-                    <th style="width:20%;">Name</th>
-                    <th style="width:20%;">Handle</th>
-                    <th style="width:15%;" class="text-center">Total</th>
-                    <th style="width:15%;" class="text-center">Point Spread Points</th>
-                    <th style="width:15%;" class="text-center">Money Line Points</th>
-                    <th style="width:15%;" class="text-center">OU Points</th>
-		  </tr>
-		</thead>
-		<tbody>
-		  <repeat group="{{ @standings }}" value="{{ @user }}">
-		    <tr>
-		      <td>{{ @user.f_name }}</td>
-		      <td>{{ @user.handle }}</td>
-		      <td align="center"><b>{{ @user.total }}</b></td>
-		      <td align="center">{{ @user.spread_points }}</td>
-		      <td align="center">{{ @user.money_points }}</td>
-		      <td align="center">{{ @user.ou_points }}</td>
-		    </tr>
-		  </repeat>
-		</tbody>
-              </table>
+              <div class="card-body">
+		<div class="table-responsive noSwipe">
+		  <table class="table table-bordered">
+		    <thead>
+		      <tr>
+			<th style="width:10%;">Name</th>
+			<th style="width:10%;">Handle</th>
+			<th style="width:5%;">Purse</th>
+			<th style="width:5%;" class="text-center">Points</th>
+			<th style="width:5%;" class="text-center">Points Back</th>
+			<th style="width:5%;" class="text-center">ATS Points</th>
+			<th style="width:5%;" class="text-center">ATS Record</th>
+			<th style="width:5%;" class="text-center">ATS Lock Record</th>
+			<th style="width:5%;" class="text-center">ATS Iron Record</th>
+			<th style="width:5%;" class="text-center">Money Line Points</th>
+			<th style="width:5%;" class="text-center">Game OU Points</th>
+			<th style="width:5%;" class="text-center">Game OU Record</th>
+			<th style="width:5%;" class="text-center">Team OU Points</th>
+			<th style="width:5%;" class="text-center">Team OU Record</th>
+			<th style="width:5%;" class="text-center">Team OU Lock Record</th>
+			<th style="width:5%;" class="text-center">Team OU Iron Record</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <repeat group="{{ @standings }}" value="{{ @user }}" key="{{ @a }}">
+			<tr>
+			  <td>{{ @user.f_name }}</td>
+			  <td>{{ @user.handle }}</td>
+			  <td align="center">${{ @purse[@a]['payout'] }}</td>
+			  <td align="center"><b>{{ @user.total }}</b></td>
+			  <td align="center">
+			    <check if="{{ @a == 0 }}">
+			      <true>-</true>
+			      <false>{{@standings[0]['total']-@standings[@a]['total']}}</false>
+			    </check>
+			  </td>
+			  <td align="center">{{ @user.spread_points }}</td>
+			  <td align="center">{{ @user.spread_wins.'-'.@user.spread_losses }}</td>
+			  <td align="center">{{ @user.lock_wins.'-'.@user.iron_losses }}</td>
+			  <td align="center">{{ @user.iron_wins.'-'.@user.iron_losses }}</td>
+			  <td align="center">{{ @user.money_points }}</td>
+			  <td align="center">{{ @user.ou_points }}</td>
+			  <td align="center">{{ @user.ou_wins.'-'.@user.ou_losses }}</td>
+			  <td align="center">{{ @user.team_ou_points }}</td>
+			  <td align="center">{{ @user.team_ou_wins.'-'.@user.team_ou_losses }}</td>
+			  <td align="center">{{ @user.team_ou_lock_wins.'-'.@user.team_ou_iron_losses }}</td>
+			  <td align="center">{{ @user.team_ou_iron_wins.'-'.@user.team_ou_iron_losses }}</td>
+			</tr>
+		      </repeat>
+		    </tbody>
+		  </table>
+		</div>
+	      </div>
             </div>
 	  </div>
         </div>

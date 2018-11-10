@@ -33,8 +33,11 @@ class UserController extends Controller {
 	}
     
 	function renderStandings(){
+        $league_id = 1; //Not sure where this goes yet
         $gamePicks = new GamePicks($this->db);
+        $purse = new Purse($this->db);
         $this->f3->set('standings',$gamePicks->getStandings());
+        $this->f3->set('purse',$purse->getByLeagueId($league_id));
         $this->f3->set('pageName','Standings');
 		$this->f3->set('view','standings.htm');	
 	}

@@ -207,14 +207,40 @@ class GamePicks extends DB\SQL\Mapper{
             SELECT
             u.f_name,
             u.handle,
-            SUM(g.spread_points+g.money_points+g.ou_points) AS total,
-            SUM(g.spread_points) AS spread_points,
-            SUM(g.money_points) AS money_points,
-            SUM(g.ou_points) AS ou_points
-            FROM game_picks AS g
-            LEFT JOIN users AS u
-            ON g.user_id = u.id
-            GROUP BY user_id
+            SUM(gp.spread_points+gp.money_points+gp.ou_points) AS total,
+            SUM(gp.spread_points) AS spread_points,
+            SUM(case when spread_result = 'W' then 1 else 0 end) AS spread_wins,
+            SUM(case when spread_result = 'L' then 1 else 0 end) AS spread_losses,
+            SUM(case when spread_result = 'W' and gp.wager = 2 then 1 else 0 end) AS lock_wins,
+            SUM(case when spread_result = 'L' and gp.wager = 2 then 1 else 0 end) AS lock_losses,
+            SUM(case when spread_result = 'W' and gp.wager = 3 then 1 else 0 end) AS iron_wins,
+            SUM(case when spread_result = 'L' and gp.wager = 3 then 1 else 0 end) AS iron_losses,
+            SUM(gp.money_points) AS money_points,
+            SUM(gp.ou_points) AS ou_points,
+            SUM(case when ou_result = 'W' then 1 else 0 end) AS ou_wins,
+            SUM(case when ou_result = 'L' then 1 else 0 end) AS ou_losses,
+            team_ou_points,team_ou_wins,team_ou_losses,
+            team_ou_lock_wins,team_ou_lock_losses,team_ou_iron_wins,team_ou_iron_losses
+            FROM game_picks AS gp
+		    LEFT JOIN users AS u
+            ON gp.user_id = u.id
+            LEFT JOIN (
+             SELECT
+				tp.player_id as player_id,
+				SUM(tp.points) AS team_ou_points,
+                SUM(case when result = 'W' then 1 else 0 end) AS team_ou_wins,
+                SUM(case when result = 'L' then 1 else 0 end) AS team_ou_losses,
+                SUM(case when result = 'W' and wager = 2 then 1 else 0 end) AS team_ou_lock_wins,
+                SUM(case when result = 'L' and wager = 2 then 1 else 0 end) AS team_ou_lock_losses,
+                SUM(case when result = 'W' and wager = 3 then 1 else 0 end) AS team_ou_iron_wins,
+                SUM(case when result = 'L' and wager = 3 then 1 else 0 end) AS team_ou_iron_losses
+				FROM team_picks AS tp
+                GROUP BY player_id
+            ) t ON t.player_id = user_id
+            GROUP BY user_id,
+            team_ou_points,team_ou_wins,team_ou_losses,
+            team_ou_lock_wins,team_ou_lock_losses,
+            team_ou_points,team_ou_iron_wins,team_ou_iron_losses            
             ORDER BY total DESC"
             ;
         return $this->db->exec($sql);
@@ -231,14 +257,15 @@ class GamePicks extends DB\SQL\Mapper{
 	    $this->update();
 	}
 
-    public function editPoints($game_id,$user_id,$spread_points,$money_points,$ou_points) {
+    public function editPoints($game_id,$user_id,$spread_points,$spread_result,$money_points,$ou_points,$ou_result) {
 	    $this->load(array('game_id=? AND user_id=?',$game_id,$user_id));
 	    $this->spread_points=$spread_points;
+	    $this->spread_result=$spread_result;
 	    $this->money_points=$money_points;
 	    $this->ou_points=$ou_points;
+	    $this->ou_result=$ou_result;
 	    $this->update();
 	}
-
 	
 	public function delete($id) {
 	    $this->load(array('id=?',$id));

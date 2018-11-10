@@ -112,7 +112,7 @@ class Games extends DB\SQL\Mapper{
             home_score IS NOT NULL
             )
             ORDER BY kickoff_time DESC
-            LIMIT 16";
+            LIMIT 50";
         return $this->db->exec($sql);
 	}
 

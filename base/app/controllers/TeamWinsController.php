@@ -64,10 +64,12 @@ class TeamWinsController extends UserController {
                 $wager=$picksObject->wager;
                 if($ou_pick === "O"){
                     $pts_ou = 2*$wager;
+                    $result_ou = 'W';
                 } else {
                     $pts_ou = 2-2*$wager;
+                    $result_ou = 'L';
                 }
-                $picksObject->editPoints($picksObject->id,$pts_ou);
+                $picksObject->editPoints($picksObject->id,$pts_ou,$result_ou);
             }
         //Check if remaining games + wins is under
         } else if($teamWins->wins_actual + $games_remaining <  $teamWins->wins_line){
@@ -78,17 +80,26 @@ class TeamWinsController extends UserController {
                 $wager=$picksObject->wager;
                 if($ou_pick === "U"){
                     $pts_ou = 2*$wager;
+                    $result_ou = 'W';
                 } else {
                     $pts_ou = 2-2*$wager;
+                    $result_ou = 'L';
                 }
-                $picksObject->editPoints($picksObject->id,$pts_ou);
+                $picksObject->editPoints($picksObject->id,$pts_ou,$result_ou);
+            }
+        //Push
+        } else if($teamWins->wins_actual == $teamWins->wins_line && $games_remaining == 0){
+            $teamPicks = new TeamPicks($this->db);
+            $picksNeedingPoints=$teamPicks->getByOuId($ou_id);
+            foreach ($picksNeedingPoints as &$picksObject) {
+                $picksObject->editPoints($picksObject->id,0,'T');
             }
         // No points yet (useful for mistakes)
         } else {
             $teamPicks = new TeamPicks($this->db);
             $picksNeedingPoints=$teamPicks->getByOuId($ou_id);
             foreach ($picksNeedingPoints as &$picksObject) {
-                $picksObject->editPoints($picksObject->id,0);
+                $picksObject->editPoints($picksObject->id,0,'I');
             }
         }
     }

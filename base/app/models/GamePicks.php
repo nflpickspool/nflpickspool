@@ -207,7 +207,7 @@ class GamePicks extends DB\SQL\Mapper{
             SELECT
             u.f_name,
             u.handle,
-            SUM(gp.spread_points+gp.money_points+gp.ou_points) AS total,
+            SUM(gp.spread_points+gp.money_points+gp.ou_points)+team_ou_points AS total,
             SUM(gp.spread_points) AS spread_points,
             SUM(case when spread_result = 'W' then 1 else 0 end) AS spread_wins,
             SUM(case when spread_result = 'L' then 1 else 0 end) AS spread_losses,

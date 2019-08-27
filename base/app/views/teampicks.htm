@@ -10,13 +10,14 @@
           </nav>
         </div>
         <div class="main-content container-fluid">
-	  <check if="{{ !empty(@incompletePicks) and strtotime(@startTime[0]['startTime']) > time()+(60*120)}}">
+	  <span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>The lines for Over/Unders <b>CAN CHANGE</b> until they are set in stone on {{ @timeLinesAreLocked }}<br>You may make and edit your selections through {{ @timePicksAreLocked }} at which time they will lock for good.</span>
+	  <check if="{{ !empty(@incompletePicks) and time() < @timePicksAreLocked}}">
 	    <true>
               <form method="POST" action="/addteampicks">
 		<div class="row">
 		  <div class="col-md-12">
 		    <div class="card card-border-color card-border-color-primary">
-                      <div class="card-header card-header-divider">Incomplete Picks<span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>You may edit your picks until September 6th at 6:00pm EDT. At this time, all picks are final.<br><b>These Lines are ACTIVE. Over/Under Lines Will become FINAL on September 4th, 2018 at midnight.<b></span></div>
+                      <div class="card-header card-header-divider">Incomplete Picks</div>
                       <div class="card-body">
 			<div class="table-responsive noSwipe">
 			  <table class="table">
@@ -71,7 +72,7 @@
 		<div class="row">
 		  <div class="col-md-12">
 		    <div class="card card-border-color card-border-color-primary">
-                      <div class="card-header card-header-divider">Submitted Picks<span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>You may edit your picks until September 6th at 6:00pm EDT. At this time, all picks are final.<br><b>These Lines are ACTIVE. Over/Under Lines Will become FINAL on September 4th, 2018 at midnight.<b></span></div>
+                      <div class="card-header card-header-divider">Submitted Picks</div>
                       <div class="card-body">
 			<div class="table-responsive noSwipe">
 			  <table class="table">
@@ -118,7 +119,7 @@
 				    </select>
 				  </td>
 				  <td>
-				    <check if="{{ strtotime(@startTime[0]['startTime']) > time()+(60*120) }}">
+				    <check if="{{ time() < @timePicksAreLocked }}">
 				      <true>
 					<div id="edit{{@i}}">
 					  <button type="button" class="btn btn-primary" onclick="updateTeamPick({{@i}})"><i class="icon mdi mdi-edit"></i></button>

@@ -16,7 +16,13 @@ class TeamPicksController extends UserController {
         $league_year = $this->f3->get('POST.league_year');
         $this->f3->set('league_year',$league_year);
         $games = new Games($this->db);
-        $this->f3->set('startTime',$games->getLeagueYearStartTime($league_year));
+        $startTimeOfSeason = $games->getLeagueYearStartTime($league_year);
+        $whenLinesFinalizeInSeconds = 60*(48*60); //2 days before kickoff of first game
+        $timeLinesAreLocked = date('D m/d g:i A',strtotime($startTimeOfSeason[0]['startTime'])-$whenLinesFinalizeInSeconds);
+        $whenPicksFinalizeInSeconds = 60*(60+20); //1 hour 20 minutes before kickoff of first game
+        $timePicksAreLocked = date('D m/d g:i A',strtotime($startTimeOfSeason[0]['startTime'])-$whenPicksFinalizeInSeconds);
+        $this->f3->set('timeLinesAreLocked',$timeLinesAreLocked);
+        $this->f3->set('timePicksAreLocked',$timePicksAreLocked);
         $this->f3->set('incompletePicks',$teamPicks->getNullPicksByIdAndLeagueYear($this->f3->get('SESSION.user'),$league_year));
         $this->f3->set('submittedPicks',$teamPicks->getNotNullPicksByIdAndLeagueYear($this->f3->get('SESSION.user'),$league_year));
         $this->f3->set('pageName','Picks for '. $league_year .'  Team Wins O/Us');

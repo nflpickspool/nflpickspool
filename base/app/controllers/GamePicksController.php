@@ -59,6 +59,28 @@ class GamePicksController extends UserController {
         $this->f3->set('league_week',$league_week);
         $this->f3->set('leaguePicks',$gamePicks->getLeaguePicksByLeagueYearAndWeek($league_year,$league_week));
         $this->f3->set('leaguePickTotals',$gamePicks->getLeaguePicksTotalsByLeagueYearAndWeek($league_year,$league_week));
+        //Constants derived from getLeaguePicksByLeagueYearAndWeek in GamePicks.php
+        $numHeaderColumnsInQuery=11; //Matchup,Result,away_id,away,home_id,home,Kickoff,Favorite,PointSpread,MoneyLine,OverUnder
+        $spreadPickIdx=0;
+        $wagerIdx=1;
+        $moneyPickIdx=2;
+        $ouPickIdx=3;
+        $spreadPointsColumnIdx=4;
+        $moneyPointsColumnIdx=5;
+        $ouPointsColumnIdx=6;
+        //Wager value decoder
+        $lockWagerValue='2';
+        $ironWagerValue='3';
+        $this->f3->set('numHeaderColumnsInQuery',$numHeaderColumnsInQuery);
+        $this->f3->set('spreadPickIdx',$spreadPickIdx);
+        $this->f3->set('wagerIdx',$wagerIdx);
+        $this->f3->set('moneyPickIdx',$moneyPickIdx);
+        $this->f3->set('ouPickIdx',$ouPickIdx);
+        $this->f3->set('spreadPointsColumnIdx',$spreadPointsColumnIdx);
+        $this->f3->set('moneyPointsColumnIdx',$moneyPointsColumnIdx);
+        $this->f3->set('ouPointsColumnIdx',$ouPointsColumnIdx);
+        $this->f3->set('lockWagerValue',$lockWagerValue);
+        $this->f3->set('ironWagerValue',$ironWagerValue);
         $this->f3->set('pageName','League Picks for '. $league_year .' Week '.$league_week);
 		$this->f3->set('view','leaguepicksgames.htm');	
     }

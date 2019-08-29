@@ -20,7 +20,7 @@ class TeamPicksController extends UserController {
         $whenLinesFinalizeInSeconds = 60*(48*60); //2 days before kickoff of first game
         $timeLinesAreLocked = date('D m/d g:i A',strtotime($startTimeOfSeason[0]['startTime'])-$whenLinesFinalizeInSeconds);
         $whenPicksFinalizeInSeconds = 60*(60+20); //1 hour 20 minutes before kickoff of first game
-        $timePicksAreLocked = date('D m/d g:i A',strtotime($startTimeOfSeason[0]['startTime'])-$whenPicksFinalizeInSeconds);
+        $timePicksAreLocked = strtotime($startTimeOfSeason[0]['startTime'])-$whenPicksFinalizeInSeconds;
         $this->f3->set('timeLinesAreLocked',$timeLinesAreLocked);
         $this->f3->set('timePicksAreLocked',$timePicksAreLocked);
         $this->f3->set('incompletePicks',$teamPicks->getNullPicksByIdAndLeagueYear($this->f3->get('SESSION.user'),$league_year));

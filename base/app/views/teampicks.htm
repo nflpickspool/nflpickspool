@@ -10,7 +10,7 @@
           </nav>
         </div>
         <div class="main-content container-fluid">
-	  <span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>The lines for Over/Unders <b>CAN CHANGE</b> until they are set in stone on {{ @timeLinesAreLocked }}<br>You may make and edit your selections through {{ @timePicksAreLocked }} at which time they will lock for good.</span>
+	  <span class="card-subtitle">You earn 2 points for a correct O/U pick and 0 for an incorrect pick.<br>You may LOCK a pick. A correct LOCK earns 4 points, but an incorrect LOCK is worth (-2) points<br>You may IRON LOCK a pick. A correct IRON LOCK earns 6 points, but an incorrect IRON LOCK is worth (-4) points<br>The lines for Over/Unders <b>CAN CHANGE</b> until they are set in stone on {{ @timeLinesAreLocked }}<br>You may make and edit your selections through {{ date('D m/d g:i A',@timePicksAreLocked) }} at which time they will lock for good.</span>
 	  <check if="{{ !empty(@incompletePicks) and time() < @timePicksAreLocked}}">
 	    <true>
               <form method="POST" action="/addteampicks">

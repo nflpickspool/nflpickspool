@@ -30,7 +30,10 @@
             <div class="btn-group btn-space">
 	      <button class="btn btn-primary dropdown-toggle btn-lg" type="button" data-toggle="dropdown">View Picks! <span class="icon-dropdown mdi mdi-chevron-down"></span></button>
 	      <div class="dropdown-menu" role="menu">
-		<li><a class="dropdown-item" href="/standings">View Standings</a></li>
+		<form name="blueStandingsForm" method="POST" action="/standings">
+		  <input type="hidden" name="league_year" value="{{ @gamesYearList[0].league_year }}">
+		  <li><a class="dropdown-item" href="#" onclick="postForm('blueStandingsForm')">View Standings</a></li>
+		</form>
 		<form name="blueWeekPicksForm" method="POST" action="/leaguepicksgames">
 		  <input type="hidden" name="league_year" value="{{ @gamesYearList[0].league_year }}">
 		  <input type="hidden" name="league_week" value="{{ @gamesWeekList[0][0]['league_week'] }}">

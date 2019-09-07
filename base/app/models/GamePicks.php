@@ -203,7 +203,7 @@ class GamePicks extends DB\SQL\Mapper{
         return $this->db->exec($sql);
     }
 
-	public function getStandings() {
+	public function getStandings($league_year) {
         $sql = "
             SELECT
             u.f_name,
@@ -225,6 +225,8 @@ class GamePicks extends DB\SQL\Mapper{
             FROM game_picks AS gp
 		    LEFT JOIN users AS u
             ON gp.user_id = u.id
+            LEFT JOIN games as g
+            ON gp.game_id = g.id
             LEFT JOIN (
              SELECT
 				tp.player_id as player_id,
@@ -236,8 +238,10 @@ class GamePicks extends DB\SQL\Mapper{
                 SUM(case when result = 'W' and wager = 3 then 1 else 0 end) AS team_ou_iron_wins,
                 SUM(case when result = 'L' and wager = 3 then 1 else 0 end) AS team_ou_iron_losses
 				FROM team_picks AS tp
+                WHERE tp.league_year = ". $league_year ."
                 GROUP BY player_id
             ) t ON t.player_id = user_id
+            WHERE u.active > 0 and g.league_year = ". $league_year ."
             GROUP BY user_id,
             team_ou_points,team_ou_wins,team_ou_losses,
             team_ou_lock_wins,team_ou_lock_losses,

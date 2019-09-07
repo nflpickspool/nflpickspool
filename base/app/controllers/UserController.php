@@ -19,7 +19,13 @@ class UserController extends Controller {
             array_push($gamesWeekList,$games->getWeekListForLeagueYear($row['league_year']));
         }
         $this->f3->set('gamesYearList',$gamesYearList);
-        $this->f3->set('gamesWeekList',$gamesWeekList);        
+        $this->f3->set('gamesWeekList',$gamesWeekList);
+
+        $league_year = $this->f3->get('POST.league_year');
+        if (is_null($league_year)){
+          $league_year = $gamesYearList[0]['league_year'];
+        }
+        $this->f3->set('league_year',$league_year);
 	}
 
 	function afterroute() {
@@ -34,9 +40,10 @@ class UserController extends Controller {
     
 	function renderStandings(){
         $league_id = 1; //Not sure where this goes yet
+        $league_year = $this->f3->get('league_year');
         $gamePicks = new GamePicks($this->db);
         $purse = new Purse($this->db);
-        $this->f3->set('standings',$gamePicks->getStandings());
+        $this->f3->set('standings',$gamePicks->getStandings($league_year));
         $this->f3->set('purse',$purse->getByLeagueId($league_id));
         $this->f3->set('pageName','Standings');
 		$this->f3->set('view','standings.htm');	

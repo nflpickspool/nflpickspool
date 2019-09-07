@@ -42,9 +42,18 @@
                   <li><a href="/home"><i class="icon mdi mdi-home"></i><span>Home</span></a>
                   <li class="parent"><a href="#"><i class="icon mdi mdi-collection-item"></i><span>My Leagues</span></a>
                     <ul class="sub-menu">
-                      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>2018 Season All Players</span></a>
+                      <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>Founders</span></a>
 			<ul class="sub-menu">
-			  <li><a href="/standings"><i class="icon mdi mdi-undefined"></i><span>League Standings</span></a>
+			  <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>League Standings</span></a>
+			    <ul class="sub-menu">
+			      <repeat group="{{ @teamWinsYearList }}" value="{{ @tw_year }}" key="{{ @i }}">
+				<form name="viewStandingsForm{{ @i }}" method="POST" action="/standings">
+				  <input type="hidden" name="league_year" value="{{ @tw_year.league_year }}">
+				  <li><a href="#" onclick="postForm('viewStandingsForm{{@i}}')"><i class="icon mdi mdi-undefined"></i><span>{{ @tw_year.league_year }}</span></a>
+				  </li>
+				</form>
+			      </repeat>
+			    </ul>
 			  <li class="parent"><a href="#"><i class="icon mdi mdi-undefined"></i><span>League Picks</span></a>
 			    <ul class="sub-menu">
 			      <li class="parent"><a href=""><i class="icon mdi mdi-undefined"></i><span>Team Win Total Picks</span></a>

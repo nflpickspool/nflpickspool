@@ -121,7 +121,8 @@ class GamePicks extends DB\SQL\Mapper{
             ) AS `pivot_columns`
             FROM game_picks AS gp
             LEFT JOIN users as u
-            ON gp.user_id = u.id"
+            ON gp.user_id = u.id
+            WHERE u.active > 0"
             ;
         $stmt = $this->db->pdo()->prepare($sql);
         $stmt->execute();

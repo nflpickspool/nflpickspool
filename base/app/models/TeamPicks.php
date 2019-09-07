@@ -87,7 +87,8 @@ class TeamPicks extends DB\SQL\Mapper{
             ) AS `pivot_columns`
             FROM team_picks AS tp
             LEFT JOIN users as u
-            ON tp.player_id = u.id"
+            ON tp.player_id = u.id
+            WHERE u.active > 0"
             ;
         $stmt = $this->db->pdo()->prepare($sql);
         $stmt->execute();
@@ -105,7 +106,7 @@ class TeamPicks extends DB\SQL\Mapper{
             LEFT JOIN teams AS t
             ON tp.team_id = t.id
             LEFT JOIN team_wins AS tw
-            ON tp.team_id = tw.team
+            ON tp.team_id = tw.team AND tp.league_year = tw.league_year
             WHERE tp.league_year = ".$league_year."
             GROUP BY team_id,Line,Record
             ORDER BY Division,Team"

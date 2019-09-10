@@ -133,7 +133,8 @@ class SuicidePicks extends DB\SQL\Mapper{
             LEFT JOIN users as u
             ON sp.user_id = u.id
             LEFT JOIN teams AS t
-            ON sp.suicide_pick = t.id"
+            ON sp.suicide_pick = t.id
+            WHERE u.active >0"
             ;
         $stmt = $this->db->pdo()->prepare($sql);
         $stmt->execute();

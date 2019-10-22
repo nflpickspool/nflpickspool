@@ -16,6 +16,11 @@ class SuicidePicks extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
+	public function getByGameId($game_id) {
+	    $this->load(array('game_id=?',$game_id));
+	    return $this->query;
+	}
+
     public function getPickByIdYearAndWeek($user_id,$league_year,$league_week) {
 		return $this->db->exec(
             "SELECT sp.league_year, sp.league_week, g.kickoff_time, sp.suicide_pick ".
@@ -41,59 +46,60 @@ class SuicidePicks extends DB\SQL\Mapper{
 	}
 
     public function getAvailableTeamsForWeek($user_id,$league_year,$league_week) {
-		return $this->db->exec(
-            "SELECT ".
-            "g.id as game_id, ".
-            "ta.id as team_id, ".
-            "ta.team as team, ".
-            "th.team as other_team, ".
-            "CONCAT(IF(ta.team=ft.team, '(-', '(+'),g.point_spread, ') @  ') AS point_spread, ".
-            "kickoff_time, ".
-            "u.id as user_id, ".
-            "sp.suicide_pick, ".
-            "sp.correct ".
-            "FROM games as g ".
-            "CROSS JOIN users AS u ".
-            "LEFT JOIN teams AS ta ". 
-            "  ON away = ta.id ".
-            "LEFT JOIN teams AS th ". 
-            "  ON home = th.id ".
-            "LEFT JOIN teams AS ft ".
-            "  ON favorite = ft.id ".
-            "LEFT JOIN suicide_picks AS sp ".
-            "  ON ta.id = sp.suicide_pick ".
-            "WHERE g.league_year =  ".$league_year." ". 
-            " AND g.league_week =  ".$league_week." ".
-            " AND u.id = ".$user_id." ".
-            " AND kickoff_time > '".date('Y-m-d H:i:s')."' ".
-            " AND correct IS NULL ".
-            "UNION ".
-            "SELECT ".
-            "g.id, ".
-            "th.id, ".
-            "th.team, ".
-            "ta.team, ".
-            "CONCAT(IF(th.team=ft.team, '(-', '(+'),g.point_spread,') vs.'), ".
-            "kickoff_time, ".
-            "u.id, ".
-            "sp.suicide_pick, ".
-            "sp.correct ".
-            "FROM games as g ".
-            "CROSS JOIN users AS u ".
-            "LEFT JOIN teams AS ta ". 
-            "  ON away = ta.id ".
-            "LEFT JOIN teams AS th ". 
-            "  ON home = th.id ".
-            "LEFT JOIN teams AS ft ".
-            "  ON favorite = ft.id ".
-            "LEFT JOIN suicide_picks AS sp ".
-            "  ON th.id = sp.suicide_pick ".
-            "WHERE g.league_year =  ".$league_year." ". 
-            " AND g.league_week =  ".$league_week." ".
-            " AND u.id = ".$user_id." ".
-            " AND kickoff_time > '".date('Y-m-d H:i:s')."' ".
-            " AND correct IS NULL".
-            " ORDER BY kickoff_time,team;"
+		return $this->db->exec("
+            SELECT
+            g.id as game_id,
+            ta.id as team_id,
+            ta.team as team,
+            th.team as other_team,
+            CONCAT(IF(ta.team=ft.team, '(-', '(+'),g.point_spread, ') @  ') AS point_spread,
+            kickoff_time,
+            u.id as user_id,
+            sp.suicide_pick,
+            sp.correct
+            FROM games as g
+            CROSS JOIN users AS u
+            LEFT JOIN teams AS ta 
+            ON away = ta.id
+            LEFT JOIN teams AS th 
+            ON home = th.id
+            LEFT JOIN teams AS ft
+            ON favorite = ft.id
+            LEFT JOIN suicide_picks AS sp
+            ON ta.id = sp.suicide_pick AND g.league_year = sp.league_year AND u.id = sp.user_id
+            WHERE g.league_year =  ".$league_year." 
+            AND g.league_week =  ".$league_week."
+            AND u.id = ".$user_id."
+            AND kickoff_time > '".date('Y-m-d H:i:s')."'
+            AND correct IS NULL
+            UNION
+            SELECT
+            g.id,
+            th.id,
+            th.team,
+            ta.team,
+            CONCAT(IF(th.team=ft.team, '(-', '(+'),g.point_spread,') vs.'),
+            kickoff_time,
+            u.id,
+            sp.suicide_pick,
+            sp.correct
+            FROM games as g
+            CROSS JOIN users AS u
+            LEFT JOIN teams AS ta 
+            ON away = ta.id
+            LEFT JOIN teams AS th 
+            ON home = th.id
+            LEFT JOIN teams AS ft
+            ON favorite = ft.id
+            LEFT JOIN suicide_picks AS sp
+            ON th.id = sp.suicide_pick AND g.league_year = sp.league_year AND u.id = sp.user_id
+            WHERE g.league_year =  ".$league_year." 
+            AND g.league_week =  ".$league_week."
+            AND u.id = ".$user_id."
+            AND kickoff_time > '".date('Y-m-d H:i:s')."'
+            AND correct IS NULL
+            ORDER BY kickoff_time,team;
+            "
 		);
     }
 
@@ -117,14 +123,14 @@ class SuicidePicks extends DB\SQL\Mapper{
         );
     }
 
-    	public function getLeaguePicksByLeagueYear($league_year) {
+    public function getLeaguePicksByLeagueYear($league_year) {
         $sql = "
             SELECT
             GROUP_CONCAT(DISTINCT
               CONCAT(
                 'max(case when user_id = ',
                 user_id,
-                ' THEN CONCAT(suicide_pick,'','',t.team) END) AS `',
+                ' THEN CONCAT(suicide_pick,'','',t.team,'','',result) END) AS `',
                 handle,
                 '`'
               )
@@ -160,6 +166,46 @@ class SuicidePicks extends DB\SQL\Mapper{
         return $this->db->exec($sql);
     }
 
+    public function getLeaguePicksTotalsByLeagueYear($league_year) {
+        $sql="SET SESSION group_concat_max_len = 4096";
+        $stmt = $this->db->pdo()->prepare($sql);
+        $stmt->execute();
+        $sql = "
+            SELECT
+            GROUP_CONCAT(DISTINCT
+              CONCAT(
+                'sum(case when user_id = ',
+                user_id,
+                ' THEN points END) AS `',
+                handle,
+                '`'
+              )
+            ) AS `pivot_columns`
+            FROM suicide_picks AS sp
+            LEFT JOIN users as u
+            ON sp.user_id = u.id
+            WHERE u.active > 0"
+            ;
+        $stmt = $this->db->pdo()->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $stmt->closeCursor();
+        $pivot_columns = $row['pivot_columns'];
+
+        $sql = "
+            SELECT 
+            {$pivot_columns}
+            FROM games AS g
+            LEFT JOIN suicide_picks AS sp
+            ON g.id = sp.game_id
+            WHERE g.league_year = ". $league_year ."
+            AND kickoff_time < NOW();"
+            ;
+            
+        return $this->db->exec($sql);
+    }
+
+
 	public function add() {
 	    $this->copyFrom('POST');
 	    $this->save();
@@ -170,6 +216,14 @@ class SuicidePicks extends DB\SQL\Mapper{
 	    $this->copyFrom('POST');
 	    $this->update();
 	}
+
+    public function editPoints($game_id,$user_id,$correct,$points,$result){
+	    $this->load(array('game_id=? AND user_id=?',$game_id,$user_id));
+        $this->correct=$correct;
+        $this->points=$points;
+        $this->result=$result;
+        $this->update();
+    }
 	
 	public function delete($id) {
 	    $this->load(array('id=?',$id));

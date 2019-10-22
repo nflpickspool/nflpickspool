@@ -75,8 +75,12 @@ class SuicidePicksController extends UserController {
     function renderLeaguePicks(){
         $suicidePicks = new SuicidePicks($this->db);
         $league_year = $this->f3->get('POST.league_year');
+        //Constants derived from getLeaguePicksByLeagueYear in SuicidePicks.php
+        $numHeaderColumnsInQuery=1; //Week
+        $this->f3->set('numHeaderColumnsInQuery',$numHeaderColumnsInQuery);
         $this->f3->set('league_year',$league_year);
         $this->f3->set('leaguePicks',$suicidePicks->getLeaguePicksByLeagueYear($league_year));
+        $this->f3->set('leaguePickTotals',$suicidePicks->getLeaguePicksTotalsByLeagueYear($league_year));
         $this->f3->set('pageName','League Suicide Picks for '. $league_year);
 		$this->f3->set('view','leaguepickssuicide.htm');	
     }

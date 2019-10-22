@@ -72,10 +72,13 @@ class GamesController extends UserController {
     }
     
     function addPointsToPicks($game_id,$awayScore,$homeScore){
-		$games = new Games($this->db);
+		$resultSpread=$awayScore-$homeScore;
+        $totalScore=$awayScore+$homeScore;
+        $games = new Games($this->db);
 		$games->getById($game_id);
 		$away=$games->away;
 		$home=$games->home;
+		$league_week=$games->league_week;
         //Logic below assumes point spread relative to home team
         //so invert if favorite is away
         if($games->favorite === $home){
@@ -90,8 +93,6 @@ class GamesController extends UserController {
 		$picksNeedingPoints=$gamePicks->getByGameId($game_id);
 
         foreach ($picksNeedingPoints as &$picksObject) {
-			$resultSpread=$awayScore-$homeScore;
-            $totalScore=$awayScore+$homeScore;
 			$spread_pick=$picksObject->spread_pick;
 			$wager=$picksObject->wager;
 			$ml_pick=$picksObject->money_pick;
@@ -192,6 +193,73 @@ class GamesController extends UserController {
             }
 			$picksObject->editPoints($picksObject->game_id,$picksObject->user_id,$pts_spread,$result_spread,$pts_ml,$pts_ou,$result_ou);
 		}
+        
+		$suicidePicks = new SuicidePicks($this->db);
+        $suicidePicksNeedingPoints=$suicidePicks->getByGameId($game_id);
+        foreach ($suicidePicksNeedingPoints as &$suicidePicksObject) {
+            //Ties are losses
+            if($resultSpread === 0){
+                $suicidePoints=0;
+                $suicideCorrect=0;
+                $suicideResult='L';
+            } else {
+                $suicidePick=$suicidePicksObject->suicide_pick;
+                if($resultSpread < 0){//Home Team Won
+                    if($suicidePick === $home){
+                        $suicideCorrect=1;
+                        $suicideResult='W';
+                    } else {
+                        $suicideCorrect=0;
+                        $suicideResult='L';
+                    }
+                } else { //Away team won
+                    if($suicidePick === $away){
+                        $suicideCorrect=1;
+                        $suicideResult='W';
+                    } else {
+                        $suicideCorrect=0;
+                        $suicideResult='L';
+                    }
+                }
+
+                if($suicideCorrect == 1){
+                    if($league_week<3){
+                        $suicidePoints=0;
+                    }else if($league_week==3){
+                        $suicidePoints=1;                            
+                    }else if($league_week==4){
+                        $suicidePoints=1;//total = 2                            
+                    }else if($league_week==5){
+                        $suicidePoints=2;//total = 4                            
+                    }else if($league_week==6){
+                        $suicidePoints=1;//total = 5                            
+                    }else if($league_week==7){
+                        $suicidePoints=2;//total = 7                            
+                    }else if($league_week==8){
+                        $suicidePoints=2;//total = 9                            
+                    }else if($league_week==9){
+                        $suicidePoints=1;//total = 10                            
+                    }else if($league_week==10){
+                        $suicidePoints=2;//total = 12                            
+                    }else if($league_week==11){
+                        $suicidePoints=1;//total = 13                            
+                    }else if($league_week==12){
+                        $suicidePoints=2;//total = 15                            
+                    }else if($league_week==13){
+                        $suicidePoints=1;//total = 16                            
+                    }else if($league_week==14){
+                        $suicidePoints=2;//total = 18                            
+                    }else if($league_week==15){
+                        $suicidePoints=2;//total = 20                            
+                    }else if($league_week==16){
+                        $suicidePoints=2;//total = 22                            
+                    }else if($league_week==17){
+                        $suicidePoints=3;//total = 25                            
+                    }
+                }
+            }
+            $suicidePicksObject->editPoints($suicidePicksObject->game_id,$suicidePicksObject->user_id,$suicideCorrect,$suicidePoints,$suicideResult);
+        }
     }
 }
 

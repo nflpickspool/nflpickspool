@@ -222,7 +222,8 @@ class GamePicks extends DB\SQL\Mapper{
             SUM(case when ou_result = 'W' then 1 else 0 end) AS ou_wins,
             SUM(case when ou_result = 'L' then 1 else 0 end) AS ou_losses,
             team_ou_points,team_ou_wins,team_ou_losses,
-            team_ou_lock_wins,team_ou_lock_losses,team_ou_iron_wins,team_ou_iron_losses
+            team_ou_lock_wins,team_ou_lock_losses,team_ou_iron_wins,team_ou_iron_losses,
+            weeks_survived, suicide_points
             FROM game_picks AS gp
 		    LEFT JOIN users AS u
             ON gp.user_id = u.id
@@ -241,12 +242,21 @@ class GamePicks extends DB\SQL\Mapper{
 				FROM team_picks AS tp
                 WHERE tp.league_year = ". $league_year ."
                 GROUP BY player_id
-            ) t ON t.player_id = user_id
+            ) t ON t.player_id = gp.user_id
+            LEFT JOIN (
+             SELECT
+				sp.user_id,
+                SUM(case when result = 'W' then 1 else 0 end) AS weeks_survived,
+				SUM(sp.points) AS suicide_points
+               	FROM suicide_picks AS sp
+                WHERE sp.league_year = ". $league_year ."
+                GROUP BY sp.user_id
+            ) s ON s.user_id = gp.user_id
             WHERE u.active > 0 and g.league_year = ". $league_year ."
-            GROUP BY user_id,
+            GROUP BY gp.user_id,
             team_ou_points,team_ou_wins,team_ou_losses,
             team_ou_lock_wins,team_ou_lock_losses,
-            team_ou_points,team_ou_iron_wins,team_ou_iron_losses            
+            team_ou_points,team_ou_iron_wins,team_ou_iron_losses,weeks_survived,suicide_points
             ORDER BY total DESC"
             ;
         return $this->db->exec($sql);

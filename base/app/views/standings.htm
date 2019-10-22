@@ -26,6 +26,8 @@
 			<th style="width:5%;" class="text-center">Team OU Record</th>
 			<th style="width:5%;" class="text-center">Team OU Lock Record</th>
 			<th style="width:5%;" class="text-center">Team OU Iron Record</th>
+			<th style="width:5%;" class="text-center">Suicide Weeks Survived</th>
+			<th style="width:5%;" class="text-center">Suicide Points</th>
 		      </tr>
 		    </thead>
 		    <tbody>
@@ -52,6 +54,8 @@
 			  <td align="center">{{ @user.team_ou_wins.'-'.@user.team_ou_losses }}</td>
 			  <td align="center">{{ @user.team_ou_lock_wins.'-'.@user.team_ou_lock_losses }}</td>
 			  <td align="center">{{ @user.team_ou_iron_wins.'-'.@user.team_ou_iron_losses }}</td>
+			  <td align="center">{{ @user.weeks_survived }}</td>
+			  <td align="center">{{ @user.suicide_points }}</td>
 			</tr>
 		      </repeat>
 		    </tbody>

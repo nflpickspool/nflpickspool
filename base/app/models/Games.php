@@ -11,7 +11,7 @@ class Games extends DB\SQL\Mapper{
 	    return $this->query;
 	}
 
-    public function getRecentlyAddedGames() {
+    public function getRecentlyAddedGames($num_games) {
         $sql = "
             SELECT
             g.id,
@@ -33,12 +33,39 @@ class Games extends DB\SQL\Mapper{
             LEFT JOIN teams AS ft
             ON favorite = ft.id
             ORDER BY g.id DESC
-            LIMIT 20"
+            LIMIT " . $num_games
             ;
         return $this->db->exec($sql);
 
 	}
 
+    public function getByIdFormatted($id) {
+        $sql = "
+            SELECT
+            g.id,
+            g.league_year,
+            g.league_week,
+            kickoff_time,
+            ta.team AS away,
+            th.team AS home,
+            network,
+            ft.team AS favorite,
+            point_spread,
+            money_line,
+            ou
+            FROM games AS g
+            LEFT JOIN teams AS ta
+            ON away = ta.id
+            LEFT JOIN teams AS th
+            ON home = th.id
+            LEFT JOIN teams AS ft
+            ON favorite = ft.id
+            WHERE g.id = " . $id
+            ;
+        return $this->db->exec($sql);
+
+	}
+    
 	public function getById($id) {
 	    $this->load(array('id=?',$id));
 	    return $this->query;

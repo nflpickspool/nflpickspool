@@ -100,7 +100,8 @@ class UserController extends Controller {
         $this->f3->set('teams',$teams->all());
 
         $games = new Games($this->db);
-        $this->f3->set('recentlyAddedGames', $games->getRecentlyAddedGames());
+        $num_games = 20;
+        $this->f3->set('recentlyAddedGames', $games->getRecentlyAddedGames($num_games));
 
         $this->f3->set('pageName','Add Games');
 		$this->f3->set('view','addgames.htm');	
@@ -119,5 +120,20 @@ class UserController extends Controller {
         $this->f3->set('pageName','Enter Results');
 		$this->f3->set('view','enterresults.htm');	
 	}
+
+    function postToSportsbook($message_text) {
+        $f3=Base::instance();
+        $url = $f3->get('slack_webhook_url');
+
+        $content = '{"text":"' . $message_text . '"}';
+                 
+        $options = array(
+            'method'  => 'POST',
+            'header'  => array("Content-Type: application/json"),
+            'content' => $content
+        );
+        
+        Web::instance()->request($url, $options);
+    }
 }
 

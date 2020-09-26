@@ -1,4 +1,5 @@
 <?php
+
 class GamesController extends UserController {
 
 	function afterroute() {
@@ -25,6 +26,16 @@ class GamesController extends UserController {
 
         $games = new Games($this->db);
         $games->add();
+        $game1 = $games->getRecentlyAddedGames(1); //Get last added game
+        $message_text = "New line posted!\n" .
+                      "*  " . date('D m/d g:i A',strtotime($game1[0]['kickoff_time'])) . ": " .
+                      $game1[0]['away'] . " @ " .
+                      $game1[0]['home'] . " " .
+                      "Line: "  . $game1[0]['favorite'] .
+                      " -" . $game1[0]['point_spread'] .
+                      " ML: " . $game1[0]['money_line'] .
+                      " OU: " . $game1[0]['ou'];
+        $this->postToSportsbook($message_text);
         $this->f3->reroute('/addgames');
     }
 
@@ -33,9 +44,10 @@ class GamesController extends UserController {
 			$this->f3->reroute('/home');
 			exit;
 		}
-
+        $message_text = "Line change!\n";
         foreach(array_keys($this->f3->get('POST.id')) as &$x){
             $games = new Games($this->db);
+            $oldgame = $games->getByIdFormatted($this->f3->get('POST.id')[$x]);
             $games->load(array('id=?',$this->f3->get('POST.id')[$x]));
             $games->league_year = $this->f3->get('POST.league_year')[$x];
             $games->league_week = $this->f3->get('POST.league_week')[$x];
@@ -48,8 +60,26 @@ class GamesController extends UserController {
             $games->money_line = $this->f3->get('POST.money_line')[$x];
             $games->ou = $this->f3->get('POST.ou')[$x];
             $games->update();
+            $newgame = $games->getByIdFormatted($this->f3->get('POST.id')[$x]);
+            $message_text = $message_text .
+                          "FROM:\n" .
+                          "*  " . date('D m/d g:i A',strtotime($oldgame[0]['kickoff_time'])) . ": " .
+                          $oldgame[0]['away'] . " @ " .
+                          $oldgame[0]['home'] . " " .
+                          "Line: "  . $oldgame[0]['favorite'] .
+                          " -" . $oldgame[0]['point_spread'] .
+                          " ML: " . $oldgame[0]['money_line'] .
+                          " OU: " . $oldgame[0]['ou'] .
+                          "\nTO:\n" .
+                          "*  " . date('D m/d g:i A',strtotime($newgame[0]['kickoff_time'])) . ": " .
+                          $newgame[0]['away'] . " @ " .
+                          $newgame[0]['home'] . " " .
+                          "Line: "  . $newgame[0]['favorite'] .
+                          " -" . $newgame[0]['point_spread'] .
+                          " ML: " . $newgame[0]['money_line'] .
+                          " OU: " . $newgame[0]['ou'] . "\n";
         }
-
+        $this->postToSportsbook($message_text);
         $this->f3->reroute('/addgames');
     }
 

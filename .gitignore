@@ -5,3 +5,5 @@ base/composer.json
 base/composer.lock
 base/tmp/
 base/vendor/
+base/scripts/include/dbCreds.php
+base/scripts/include/slackInfo.php

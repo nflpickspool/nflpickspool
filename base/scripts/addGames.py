@@ -142,7 +142,7 @@ def update_db(mydb, games_list, sportsbook_url, admin_url):
     sportsbook_msg = "New Lines Posted!\n"
     for game in games_list:
         kickoff_time = game["game_date"] + " " + game["game_time"]
-        sql = "INSERT INTO games (kickoff_time, league_year, league_week, away, home, favorite, point_spread, money_line, ou) VALUES "
+        sql = "INSERT INTO games (kickoff_time, league_year, league_week, away, home, favorite, point_spread, money_line, ou, odds_api_id) VALUES "
         sql += "('"
         sql += kickoff_time              + "', '"
         sql += game["league_year"]       + "', '"
@@ -152,7 +152,8 @@ def update_db(mydb, games_list, sportsbook_url, admin_url):
         sql += str(game["favorite"][0])  + "', '"
         sql += game["point_spread"]      + "', '"
         sql += game["money_line"]        + "', '"
-        sql += game["ou"]
+        sql += game["ou"]                + "', '"
+        sql += game["odds_api_id"]
         sql += "')"
         if mycursor.execute(sql):
             error_msg = "Error inserting: " + sql

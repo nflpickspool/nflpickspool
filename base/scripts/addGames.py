@@ -7,8 +7,8 @@ Check for games and add/update the lines as needed
 import argparse
 import logging
 import datetime
+from zoneinfo import ZoneInfo
 import requests
-from bs4 import BeautifulSoup
 import json
 import math
 from slack_sdk.webhook import WebhookClient
@@ -19,6 +19,12 @@ from dbCreds import mydb, API_KEY, sportsbook_url, admin_url
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+SPORT = 'americanfootball_nfl'
+# Kickoff times are stored/compared (NOW(), time()) against the app server's
+# local clock, which runs America/New_York - so convert the-odds-api's UTC
+# commence_time into that zone before splitting it into date/time strings.
+EASTERN_TZ = ZoneInfo('America/New_York')
+
 def get_id_from_region_team(mydb, region_team):
     mycursor = mydb.cursor()
     sql = "SELECT id, concat(region, ' ', team) as t FROM teams having t = '" + region_team + "';";
@@ -28,35 +34,55 @@ def get_id_from_region_team(mydb, region_team):
 
     return myresults[0]
 
-def scrape_pfr(league_year, dates_to_check):
-    # Making a GET request
-    r = requests.get('https://www.pro-football-reference.com/years/' + str(league_year) + '/games.htm')
-    # Parsing the HTML
-    soup = BeautifulSoup(r.content, 'html.parser')
+def get_events(mydb, league_year, league_week, dates_to_check):
+    """Fetch upcoming NFL games from the-odds-api's /events endpoint.
+
+    Replaces the old pro-football-reference HTML scrape, which pfr's
+    Cloudflare bot-detection now blocks. the-odds-api is already used
+    elsewhere in this script/repo for lines and scores, so this reuses the
+    same API key/quota instead of fighting a JS challenge.
+    """
+    events_response = requests.get(
+        f'https://api.the-odds-api.com/v4/sports/{SPORT}/events',
+        params={'api_key': API_KEY}
+    )
+
+    if events_response.status_code != 200:
+        print(f'Failed to get events: status_code {events_response.status_code}, response body {events_response.text}')
+        exit(-1)
+
+    events_json = events_response.json()
 
     games_list = []
 
-    for row in soup.find_all('td', attrs={"csk": dates_to_check}):
+    for event in events_json:
+        commence_utc = datetime.datetime.strptime(event['commence_time'], '%Y-%m-%dT%H:%M:%SZ')
+        commence_utc = commence_utc.replace(tzinfo=datetime.timezone.utc)
+        commence_eastern = commence_utc.astimezone(EASTERN_TZ)
+
+        if commence_eastern.strftime('%Y-%m-%d') not in dates_to_check:
+            continue
+
         game = {
             "league_year"  : str(league_year),
-            "league_week"  : row.parent.find('th', attrs={"data-stat": "week_num"}).string,
-            "game_date"    : row.parent.find('td', attrs={"data-stat": "game_date"}).string,
-            "game_time"    : row.parent.find('td', attrs={"data-stat": "gametime"})['csk'],
-            "away_team"    : get_id_from_region_team(mydb, row.parent.find('td', attrs={"data-stat": "winner"}).string),
-            "home_team"    : get_id_from_region_team(mydb, row.parent.find('td', attrs={"data-stat": "loser"}).string),
-            "favorite"     : get_id_from_region_team(mydb, row.parent.find('td', attrs={"data-stat": "loser"}).string),
+            "league_week"  : str(league_week),
+            "game_date"    : commence_eastern.strftime('%Y-%m-%d'),
+            "game_time"    : commence_eastern.strftime('%H:%M:%S'),
+            "away_team"    : get_id_from_region_team(mydb, event['away_team']),
+            "home_team"    : get_id_from_region_team(mydb, event['home_team']),
+            # Placeholder; add_odds_to_games overwrites this from real market data.
+            "favorite"     : get_id_from_region_team(mydb, event['home_team']),
             "money_line"   : 0.0,
             "point_spread" : 0.0,
             "ou"           : 0.0,
-            "odds_api_id"  : ''
+            "odds_api_id"  : event['id']
         }
-        
+
         games_list.append(game)
 
     return games_list
 
 def getOdds(now):
-    SPORT = 'americanfootball_nfl'
     REGIONS = 'us'
     MARKETS = 'h2h,spreads,totals' # h2h | spreads | totals. Multiple can be specified if comma delimited
     ODDS_FORMAT = 'american' # decimal | american
@@ -173,20 +199,22 @@ def main():
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Your script description.")
     parser.add_argument("-d", "--days", help="Number of days in the future to check", type=int, default=0)
-    parser.add_argument("-y", "--year", help="League year", type=int, default=2025)
+    parser.add_argument("-y", "--year", help="League year", type=int, default=2026)
+    parser.add_argument("-w", "--week", help="League week number", type=int, required=True)
     args = parser.parse_args()
 
     # Your script logic goes here
     logger.info("Starting script execution...")
-    # Make list of days to check
-    now = datetime.datetime.utcnow()
+    # Make list of days to check, in the same Eastern local time the games'
+    # kickoff_time will be stored/compared in.
+    now = datetime.datetime.now(EASTERN_TZ)
     pfr_date_format = '%Y-%m-%d'
     dates_to_check = [now.strftime(pfr_date_format)]
     for i in range(1, args.days + 1):
         now += datetime.timedelta(days=1)
         dates_to_check.append(now.strftime(pfr_date_format))
     logger.info("Checking dates for games: %s", dates_to_check)
-    games_list = scrape_pfr(args.year, dates_to_check)
+    games_list = get_events(mydb, args.year, args.week, dates_to_check)
     odds_json = getOdds(now)
     games_list = add_odds_to_games(games_list, odds_json)
     update_db(mydb, games_list, sportsbook_url, admin_url)

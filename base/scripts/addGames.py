@@ -82,6 +82,20 @@ def get_events(mydb, league_year, league_week, dates_to_check):
 
     return games_list
 
+def get_current_week():
+    """Look up the current NFL season/week from ESPN's public scoreboard API.
+
+    Used as a default for --year/--week when they aren't passed explicitly.
+    No API key required and no bot-detection like pro-football-reference has.
+    """
+    response = requests.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard')
+    if response.status_code != 200:
+        print(f'Failed to look up current week from ESPN: status_code {response.status_code}, response body {response.text}')
+        exit(-1)
+
+    data = response.json()
+    return data['season']['year'], data['week']['number']
+
 def getOdds(now):
     REGIONS = 'us'
     MARKETS = 'h2h,spreads,totals' # h2h | spreads | totals. Multiple can be specified if comma delimited
@@ -199,12 +213,17 @@ def main():
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Your script description.")
     parser.add_argument("-d", "--days", help="Number of days in the future to check", type=int, default=0)
-    parser.add_argument("-y", "--year", help="League year", type=int, default=2026)
-    parser.add_argument("-w", "--week", help="League week number", type=int, required=True)
+    parser.add_argument("-y", "--year", help="League year (default: current NFL season, from ESPN)", type=int, default=None)
+    parser.add_argument("-w", "--week", help="League week number (default: current NFL week, from ESPN)", type=int, default=None)
     args = parser.parse_args()
 
     # Your script logic goes here
     logger.info("Starting script execution...")
+    if args.year is None or args.week is None:
+        espn_year, espn_week = get_current_week()
+        args.year = args.year if args.year is not None else espn_year
+        args.week = args.week if args.week is not None else espn_week
+        logger.info("Defaulted league_year=%s league_week=%s from ESPN", args.year, args.week)
     # Make list of days to check, in the same Eastern local time the games'
     # kickoff_time will be stored/compared in.
     now = datetime.datetime.now(EASTERN_TZ)

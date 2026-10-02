@@ -54,6 +54,11 @@ def get_events(mydb, league_year, league_week, dates_to_check):
     events_json = events_response.json()
 
     games_list = []
+    # dates_to_check is calendar-day granularity, so re-running this later in
+    # the same day (e.g. re-pulling for Sunday's late/primetime games) must
+    # not let an already-kicked-off early game back in - its line is locked
+    # once picks have been made against it.
+    now_eastern = datetime.datetime.now(EASTERN_TZ)
 
     for event in events_json:
         commence_utc = datetime.datetime.strptime(event['commence_time'], '%Y-%m-%dT%H:%M:%SZ')
@@ -61,6 +66,9 @@ def get_events(mydb, league_year, league_week, dates_to_check):
         commence_eastern = commence_utc.astimezone(EASTERN_TZ)
 
         if commence_eastern.strftime('%Y-%m-%d') not in dates_to_check:
+            continue
+
+        if commence_eastern <= now_eastern:
             continue
 
         game = {
@@ -175,13 +183,41 @@ def add_odds_to_games(games_list, odds_json):
                                 game['ou'] = str(abs(market["outcomes"][0]['point']))
     return games_list
 
+def format_kickoff(kickoff_time):
+    """Mirror PHP's date('D m/d g:i A', ...) formatting used in GamesController."""
+    if isinstance(kickoff_time, datetime.datetime):
+        return kickoff_time.strftime('%a %m/%d %I:%M %p')
+    return str(kickoff_time)
+
+def get_line_snapshot(mycursor, odds_api_id):
+    """(kickoff_time, favorite, point_spread, money_line, ou) currently
+    stored for this game, or None if it isn't in the table yet."""
+    mycursor.execute(
+        "SELECT kickoff_time, favorite, point_spread, money_line, ou "
+        "FROM games WHERE odds_api_id = %s",
+        (odds_api_id,)
+    )
+    return mycursor.fetchone()
+
 def update_db(mydb, games_list, sportsbook_url, admin_url):
     mycursor = mydb.cursor()
     sportsbook_webhook = WebhookClient(sportsbook_url)
     admin_webhook = WebhookClient(admin_url)
-    sportsbook_msg = "New Lines Posted!\n"
+
+    # Only report what's actually true: "New Lines Posted!" only for games
+    # that didn't already exist, and a "Line change!" diff (same style as
+    # GamesController::updateGame) only for games whose line actually moved -
+    # never for a re-run that left everything the same.
+    new_games_msg = "New Lines Posted!\n"
+    changed_games_msg = "Line change!\n"
+    any_new = False
+    any_changed = False
+
     for game in games_list:
         kickoff_time = game["game_date"] + " " + game["game_time"]
+
+        before = get_line_snapshot(mycursor, game["odds_api_id"])
+
         sql = "INSERT INTO games (kickoff_time, league_year, league_week, away, home, favorite, point_spread, money_line, ou, odds_api_id) VALUES "
         sql += "('"
         sql += kickoff_time              + "', '"
@@ -195,17 +231,74 @@ def update_db(mydb, games_list, sportsbook_url, admin_url):
         sql += game["ou"]                + "', '"
         sql += game["odds_api_id"]
         sql += "')"
-        if mycursor.execute(sql):
-            error_msg = "Error inserting: " + sql
+        # odds_api_id is UNIQUE (the-odds-api's stable id for this matchup),
+        # so re-running for a game we've already inserted updates its line
+        # instead of adding a duplicate row. The IF() guards are a second,
+        # DB-level backstop (get_events already excludes started games) so a
+        # game's line can never change once its kickoff_time has passed -
+        # picks are graded against whatever line was locked in at kickoff.
+        sql += (
+            " ON DUPLICATE KEY UPDATE"
+            " kickoff_time = IF(kickoff_time > NOW(), VALUES(kickoff_time), kickoff_time),"
+            " favorite = IF(kickoff_time > NOW(), VALUES(favorite), favorite),"
+            " point_spread = IF(kickoff_time > NOW(), VALUES(point_spread), point_spread),"
+            " money_line = IF(kickoff_time > NOW(), VALUES(money_line), money_line),"
+            " ou = IF(kickoff_time > NOW(), VALUES(ou), ou)"
+        )
+        try:
+            mycursor.execute(sql)
+        except Exception as e:
+            # mysql-connector raises on error rather than returning a falsy
+            # result, so this previously never caught anything (and an
+            # uncaught error here would have killed the whole batch).
+            error_msg = "Error inserting: " + sql + "\n" + str(e)
             admin_webhook.send(text=error_msg)
-        else:
-            sportsbook_msg += "* "  + kickoff_time + ": " + game["away_team"][1] + " @ " + game["home_team"][1]
-            sportsbook_msg += " Line: " + game["favorite"][1] + " -" + game["point_spread"] + " ML: " + game["money_line"]
-            sportsbook_msg += " OU: " + game["ou"] + "\n";
+            mydb.commit()
+            continue
 
         mydb.commit()
-    #print(sportsbook_msg)
-    sportsbook_webhook.send(text=sportsbook_msg)
+
+        if before is None:
+            any_new = True
+            new_games_msg += "* "  + kickoff_time + ": " + game["away_team"][1] + " @ " + game["home_team"][1]
+            new_games_msg += " Line: " + game["favorite"][1] + " -" + game["point_spread"] + " ML: " + game["money_line"]
+            new_games_msg += " OU: " + game["ou"] + "\n"
+            continue
+
+        # Read back what's actually stored now rather than trusting the
+        # values we tried to write - reflects reality if the IF() guard
+        # above left an already-started game's row untouched.
+        after = get_line_snapshot(mycursor, game["odds_api_id"])
+        if before == after:
+            continue
+
+        any_changed = True
+
+        def team_name(team_id):
+            if team_id == game['away_team'][0]:
+                return game['away_team'][1]
+            if team_id == game['home_team'][0]:
+                return game['home_team'][1]
+            return str(team_id)
+
+        old_kickoff, old_favorite, old_point_spread, old_money_line, old_ou = before
+        new_kickoff, new_favorite, new_point_spread, new_money_line, new_ou = after
+        matchup = game["away_team"][1] + " @ " + game["home_team"][1]
+        changed_games_msg += (
+            "FROM:\n"
+            "*  " + format_kickoff(old_kickoff) + ": " + matchup +
+            " Line: " + team_name(old_favorite) + " -" + str(old_point_spread) +
+            " ML: " + str(old_money_line) + " OU: " + str(old_ou) +
+            "\nTO:\n"
+            "*  " + format_kickoff(new_kickoff) + ": " + matchup +
+            " Line: " + team_name(new_favorite) + " -" + str(new_point_spread) +
+            " ML: " + str(new_money_line) + " OU: " + str(new_ou) + "\n"
+        )
+
+    if any_new:
+        sportsbook_webhook.send(text=new_games_msg)
+    if any_changed:
+        sportsbook_webhook.send(text=changed_games_msg)
 
 def main():
     """Main function of the script."""

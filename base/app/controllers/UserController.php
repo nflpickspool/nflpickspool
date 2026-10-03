@@ -102,10 +102,47 @@ class UserController extends Controller {
         $games = new Games($this->db);
         $num_games = 20;
         $this->f3->set('recentlyAddedGames', $games->getRecentlyAddedGames($num_games));
+        // Use the venv's python3, which is where requests/bs4/mysql-connector
+        // are actually installed - bare "python" resolves to the system
+        // interpreter and lacks them.
+        // Stderr isn't captured here (unlike pullGames()) - this is just the
+        // plain "requests remaining" number, not somewhere to surface errors.
+        $credits = shell_exec(escapeshellarg($this->pythonBin()) . ' ' . escapeshellarg(__DIR__ . '/../../scripts/getEvents.py') . ' 2>/dev/null');
+        $this->f3->set('credits', $credits);
+
+        $espnDefaults = $this->getEspnWeekDefaults();
+        $this->f3->set('espnYear', $espnDefaults['year']);
+        $this->f3->set('espnWeek', $espnDefaults['week']);
+
+        $pullGamesMessage = $this->f3->get('SESSION.pullGamesMessage');
+        if ($pullGamesMessage) {
+            $this->f3->set('pullGamesMessage', $pullGamesMessage);
+            $this->f3->clear('SESSION.pullGamesMessage');
+        }
 
         $this->f3->set('pageName','Add Games');
-		$this->f3->set('view','addgames.htm');	
+		$this->f3->set('view','addgames.htm');
 	}
+
+    // Absolute path to the venv python3 that scripts/ was set up with.
+    function pythonBin() {
+        return __DIR__ . '/../../scripts/venv/bin/python3';
+    }
+
+    // Best-effort lookup of the current NFL season/week from ESPN's public
+    // scoreboard API, just to prefill the "Pull Games" form - if it's
+    // unreachable the fields are simply left blank for the admin to fill in.
+    function getEspnWeekDefaults() {
+        $json = @file_get_contents('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard');
+        if ($json === false) {
+            return array('year' => '', 'week' => '');
+        }
+        $data = json_decode($json, true);
+        if (!isset($data['season']['year']) || !isset($data['week']['number'])) {
+            return array('year' => '', 'week' => '');
+        }
+        return array('year' => $data['season']['year'], 'week' => $data['week']['number']);
+    }
 
     function enterResults(){
         if($this->f3->get('SESSION.user') > 2){

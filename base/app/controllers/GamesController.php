@@ -1,7 +1,7 @@
 <?php
 
 class GamesController extends UserController {
-
+    
 	function afterroute() {
 		$template=new Template;
         echo $template->render('homeLayout.htm');
@@ -83,6 +83,40 @@ class GamesController extends UserController {
         $this->f3->reroute('/addgames');
     }
 
+
+    function pullGames(){
+        if($this->f3->get('SESSION.user') > 2){
+			$this->f3->reroute('/home');
+			exit;
+		}
+
+        $cmd = escapeshellarg($this->pythonBin()) . ' ' . escapeshellarg(__DIR__ . '/../../scripts/addGames.py');
+
+        // year/week/days are all optional - when left blank, addGames.py
+        // falls back to its own ESPN-based defaults.
+        $year = $this->f3->get('POST.pull_year');
+        if ($year !== null && $year !== '') {
+            $cmd .= ' -y ' . escapeshellarg((string)(int)$year);
+        }
+        $week = $this->f3->get('POST.pull_week');
+        if ($week !== null && $week !== '') {
+            $cmd .= ' -w ' . escapeshellarg((string)(int)$week);
+        }
+        $days = $this->f3->get('POST.pull_days');
+        if ($days !== null && $days !== '') {
+            $cmd .= ' -d ' . escapeshellarg((string)(int)$days);
+        }
+        $cmd .= ' 2>&1';
+
+        exec($cmd, $outputLines, $returnVar);
+
+        // One-shot flash message, read and cleared by UserController::addGames().
+        $this->f3->set('SESSION.pullGamesMessage', array(
+            'ok'     => ($returnVar === 0),
+            'output' => implode("\n", $outputLines),
+        ));
+        $this->f3->reroute('/addgames');
+    }
 
     function addGameScores(){
         //$this->f3->set('view','post.htm');

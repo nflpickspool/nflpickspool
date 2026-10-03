@@ -4,6 +4,34 @@
         </div>
         <div class="main-content container-fluid">
 	  <div class="col-md-12">
+	    <h2>Odds API credits remaining: {{ @credits }}</h2>
+	    <div class="card card-border-color card-border-color-primary">
+	      <div class="card-header"><div class="card-title">Pull Games from Odds API</div></div>
+	      <div class="card-body">
+		<check if="{{ @pullGamesMessage }}">
+		  <true>
+		    <div class="alert <check if="{{ @pullGamesMessage.ok }}"><true>alert-success</true><false>alert-danger</false></check>">
+		      <pre style="white-space: pre-wrap; margin: 0;">{{ @pullGamesMessage.output }}</pre>
+		    </div>
+		  </true>
+		</check>
+		<form method="POST" action="/pullgames" class="form-inline">
+		  <div class="form-group" style="margin-right: 1em;">
+		    <label for="pull_year" style="margin-right: 0.5em;">Year</label>
+		    <input class="form-control" type="number" id="pull_year" name="pull_year" placeholder="{{ @espnYear }}" value="{{ @espnYear }}">
+		  </div>
+		  <div class="form-group" style="margin-right: 1em;">
+		    <label for="pull_week" style="margin-right: 0.5em;">Week</label>
+		    <input class="form-control" type="number" id="pull_week" name="pull_week" placeholder="{{ @espnWeek }}" value="{{ @espnWeek }}">
+		  </div>
+		  <div class="form-group" style="margin-right: 1em;">
+		    <label for="pull_days" style="margin-right: 0.5em;">Days ahead</label>
+		    <input class="form-control" type="number" id="pull_days" name="pull_days" value="2">
+		  </div>
+		  <button type="submit" class="btn btn-primary">Pull Games</button>
+		</form>
+	      </div>
+	    </div>
 	    <div class="card card-border-color card-border-color-primary">
 	      <form method="POST" action="/addgame">
 		<table class="table">

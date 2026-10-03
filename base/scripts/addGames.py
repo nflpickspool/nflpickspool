@@ -327,6 +327,12 @@ def main():
         dates_to_check.append(now.strftime(pfr_date_format))
     logger.info("Checking dates for games: %s", dates_to_check)
     games_list = get_events(mydb, args.year, args.week, dates_to_check)
+    if not games_list:
+        # get_events() is free; getOdds() costs the-odds-api credits
+        # (3/call: 1 region x 3 markets) regardless of how many events it
+        # returns, so skip it entirely on days with nothing to update.
+        logger.info("No games found for the requested dates - skipping the odds lookup.")
+        return
     odds_json = getOdds(now)
     games_list = add_odds_to_games(games_list, odds_json)
     update_db(mydb, games_list, sportsbook_url, admin_url)

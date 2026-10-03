@@ -19,7 +19,7 @@ class TeamPicksController extends UserController {
         $startTimeOfSeason = $games->getLeagueYearStartTime($league_year);
         $whenLinesFinalizeInSeconds = 60*(48*60); //2 days before kickoff of first game
         $timeLinesAreLocked = date('D m/d g:i A',strtotime($startTimeOfSeason[0]['startTime'])-$whenLinesFinalizeInSeconds);
-        $whenPicksFinalizeInSeconds = 60*(60+20); //1 hour 20 minutes before kickoff of first game
+        $whenPicksFinalizeInSeconds = 0; //locks at kickoff of first game
         $timePicksAreLocked = strtotime($startTimeOfSeason[0]['startTime'])-$whenPicksFinalizeInSeconds;
         $this->f3->set('timeLinesAreLocked',$timeLinesAreLocked);
         $this->f3->set('timePicksAreLocked',$timePicksAreLocked);
@@ -35,10 +35,10 @@ class TeamPicksController extends UserController {
             //Make sure this pick hasn't been made before
             $teamPicks->load(array('ou_id=? AND player_id=?',$this->f3->get('POST.ou_id')[$x],$this->f3->get('POST.player_id')[$x]));
             if($teamPicks->dry()){
-                //Also check that the pick came in on time (kickoff - 2 hours)
+                //Also check that the pick came in on time (before kickoff)
                 $games = new Games($this->db);
                 $startTime=$games->getLeagueYearStartTime($this->f3->get('POST.league_year'));
-                if(strtotime($startTime[0]['startTime']) > time()+(60*120)){
+                if(strtotime($startTime[0]['startTime']) > time()){
                     $this->extractDataFromPost($teamPicks,$x);
                     $teamPicks->save();
                 }
@@ -49,10 +49,10 @@ class TeamPicksController extends UserController {
 
     function updateTeamPicks(){
         foreach(array_keys($this->f3->get('POST.ou_pick')) as &$x){
-            //Check that the pick came in on time (kickoff - 2 hours)
+            //Check that the pick came in on time (before kickoff)
             $games = new Games($this->db);
             $startTime=$games->getLeagueYearStartTime($this->f3->get('POST.league_year'));
-            if(strtotime($startTime[0]['startTime']) > time()+(60*120)){
+            if(strtotime($startTime[0]['startTime']) > time()){
                 $teamPicks = new TeamPicks($this->db);
                 $teamPicks->load(array('id=?',$this->f3->get('POST.id')[$x]));
                 $this->extractDataFromPost($teamPicks,$x);

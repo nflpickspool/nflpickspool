@@ -54,7 +54,7 @@ class TeamWinsController extends UserController {
     function addPointsToPicks($ou_id){
         $teamWins = new TeamWins($this->db);
         $teamWins->load(array('id=?',$ou_id));
-        $games_remaining = 16 - $teamWins->wins_actual - $teamWins->losses - $teamWins->ties;
+        $games_remaining = 17 - $teamWins->wins_actual - $teamWins->losses - $teamWins->ties;
         //Check if win total is over
         if($teamWins->wins_actual > $teamWins->wins_line){
             $teamPicks = new TeamPicks($this->db);

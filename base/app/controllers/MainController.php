@@ -144,7 +144,6 @@ class MainController extends Controller {
     			$password = substr( str_shuffle( $chars ), 0, $length );
 			$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 			$user->editPassword($user->id,$passwordHash);
-        }
   		// subject
   		$subject = 'NFL Picks Pool: Password Reset';
         // message
@@ -158,6 +157,7 @@ class MainController extends Controller {
   		$headers .= 'From: admin@nflpickspool.com' . "\r\n";
   		// Mail it
   		mail($to, $subject, $message, $headers);
+        }
         $this->f3->set('result','Password sent. If it does not arrive in 15 minutes, contact your league commissioner.');
         $this->renderForgotPassword();
 	}
